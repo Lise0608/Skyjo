@@ -1,11 +1,29 @@
 package skyjo.entities;
 
+import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+
+@Entity
+@Table (name = "game")
 public class Game {
-private Long id; 
-private GameMode gameMode;
-private Deck deck;
+	@Id
+	@GeneratedValue (strategy = GenerationType.IDENTITY)
+	private Long id; 
+	@Column
+	private GameMode gameMode;
+	@Transient
+	private Deck deck;
+	@OneToMany(mappedBy = "game")
+	private List <Player> players;
 
 public Game() {
 }
