@@ -6,7 +6,9 @@ import skyjo.dao.DaoPlayer;
 import skyjo.dao.JpaContext;
 import skyjo.entities.Admin;
 import skyjo.entities.Compte;
+import skyjo.entities.Game;
 import skyjo.entities.Player;
+import skyjo.entities.PlayerId;
 import skyjo.entities.User;
 
 public class MainTest {
@@ -19,8 +21,10 @@ public class MainTest {
 		
 		daoCompte.insert(new User("test", "test"));
 		daoCompte.insert(new Admin("Admin", "Admin"));
+
 		
-		daoPlayer.insert(new Player());
+		daoPlayer.insert(new Player(new PlayerId(new User(1L,null, null) ,new Game()),50));
+		
 		
 		
 		

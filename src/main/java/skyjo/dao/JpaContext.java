@@ -15,6 +15,11 @@ public class JpaContext {
 	public static DaoPlayer getDaoPlayer() {
 		return daoPlayer;
 	}
+	
+	private static DaoGame daoGame= new DaoGameJpaImpl();
+	public static DaoGame getDaoGame() {
+		return daoGame;
+	}
 
 	public static EntityManagerFactory getEntityManagerFactory() {
 		if (emf == null) {

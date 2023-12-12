@@ -10,8 +10,11 @@ public class User extends Compte{
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public User(String login, String password) {
 		super(login, password);
+	}
+	public User(Long id, String login, String password) {
+		super(id, login, password);
 	}
 }

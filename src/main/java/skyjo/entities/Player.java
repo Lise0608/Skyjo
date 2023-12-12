@@ -17,8 +17,8 @@ import jakarta.persistence.Table;
 @Table(name = "player")
 public class Player {
 	//@Id
-	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@EmbeddedId
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
 	//@Column(name = "player_id")
 	private PlayerId id;
 	
@@ -42,16 +42,16 @@ public class Player {
 		this.score = score;
 	}
 
-	public Player(Long id, int score) {
+	public Player(PlayerId id, int score) {
 		this.id = id;
 		this.score = score;
 	}
 
-	public Long getId() {
+	public PlayerId getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(PlayerId id) {
 		this.id = id;
 	}
 
@@ -78,5 +78,8 @@ public class Player {
 			return false;
 		Player other = (Player) obj;
 		return Objects.equals(id, other.id);
-	}	
+	}
+
+
+	
 }

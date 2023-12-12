@@ -10,6 +10,9 @@ import jakarta.persistence.ForeignKey;
 
 @Embeddable
 public class PlayerId {
+	
+	
+	
 	@ManyToOne //(fetch = FetchType.EAGER) // EAGER/LAZY
 	@JoinColumn(name = "user_player_id", foreignKey = @ForeignKey(name = "user_player_id_fk"))
 	private User user;

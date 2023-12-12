@@ -1,8 +1,15 @@
 package skyjo.entities;
 
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
+
+@Embeddable
 public class GameMode {
+	
+	
 private int scoreAAtteindre;
 private String specificites;
+
 
 public GameMode(int scoreAAtteindre, String specificites) {
 	super();
