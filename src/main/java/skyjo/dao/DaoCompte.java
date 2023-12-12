@@ -8,5 +8,5 @@ import skyjo.entities.User;
 
 public interface DaoCompte extends DaoGeneric<Compte, Long>{
 	public List<Admin> findAdmin();
-	public List<User> findSecretaire();
+	public List<User> findUser();
 }
