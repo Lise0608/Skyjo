@@ -1,7 +1,6 @@
 package skyjo.entities;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 
 @Embeddable
 public class GameMode {
@@ -11,8 +10,16 @@ private int scoreAAtteindre;
 private String specificites;
 
 
+
+
+public GameMode() {
+}
+
+public GameMode(int scoreAAtteindre) {
+	this.scoreAAtteindre = scoreAAtteindre;
+}
+
 public GameMode(int scoreAAtteindre, String specificites) {
-	super();
 	this.scoreAAtteindre = scoreAAtteindre;
 	this.specificites = specificites;
 }

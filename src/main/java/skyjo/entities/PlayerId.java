@@ -1,19 +1,16 @@
 package skyjo.entities;
 
 import java.util.Objects;
-
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.ForeignKey;
 
 @Embeddable
 public class PlayerId {
+
 	
-	
-	
-	@ManyToOne //(fetch = FetchType.EAGER) // EAGER/LAZY
+	@ManyToOne
 	@JoinColumn(name = "user_player_id", foreignKey = @ForeignKey(name = "user_player_id_fk"))
 	private User user;
 	@ManyToOne
@@ -44,10 +41,12 @@ public class PlayerId {
 		this.game = game;
 	}
 
+	@Override
 	public int hashCode() {
-		return Objects.hash(user, game);
+		return Objects.hash(game, user);
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -56,7 +55,9 @@ public class PlayerId {
 		if (getClass() != obj.getClass())
 			return false;
 		PlayerId other = (PlayerId) obj;
-		return Objects.equals(user, other.user) && Objects.equals(game, other.game);
+		return Objects.equals(game, other.game) && Objects.equals(user, other.user);
 	}
+
+
 
 }

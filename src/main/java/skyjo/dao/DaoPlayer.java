@@ -1,7 +1,5 @@
 package skyjo.dao;
 
-import java.util.List;
-
 import skyjo.entities.Player;
 import skyjo.entities.PlayerId;
 

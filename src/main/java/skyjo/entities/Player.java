@@ -5,29 +5,19 @@ import java.util.Objects;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "player")
 public class Player {
 	//@Id
-	@EmbeddedId
 	//@GeneratedValue(strategy = GenerationType.IDENTITY)
-	//@Column(name = "player_id")
+	@EmbeddedId
 	private PlayerId id;
 	
 	@Column(name = "score")
 	private int score;
 	
-	@ManyToOne
-	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_player_game"))
-	private Game game;
 	
 	// name = get_username
 
@@ -79,6 +69,7 @@ public class Player {
 		Player other = (Player) obj;
 		return Objects.equals(id, other.id);
 	}
+
 
 
 	
