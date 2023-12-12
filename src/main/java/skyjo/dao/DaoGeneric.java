@@ -1,4 +1,4 @@
-package eshop.dao;
+package skyjo.dao;
 
 import java.util.List;
 
