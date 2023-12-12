@@ -3,6 +3,7 @@ package skyjo.entities;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +16,15 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "player")
 public class Player {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "player_id")
-    private Long id;
+	//@Id
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@EmbeddedId
+	//@Column(name = "player_id")
+	private PlayerId id;
+	
 	@Column(name = "score")
 	private int score;
+	
 	@ManyToOne
 	@JoinColumn(name = "id", foreignKey = @ForeignKey(name = "fk_player_game"))
 	private Game game;
