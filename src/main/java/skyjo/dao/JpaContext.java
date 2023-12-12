@@ -10,6 +10,11 @@ public class JpaContext {
 	public static DaoCompte getDaoCompte() {
 		return daoCompte;
 	}
+	
+	private static DaoPlayer daoPlayer= new DaoPlayerJpaImpl();
+	public static DaoPlayer getDaoPlayer() {
+		return daoPlayer;
+	}
 
 	public static EntityManagerFactory getEntityManagerFactory() {
 		if (emf == null) {
