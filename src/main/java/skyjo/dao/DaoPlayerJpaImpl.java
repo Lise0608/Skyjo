@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import skyjo.entities.Player;
+import skyjo.entities.PlayerId;
 
 public class DaoPlayerJpaImpl implements DaoPlayer{
 
@@ -40,12 +41,12 @@ public class DaoPlayerJpaImpl implements DaoPlayer{
 	}
 
 	@Override
-	public void deleteByKey(Long key) {
+	public void deleteByKey(PlayerId key) {
 		delete(findByKey(key));	
 	}
 
 	@Override
-	public Player findByKey(Long key) {
+	public Player findByKey(PlayerId key) {
 		EntityManager em = JpaContext.getEntityManagerFactory().createEntityManager();
 		Player player = em.find(Player.class, key);
 		em.close();
