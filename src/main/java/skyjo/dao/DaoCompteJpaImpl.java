@@ -72,7 +72,7 @@ public class DaoCompteJpaImpl implements DaoCompte{
 	}
 	
 	@Override
-	public List<User> findSecretaire() {
+	public List<User> findUser() {
 		EntityManager em = JpaContext.getEntityManagerFactory().createEntityManager();
 		TypedQuery<User> query = em.createQuery("from User u", User.class);
 		List<User> comptes = query.getResultList();
