@@ -10,6 +10,14 @@
       crossorigin="anonymous"
     />
     <style>
+      body {
+        background-color: #ececec;
+      }
+
+      .navbar {
+        background: #007bff;
+        background: linear-gradient(to right, #007bff, #00ffb0);
+      }
       .btn-orange {
         background-color: orange;
         color: white;
@@ -19,7 +27,7 @@
     <title>Create/Join game</title>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
       <div class="container-fluid">
         <!-- Left-aligned items -->
         <div class="navbar-nav me-auto">
@@ -28,12 +36,7 @@
 
         <!-- Centered item -->
         <div class="navbar-nav mx-auto">
-          <button
-            type="button"
-            class="btn btn-orange text-white font-weight-bold"
-          >
-            Ranking
-          </button>
+          <button type="button" class="btn btn-orange text-white font-weight-bold">Ranking</button>
         </div>
 
         <!-- Right-aligned items -->
@@ -45,41 +48,23 @@
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-6">
-          <div class="card">
-            <div class="card-header">
+          <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
+            <div class="card-body">
               <h3 class="text-center">SKYJO</h3>
             </div>
             <div class="card-body">
               <form id="partieForm">
                 <div class="mb-3">
-                  <button
-                    type="button"
-                    class="btn btn-primary"
-                    id="creerPartieButton"
-                  >
+                  <button type="button" class="btn rounded-pill mb-3" style="background-color: #0094ff; color: white" id="creerPartieButton">
                     New Game
                   </button>
                 </div>
                 <div class="mb-3">
-                  <label for="codePartie" class="form-label"
-                    >Join an existing game</label
-                  >
+                  <label for="codePartie" class="form-label">Join an existing game</label>
                   <div class="input-group">
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="codePartie"
-                      name="codePartie"
-                      placeholder="Game ID"
-                    />
+                    <input type="text" class="form-control rounded-start-pill" id="codePartie" name="codePartie" placeholder="Game ID" />
 
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      id="rejoindreButton"
-                    >
-                      Join
-                    </button>
+                    <button type="button" class="btn btn-secondary rounded-end-pill" id="rejoindreButton">Join</button>
                   </div>
                 </div>
               </form>
