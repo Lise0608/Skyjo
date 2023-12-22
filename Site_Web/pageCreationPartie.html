@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Je crée ma partie</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    <style>
+      body {
+        background-color: #ececec;
+      }
+
+  .navbar {
+    background: #007BFF; 
+    background: linear-gradient(to right, #007BFF, #00FFB0);
+  }
+</style>
+    </style>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+      <div class="container-fluid">
+        <!-- Left-aligned items -->
+        <div class="navbar-nav me-auto">
+          <a class="nav-link text-light" href="#">Rules of the game</a>
+        </div>
+
+        <!-- Right-aligned items -->
+        <div class="navbar-nav ms-auto">
+          <a class="nav-link text-light" href="#">Log In</a>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
+              <div class="card-body">
+                <h2 class="text-center mb-4 text-dark">Skyjo</h2>
+                <form>
+                    <div class="form-group mb-3">
+                      <label for="Player 1" class="text-dark">Player 1</label>
+                      <select class="form-select">
+                        <option>Joueur</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                      <label for="Player 2" class="text-dark">Player 2</label>
+                      <select class="form-select">
+                        <option>Joueur</option>
+                        <option>Ordinateur</option>
+                        </select>
+                    </div>
+                    <div class="d-grid" id="buttonContainer">
+                      <button
+                        type="button"
+                        class="btn rounded-pill mb-3" style="background: linear-gradient(to right, #007BFF, #00FFB0); color: white"
+                        onclick="ajouterJoueur()"
+                        >
+                        Ajouter joueur
+                      </button>
+                    </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="alert alert-danger" id="limiteAtteinte" style="display: none;">
+      <strong>Limite de joueurs atteinte !</strong> Vous avez atteint la limite du nombre de joueurs autorisés pour une partie.
+    </div>
+    <footer>
+      <div>
+        <button
+          type="button"
+          class="btn rounded-pill mb-3 float-start " style="background: linear-gradient(to right, #007BFF, #00FFB0); color: white"
+          href = "#"
+          >
+          <- Précédent
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          class="btn rounded-pill mb-3 float-end " style="background: linear-gradient(to right, #007BFF, #00FFB0); color: white"
+          href = "#"
+          >
+          Let's GO ! ->
+        </button>
+      </div>
+    </footer>
+  </body>
+  <script>
+
+    let numeroJoueur = 3;
+    let limiteJoueurs = 8;
+
+    function ajouterJoueur() {
+      
+      if (numeroJoueur <= limiteJoueurs) {
+
+      let formulaireDiv = document.createElement('div');
+      formulaireDiv.className = 'form-group mb-3';
+  
+      
+      let label = document.createElement('label');
+      label.textContent = 'Player' + numeroJoueur;
+      label.className = 'text-dark';
+  
+      
+      let select = document.createElement('select');
+      select.className = 'form-select';
+  
+    
+      let option1 = document.createElement('option');
+      option1.textContent = 'Joueur';
+  
+      let option2 = document.createElement('option');
+      option2.textContent = 'Ordinateur';
+  
+      select.appendChild(option1);
+      select.appendChild(option2);
+  
+      
+      formulaireDiv.appendChild(label);
+      formulaireDiv.appendChild(select);
+  
+     
+    let buttonContainer = document.getElementById('buttonContainer');
+    buttonContainer.parentNode.insertBefore(formulaireDiv, buttonContainer);
+    
+    numeroJoueur++;
+    } else {
+      document.getElementById('limiteAtteinte').style.display = 'block';
+    }
+  }
+  </script>
+</html>
