@@ -17,18 +17,57 @@
     <title>Document</title>
   </head>
   <body>
-    <div>
-      <div>
-        <p>Skyjo</p>
-        <form>
-          <br /><label for="user">User</label><br />
-          <input type="text" , id="user" name="user" placeholder="UserName" /><br />
-          <label for="password">Password</label><br />
-          <input type="text" , id="password" name="password" placeholder="Password" /><br />
-          <a>forgot password ?</a><br />
-          <button type="submit">Login</button>
-          <button>Register</button>
-        </form>
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary">
+      <div class="container-fluid">
+        <!-- Left-aligned items -->
+        <div class="navbar-nav me-auto">
+          <a class="nav-link text-light" href="#">Rules of the game</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="text-center mb-4">Skyjo</h3>
+              <form>
+                <div class="mb-3">
+                  <label for="user" class="form-label">User</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="user"
+                    name="user"
+                    placeholder="Username"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
+                    name="password"
+                    placeholder="Password"
+                  />
+                </div>
+                <div class="mb-3">
+                  <a href="#">Forgot password?</a>
+                </div>
+                <div class="d-grid">
+                  <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+                <div class="d-grid mt-2">
+                  <button type="button" class="btn btn-secondary">
+                    Register
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
