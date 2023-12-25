@@ -3,8 +3,21 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Page Title</title>
+    <title>Skyjo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Format pour les navigateurs modernes -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./assets/images/Card.png"
+    />
+    <!-- Pour les appareils Apple (iOS) -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./assets/images/Card.png"
+    />
     <link rel="stylesheet" href="../assets/css/plateau_jeu.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
@@ -65,46 +78,434 @@
       </header>
 
       <!-- <section id="plateau_de_jeu"> -->
-      <div class="container">
-        <div class="Mon-plateau-de-cartes">
-          Mon-plateau-de-cartes
-          <img src="./assets/images/Card.png" alt="" /><img
-            src="./assets/images/Card.png"
-            alt=""
-          />
-          <img src="./assets/images/Card.png" alt="" /><img
-            src="./assets/images/Card.png"
-            alt=""
-          />
-          <img src="./assets/images/Card.png" alt="" /><img
-            src="./assets/images/Card.png"
-            alt=""
-          />
-          <img src="./assets/images/Card.png" alt="" /><img
-            src="./assets/images/Card.png"
-            alt=""
-          />
-          <img src="./assets/images/Card.png" alt="" /><img
-            src="./assets/images/Card.png"
-            alt=""
-          />
+      <div class="grid-container">
+        <div class="P1">
+          <div class="c1-1P1">
+            <button class="btn-c1-1P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c1-2P1">
+            <button class="btn-c1-2P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c1-3P1">
+            <button class="btn-c1-3P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c1-4P1">
+            <button class="btn-c1-4P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c2-4P1">
+            <button class="btn-c2-4P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c3-4P1">
+            <button class="btn-c3-4P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c3-3P1">
+            <button class="btn-c3-3P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c3-2P1">
+            <button class="btn-c3-2P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c3-1P1">
+            <button class="btn-c3-1P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c2-3P1">
+            <button class="btn-c2-3P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c2-2P1">
+            <button class="btn-c2-2P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="c2-1P1">
+            <button class="btn-c2-1P1" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="tP1"><b>Player 1</b></div>
         </div>
-        <div class="Joueur-4">
-          Joueur-4 <img src="./assets/images/Card.png" alt="" width="50" />
+        <div class="P2">
+          <div class="c1-1P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-1P2"
+            />
+          </div>
+          <div class="c1-2P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-2P2"
+            />
+          </div>
+          <div class="c1-3P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-3P2"
+            />
+          </div>
+          <div class="c1-4P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-4P2"
+            />
+          </div>
+          <div class="c2-4P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-4P2"
+            />
+          </div>
+          <div class="c3-4P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-4P2"
+            />
+          </div>
+          <div class="c3-3P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-3P2"
+            />
+          </div>
+          <div class="c3-2P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-2P2"
+            />
+          </div>
+          <div class="c3-1P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-1P2"
+            />
+          </div>
+          <div class="c2-3P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-3P2"
+            />
+          </div>
+          <div class="c2-2P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-2P2"
+            />
+          </div>
+          <div class="c2-1P2">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-1P2"
+            />
+          </div>
+          <div class="tP2"><b>Player 2</b></div>
         </div>
-        <div class="Joueur-5">
-          Joueur-5 <img src="./assets/images/Card.png" alt="" width="50" />
+        <div class="P3">
+          <div class="c1-1P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-1P3"
+            />
+          </div>
+          <div class="c1-2P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-2P3"
+            />
+          </div>
+          <div class="c1-3P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-3P3"
+            />
+          </div>
+          <div class="c1-4P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-4P3"
+            />
+          </div>
+          <div class="c2-4P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-4P3"
+            />
+          </div>
+          <div class="c3-4P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-4P3"
+            />
+          </div>
+          <div class="c3-3P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-3P3"
+            />
+          </div>
+          <div class="c3-2P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-2P3"
+            />
+          </div>
+          <div class="c3-1P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-1P3"
+            />
+          </div>
+          <div class="c2-3P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-3P3"
+            />
+          </div>
+          <div class="c2-2P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-2P3"
+            />
+          </div>
+          <div class="c2-1P3">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-1P3"
+            />
+          </div>
+          <div class="tP3"><b>Player 3</b></div>
         </div>
+        <div class="P4">
+          <div class="c1-1P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-1P4"
+            />
+          </div>
+          <div class="c1-2P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-2P4"
+            />
+          </div>
+          <div class="c1-3P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-3P4"
+            />
+          </div>
+          <div class="c1-4P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-4P4"
+            />
+          </div>
+          <div class="c2-4P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-4P4"
+            />
+          </div>
+          <div class="c3-4P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-4P4"
+            />
+          </div>
+          <div class="c3-3P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-3P4"
+            />
+          </div>
+          <div class="c3-2P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-2P4"
+            />
+          </div>
+          <div class="c3-1P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-1P4"
+            />
+          </div>
+          <div class="c2-3P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-3P4"
+            />
+          </div>
+          <div class="c2-2P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-2P4"
+            />
+          </div>
 
-        <div class="Joueur-2">
-          Joueur-2 <img src="./assets/images/Card.png" alt="" width="50" />
+          <div class="c2-1P4">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-1P4"
+            />
+          </div>
+
+          <div class="tP4"><b>Player 4</b></div>
         </div>
-        <div class="Joueur-3">
-          Joueur-3 <img src="./assets/images/Card.png" alt="" width="50" />
+        <div class="P5">
+          <div class="c1-1P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-1P5"
+            />
+          </div>
+          <div class="c1-2P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-2P5"
+            />
+          </div>
+          <div class="c1-3P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-3P5"
+            />
+          </div>
+          <div class="c1-4P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c1-4P5"
+            />
+          </div>
+          <div class="c2-4P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-4P5"
+            />
+          </div>
+          <div class="c3-4P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-4P5"
+            />
+          </div>
+          <div class="c3-3P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-3P5"
+            />
+          </div>
+          <div class="c3-2P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-2P5"
+            />
+          </div>
+          <div class="c3-1P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c3-1P5"
+            />
+          </div>
+          <div class="c2-3P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-3P5"
+            />
+          </div>
+          <div class="c2-2P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-2P5"
+            />
+          </div>
+          <div class="c2-1P5">
+            <img
+              src="./assets/images/Card.png"
+              class="img-fluid img-small img-md img-lg"
+              id="c2-1P5"
+            />
+          </div>
+          <div class="tP5"><b>Player 5</b></div>
         </div>
-        <div class="Pioche">
-          <img src="./assets/images/Card.png" alt="" />
-          <img src="./assets/images/Card.png" alt="" />
+        <div class="PiocheDefausse">
+          <div class="Pioche">
+            <!-- background: none pour bords ronds -->
+            <button class="btn-pioche" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="Defausse">
+            <button class="btn-defausse" type="button">
+              <img src="./assets/images/Card.png" />
+            </button>
+          </div>
+          <div class="tPioche"><b>Pioche</b></div>
+          <div class="tDefausse"><b>Défausse</b></div>
         </div>
         <div class="Chat">Chat</div>
       </div>
