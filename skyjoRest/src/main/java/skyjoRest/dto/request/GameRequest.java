@@ -2,47 +2,45 @@ package skyjoRest.dto.request;
 
 import java.util.List;
 
-import skyjo.entities.Player;
-
 public class GameRequest {
 		private Long id; 
-		private GameMode gameMode;
-		private Deck deck;
-		private List <Player> players;
+		private int scoreAAtteindre;
+		private String specificites;
+		private List <Long> playerIds;
 		
 		public GameRequest() {
 
 		}
 
-		public synchronized Long getId() {
+		public Long getId() {
 			return id;
 		}
 
-		public synchronized void setId(Long id) {
+		public void setId(Long id) {
 			this.id = id;
 		}
 
-		public synchronized GameMode getGameMode() {
-			return gameMode;
+		public int getScoreAAtteindre() {
+			return scoreAAtteindre;
 		}
 
-		public synchronized void setGameMode(GameMode gameMode) {
-			this.gameMode = gameMode;
+		public void setScoreAAtteindre(int scoreAAtteindre) {
+			this.scoreAAtteindre = scoreAAtteindre;
 		}
 
-		public synchronized Deck getDeck() {
-			return deck;
+		public String getSpecificites() {
+			return specificites;
 		}
 
-		public synchronized void setDeck(Deck deck) {
-			this.deck = deck;
+		public void setSpecificites(String specificites) {
+			this.specificites = specificites;
 		}
 
-		public synchronized Long getPlayerId() {
-			return playerId;
+		public List<Long> getPlayerIds() {
+			return playerIds;
 		}
 
-		public synchronized void setPlayerId(Long playerId) {
-			this.playerId = playerId;
+		public void setPlayerIds(List<Long> playerIds) {
+			this.playerIds = playerIds;
 		}
 }

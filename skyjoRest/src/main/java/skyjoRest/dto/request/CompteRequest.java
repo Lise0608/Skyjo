@@ -8,32 +8,42 @@ public class CompteRequest {
 	private String login;
 	@NotBlank
 	private String password;
+	@NotBlank
+	private String type;
 	
 	public CompteRequest() {
 
 	}
 
-	public synchronized Long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public synchronized void setId(Long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public synchronized String getLogin() {
+	public String getLogin() {
 		return login;
 	}
 
-	public synchronized void setLogin(String login) {
+	public void setLogin(String login) {
 		this.login = login;
 	}
 
-	public synchronized String getPassword() {
+	public String getPassword() {
 		return password;
 	}
 
-	public synchronized void setPassword(String password) {
+	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
