@@ -2,8 +2,11 @@ package skyjoRest.dto.response;
 
 import org.springframework.beans.BeanUtils;
 
+import skyjo.entities.Player;
+
 public class PlayerResponse {
-	private PlayerId id; 
+	private Long userid;
+	private Long gameId;
 	private int score;
 	
 	public PlayerResponse () {
@@ -14,12 +17,20 @@ public class PlayerResponse {
 		BeanUtils.copyProperties (playerEntity , this);
 	}
 
-	public PlayerId getId() {
-		return id;
+	public Long getUserid() {
+		return userid;
 	}
 
-	public void setId(PlayerId id) {
-		this.id = id;
+	public void setUserid(Long userid) {
+		this.userid = userid;
+	}
+
+	public Long getGameId() {
+		return gameId;
+	}
+
+	public void setGameId(Long gameId) {
+		this.gameId = gameId;
 	}
 
 	public int getScore() {

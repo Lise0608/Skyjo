@@ -5,11 +5,14 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 
-public class GameResponse {
+import skyjo.entities.Game;
 
+public class GameResponse {
+	
 	private Long id; 
-	private GameMode gameMode;
-	private Deck deck;
+	private int scoreAAtteindre;
+	private String specificites;
+	//private Deck deck;
 	private List <PlayerResponse> players;
 
 	public GameResponse () {
@@ -35,22 +38,30 @@ public class GameResponse {
 
 	public void setId(Long id) {
 		this.id = id;
+	}	
+
+//	public Deck getDeck() {
+//		return deck;
+//	}
+//
+//	public void setDeck(Deck deck) {
+//		this.deck = deck;
+//	}
+
+	public int getScoreAAtteindre() {
+		return scoreAAtteindre;
 	}
 
-	public GameMode getGameMode() {
-		return gameMode;
+	public void setScoreAAtteindre(int scoreAAtteindre) {
+		this.scoreAAtteindre = scoreAAtteindre;
 	}
 
-	public void setGameMode(GameMode gameMode) {
-		this.gameMode = gameMode;
+	public String getSpecificites() {
+		return specificites;
 	}
 
-	public Deck getDeck() {
-		return deck;
-	}
-
-	public void setDeck(Deck deck) {
-		this.deck = deck;
+	public void setSpecificites(String specificites) {
+		this.specificites = specificites;
 	}
 
 	public List<PlayerResponse> getPlayers() {
