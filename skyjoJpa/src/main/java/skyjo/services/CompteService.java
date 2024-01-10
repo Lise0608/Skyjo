@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import skyjo.entities.Compte;
 import skyjo.exceptions.CompteException;
 import skyjo.repositories.CompteRepositories;
-import skyjo.repositories.CompteRepository;
 
 @Service
 public class CompteService {
@@ -23,7 +22,7 @@ public class CompteService {
 
         validateCompteFields(compte);
 
-        if (compteRepository.findByLogin(compte.getLogin()).isPresent()) {
+        if (compteRepo.findByLogin(compte.getLogin()).isEmpty()) {
             throw new CompteException("Login déjà utilisé");
         }
 
@@ -62,8 +61,8 @@ public class CompteService {
             throw new CompteException("Login obligatoire");
         }
         
-        if (compte.getPassword() == null || compte.getPassword().length() < 8) {
-            throw new CompteException("Le mot de passe doit avoir au moins 8 caractères");
+        if (compte.getPassword() == null || compte.getPassword().length() < 8 || compte.getPassword().contains(" ")) {
+            throw new CompteException("Le mot de passe doit avoir au moins 8 caractères et ne pas contenir d'espaces");
         }
     }
 }
