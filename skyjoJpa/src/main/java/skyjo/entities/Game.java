@@ -62,6 +62,14 @@ public void setDeck(Deck deck) {
 	this.deck = deck;
 }
 
+public List<Player> getPlayers() {
+	return players;
+}
+
+public void setPlayers(List<Player> players) {
+	this.players = players;
+}
+
 @Override
 public int hashCode() {
 	return Objects.hash(id);
