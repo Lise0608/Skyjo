@@ -495,13 +495,17 @@
         <div class="PiocheDefausse">
           <div class="Pioche">
             <!-- background: none pour bords ronds -->
-            <button class="btn-pioche" type="button">
+            <button class="btn-pioche" type="button" id="btnPioche">
               <img src="./assets/images/Card.png" />
             </button>
+            <section id="optionsPioche" class="d-none">
+              <button id="btnGarder">Garder</button>
+              <button id="btnChanger">Jeter</button>
+            </section>
           </div>
           <div class="Defausse">
-            <button class="btn-defausse" type="button">
-              <img src="./assets/images/Card.png" />
+            <button class="btn-defausse" type="button" id="btnDefausse">
+              <img src="./assets/images/Defausse_debut_partie.png" />
             </button>
           </div>
           <div class="tPioche"><b>Pioche</b></div>
@@ -510,5 +514,8 @@
         <div class="Chat">Chat</div>
       </div>
     </div>
+
+    <!-- Liens vers js -->
+    <script src="./assets/scripts/Plateau.js"></script>
   </body>
 </html>
