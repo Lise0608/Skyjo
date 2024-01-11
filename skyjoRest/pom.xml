@@ -16,6 +16,11 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>formation.soprasteria</groupId> <!--aucune importance, pour organiser votre code -->
+			<artifactId>SkyjoJpa</artifactId> <!--recommandé de mettre le m^me nom que le dossier dans lequel on est -->
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>${springVersion}</version>
@@ -29,12 +34,6 @@
 			<groupId>com.fasterxml.jackson.datatype</groupId>
 			<artifactId>jackson-datatype-jsr310</artifactId>
 			<version>${jacksonDatatypeVersion}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>formation.soprasteria</groupId>
-			<artifactId>formationJpaSpring</artifactId>
-			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>jakarta.validation</groupId>
