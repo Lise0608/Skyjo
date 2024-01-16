@@ -1,0 +1,27 @@
+logging:
+  level:
+    root: info
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root123#
+    url: jdbc:mysql://localhost:3306/skyjo
+    username: root
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        show_sql: false
+
+  mvc:
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
+      
+server:
+  servlet:
+    context-path: /skyjo   
