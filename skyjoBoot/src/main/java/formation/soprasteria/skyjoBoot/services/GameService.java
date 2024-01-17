@@ -6,7 +6,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import formation.soprasteria.skyBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.Game;
 import formation.soprasteria.skyjoBoot.exceptions.GameException;
 import formation.soprasteria.skyjoBoot.exceptions.GameNotFoundException;
 import formation.soprasteria.skyjoBoot.repositories.GameRepositories;

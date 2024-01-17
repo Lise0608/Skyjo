@@ -1,4 +1,4 @@
-package formation.soprasteria.skyBoot.entities;
+package formation.soprasteria.skyjoBoot.entities;
 
 import java.util.List;
 import java.util.Objects;
