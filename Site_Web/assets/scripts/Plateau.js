@@ -183,6 +183,10 @@ function updateImagePioche() {
   if (drawnCard !== null) {
     let btnPioche = document.getElementById("btnPioche");
     btnPioche.innerHTML = `<img src="./assets/images/Card_${drawnCard}.png" />`;
+    btnPioche.dataset.cardNumber = drawnCard;
+    console.log(
+      "updateImagePioche avec la carte numéro : " + btnPioche.dataset.cardNumber
+    );
   }
 }
 
@@ -190,6 +194,9 @@ function updateImagePioche() {
 document
   .getElementById("btnPioche")
   .addEventListener("click", updateImagePioche);
+document
+  .getElementById("btnPioche")
+  .addEventListener("dragstart", dragStartPioche); //On lit les infos quand il commenc à etre glissé
 
 // === Distribution Cartes ================================================================================
 // ----- P1 -----------------------------------------------------------------------
@@ -205,11 +212,11 @@ function distribuerCartesAuJoueurP1() {
       bouton.addEventListener("click", turnCard);
       // Ajoute les événements de drag = glisser-déposer carte (expliqué plus tard)
       bouton.setAttribute("draggable", true);
-      bouton.addEventListener("dragstart", dragStart);
+      bouton.addEventListener("dragstart", dragStartP1);
       bouton.addEventListener("dragover", dragOver);
       bouton.addEventListener("dragenter", dragEnter);
       bouton.addEventListener("dragleave", dragLeave);
-      bouton.addEventListener("drop", dropToP1);
+      bouton.addEventListener("drop", dropAnyToP1);
     }
   });
   console.log("Cartes distribuées à P1.");
@@ -238,6 +245,7 @@ function distribuerPremiereCarteDefausse() {
   if (drawnCard !== null) {
     btnDefausse.dataset.cardNumber = drawnCard;
   }
+  btnDefausse.addEventListener("dragstart", dragStartDefausse);
   btnDefausse.innerHTML = `<img src="./assets/images/Card_${drawnCard}.png" />`;
   console.log("Première carte de la défausse distribuée.");
 }
@@ -258,9 +266,25 @@ function turnCard() {
 // --- Gestion du drag (glisser-déposer) -------------------------------
 let draggedCard; // Variable pour stocker la carte en cours de drag
 let isDragging = false; // Variable pour indiquer si le glisser-déposer est en cours
-function dragStart(event) {
+function dragStartP1(event) {
   draggedCard = event.target; // Quand l'utilisateur commence à glisser un bouton
+  draggedCard.classList.add("dragP1"); // Quand l'utilisateur commence à glisser un bouton
   event.dataTransfer.setData("text/plain", draggedCard.dataset.cardNumber); // Lit le numéro de la carte
+  isDragging = true; // Le glisser-déposer est activé
+}
+function dragStartDefausse(event) {
+  draggedCard = document.getElementById("btnDefausse"); // Quand l'utilisateur commence à glisser un bouton
+  draggedCard.classList.add("dragDefausse"); // Quand l'utilisateur commence à glisser un bouton
+  event.dataTransfer.setData("text/plain", draggedCard.dataset.cardNumber); // Lit le numéro de la carte
+  isDragging = true; // Le glisser-déposer est activé
+}
+function dragStartPioche(event) {
+  draggedCard = document.getElementById("btnPioche");
+  draggedCard.classList.add("dragPioche"); // Quand l'utilisateur commence à glisser un bouton
+  event.dataTransfer.setData("text/plain", draggedCard.dataset.cardNumber); // Lit le numéro de la carte
+  console.log(
+    "dragStartPioche avec la carte numéro : " + draggedCard.dataset.cardNumber
+  );
   isDragging = true; // Le glisser-déposer est activé
 }
 function dragEnd() {
@@ -276,24 +300,49 @@ function dragEnter(event) {
 function dragLeave(event) {
   event.currentTarget.style.opacity = ""; // Lorsque le curseur quitte la zone de dépôt, on retourne à l'opacité normale
 }
-function drop(event) {
-  event.preventDefault();
-}
-function dropToP1(event) {
+function dropAnyToP1(event) {
   event.preventDefault();
   event.stopPropagation(); // On impose d'arrêter le glisser-déposer
-  let piocheCardNumber = event.dataTransfer.getData("text/plain"); // Récupère le numéro de la carte qui était dans la pioche
-  let replacedCardNumber = event.currentTarget.dataset.cardNumber; // Récupère le numéro de la carte qui était dans la zone de dépôt
   event.currentTarget.style.opacity = ""; // Pour que la carte face visible ne soit pas transparente
-  let buttonClass = event.currentTarget.className; // Pour avoir la classe du bouton du dépôt
-  replaceCardInP1(piocheCardNumber, replacedCardNumber, buttonClass); // La carte de la pioche va dans le plateau, la carte du plateau dans la défausse
+  let newCardNumber = event.dataTransfer.getData("text/plain"); // Récupère le numéro de la carte glissée
+  let P1CardNumber = event.currentTarget.dataset.cardNumber; // Récupère le numéro de la carte qui était dans la zone de dépôt P1
+  let dropButtonClass = event.currentTarget.className; // Pour avoir la classe du bouton du dépôt P1
+  /* replaceDrawToP1(newCardNumber, P1CardNumber, dropButtonClass); // La carte de la pioche va dans le plateau, la carte du plateau dans la défausse*/
+  replaceDrawOrDiscardToP1(newCardNumber, P1CardNumber, dropButtonClass); // La carte de la pioche va dans le plateau, la carte du plateau dans la défausse
 }
-function replaceCardInP1(piocheCardNumber, replacedCardNumber, buttonClass) {
-  let piocheCard = document.getElementById("btnPioche"); // Recherche le bouton de la carte de la pioche
-  let replacedCard = document.querySelector(`.${buttonClass}`); // Recherche le bouton de la carte de P1 à remplacer
-  let defausseCard = document.getElementById("btnDefausse"); // Recherche le bouton de la carte de la défausse
-  replacedCard.innerHTML = `<img src="${piocheCardNumber}" />`; // Met à jour la carte de P1 avec la carte de la pioche
-  defausseCard.dataset.cardNumber = replacedCardNumber; // Met la carte actuelle de la zone de dépôt de P1 sur la défausse
-  defausseCard.innerHTML = `<img src="./assets/images/Card_${replacedCardNumber}.png" />`;
-  piocheCard.innerHTML = `<img src="./assets/images/Card.png" />`; // On affiche la pioche par une carte face cachée, la prochaine carte est prete à être tirée
+function replaceDrawToP1(drawCardNumber, P1CardNumber, dropButtonClass) {
+  let drawCard = document.getElementById("btnPioche"); // Recherche le bouton de la carte de la pioche
+  let P1Card = document.querySelector(`.${dropButtonClass}`); // Recherche le bouton de la carte de P1 à remplacer
+  let discardCard = document.getElementById("btnDefausse"); // Recherche le bouton de la carte de la défausse
+  P1Card.innerHTML = `<img src="${drawCardNumber}" />`; // Met à jour la carte de P1 avec la carte de la pioche
+  discardCard.dataset.cardNumber = P1CardNumber; // Nouveau numéro pour le bouton défausse : anciennement P1
+  P1Button.dataset.cardNumber = drawCardNumber; // Nouveau numéro pour le bouton P1 : anciennement pioche
+  discardCard.innerHTML = `<img src="./assets/images/Card_${P1CardNumber}.png" />`; //Met à jour le bon numéro sur la défausse
+  drawCard.innerHTML = `<img src="./assets/images/Card.png" />`; // On affiche la pioche par une carte face cachée, la prochaine carte est prete à être tirée
+}
+function replaceDiscardToP1(discardCardNumber, P1CardNumber, dropButtonClass) {
+  let discardButton = document.getElementById("btnDefausse"); // Recherche le bouton de la carte de la défausse
+  let P1Button = document.querySelector(`.${dropButtonClass}`); // Recherche le bouton de la carte de P1 à remplacer
+  discardButton.dataset.cardNumber = P1CardNumber; // Nouveau numéro pour le bouton défausse : anciennement P1
+  P1Button.dataset.cardNumber = discardCardNumber; // Nouveau numéro pour le bouton P1 : anciennement défausse
+  discardButton.innerHTML = `<img src="${P1CardNumber}" />`; //Met à jour le bon numéro sur la défausse
+  P1Button.innerHTML = `<img src="${discardCardNumber}" />`; // Met à jour la carte de P1 avec la carte de la défausse
+}
+function replaceDrawOrDiscardToP1(
+  newCardNumber,
+  P1CardNumber,
+  dropButtonClass
+) {
+  let discardButton = document.getElementById("btnDefausse"); // Recherche le bouton de la carte de la défausse
+  let P1Button = document.querySelector(`.${dropButtonClass}`); // Recherche le bouton de la carte de P1 à remplacer
+  P1Button.dataset.cardNumber = newCardNumber; // Nouveau numéro pour le bouton P1 : anciennement pioche ou defausse
+  P1Button.innerHTML = `<img src="./assets/images/Card_${newCardNumber}.png" />`; // Met à jour la carte de P1 avec la carte de la pioche ou defausse
+  discardButton.dataset.cardNumber = P1CardNumber; // Nouveau numéro pour le bouton défausse : anciennement P1
+  discardButton.innerHTML = `<img src="./assets/images/Card_${P1CardNumber}.png" />`; //Met à jour le bon numéro sur la défausse
+  //Si la carte provient de la pioched | (draggedCard.classList.contains("dragPioche"))
+  if (draggedCard.classList.contains("dragPioche")) {
+    console.log("La carte provient de la pioche.");
+    let drawCard = document.getElementById("btnPioche"); // Recherche le bouton de la carte de la pioche
+    drawCard.innerHTML = `<img src="./assets/images/Card.png" />`; // On affiche la pioche par une carte face cachée, la prochaine carte est prete à être tirée
+  }
 }
