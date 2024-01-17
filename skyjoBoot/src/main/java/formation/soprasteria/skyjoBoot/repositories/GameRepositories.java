@@ -2,7 +2,7 @@ package formation.soprasteria.skyjoBoot.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import formation.soprasteria.skyBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.Game;
 
 
 

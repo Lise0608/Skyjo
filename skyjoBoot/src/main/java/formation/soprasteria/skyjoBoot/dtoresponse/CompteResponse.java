@@ -3,7 +3,7 @@ package formation.soprasteria.skyjoBoot.dtoresponse;
 
 import org.springframework.beans.BeanUtils;
 
-import formation.soprasteria.skyBoot.entities.Compte;
+import formation.soprasteria.skyjoBoot.entities.Compte;
 
 
 

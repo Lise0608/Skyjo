@@ -2,7 +2,7 @@ package formation.soprasteria.skyjoBoot.dtoresponse;
 
 import org.springframework.beans.BeanUtils;
 
-import formation.soprasteria.skyBoot.entities.Player;
+import formation.soprasteria.skyjoBoot.entities.Player;
 
 public class PlayerResponse {
 	private Long userid;

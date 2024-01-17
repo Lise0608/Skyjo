@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 
-import formation.soprasteria.skyBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.Game;
 
 public class GameResponse {
 	

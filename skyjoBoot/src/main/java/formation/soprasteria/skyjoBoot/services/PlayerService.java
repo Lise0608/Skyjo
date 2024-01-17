@@ -6,8 +6,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import formation.soprasteria.skyBoot.entities.Player;
-import formation.soprasteria.skyBoot.entities.PlayerId;
+import formation.soprasteria.skyjoBoot.entities.Player;
+import formation.soprasteria.skyjoBoot.entities.PlayerId;
 import formation.soprasteria.skyjoBoot.exceptions.PlayerException;
 import formation.soprasteria.skyjoBoot.exceptions.PlayerNotFoundException;
 import formation.soprasteria.skyjoBoot.repositories.PlayerRepositories;

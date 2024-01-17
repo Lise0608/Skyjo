@@ -5,9 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import formation.soprasteria.skyBoot.entities.Compte;
-import formation.soprasteria.skyjoBoot.repositories.CompteRepositories;
+import formation.soprasteria.skyjoBoot.entities.Compte;
 import formation.soprasteria.skyjoBoot.exceptions.CompteException;
+import formation.soprasteria.skyjoBoot.repositories.CompteRepositories;
 
 @Service
 public class CompteService {

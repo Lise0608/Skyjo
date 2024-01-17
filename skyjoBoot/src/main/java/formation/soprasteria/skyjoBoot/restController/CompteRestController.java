@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import formation.soprasteria.skyBoot.entities.Compte;
 import formation.soprasteria.skyjoBoot.dtorequest.CompteRequest;
 import formation.soprasteria.skyjoBoot.dtoresponse.CompteResponse;
+import formation.soprasteria.skyjoBoot.entities.Compte;
 import formation.soprasteria.skyjoBoot.services.CompteService;
 import jakarta.validation.Valid;
 
