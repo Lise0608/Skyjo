@@ -14,7 +14,7 @@ import formation.soprasteria.skyjoBoot.repositories.GameRepositories;
 @Service
 public class GameService {
 	@Autowired
-	GameRepositories gameRepo;
+	private GameRepositories gameRepo;
 	
 	public Game create(Game game) {
 		if (game.getId() != null) {
