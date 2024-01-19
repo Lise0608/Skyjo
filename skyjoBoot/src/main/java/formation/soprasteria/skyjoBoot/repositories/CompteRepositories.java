@@ -9,8 +9,9 @@ import formation.soprasteria.skyjoBoot.entities.Compte;
 
 
 public interface CompteRepositories extends JpaRepository<Compte, Long> {
-	Compte findByLogin(String login);
-
+	Optional<Compte> findByLogin(String login);
+	
 	Optional<Compte> findByLoginAndIdNot(String login, Long id);
+
 }
 
