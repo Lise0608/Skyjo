@@ -26,15 +26,15 @@ public class PlayerRestController {
 		return playerService.findAll().stream().map(pl -> new PlayerResponse(pl)).collect(Collectors.toList());
 	}
 	
-	@GetMapping("/{userid}")
-	public PlayerResponse playerByUserId (@PathVariable Long userid) {
-		return new PlayerResponse(playerService.findByUserId(userid));
-	}
-	
-	@GetMapping("/{gameid}")
-	public PlayerResponse playerByGameId (@PathVariable Long gameid) {
-		return new PlayerResponse(playerService.findByGameId(gameid));
-	}
+//	@GetMapping("/{userid}")
+//	public PlayerResponse playerByUserId (@PathVariable Long userid) {
+//		return new PlayerResponse(playerService.findByUserId(userid));
+//	}
+//	
+//	@GetMapping("/{gameid}")
+//	public PlayerResponse playerByGameId (@PathVariable Long gameid) {
+//		return new PlayerResponse(playerService.findByGameId(gameid));
+//	}
 	
 //	@DeleteMapping
 	
