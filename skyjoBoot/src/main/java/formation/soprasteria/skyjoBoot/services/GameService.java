@@ -16,6 +16,9 @@ public class GameService {
 	@Autowired
 	private GameRepositories gameRepo;
 	
+	@Autowired
+	private PlayerService playerService;
+	
 	public Game create(Game game) {
 		if (game.getId() != null) {
 			throw new GameException("Partie déjà existante");
@@ -43,6 +46,7 @@ public class GameService {
 			throw new GameNotFoundException("Game avec l'ID :" + id + " non trouvée");
 		}
 		try {
+			playerService.deletePlayerByGameId(id);
 			gameRepo.delete(gameToDelete);			
 		} catch (Exception e) {
 			e.printStackTrace();

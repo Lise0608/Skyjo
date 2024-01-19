@@ -57,6 +57,14 @@ public class PlayerService {
 	    }
 		deleteById(player.getId());
 	}
+	
+	public void deletePlayerByGameId(Long id) {
+		List<Player> playersToDelete = playerRepo.findByidGameId(id);
+
+        for (Player player : playersToDelete) {
+            playerRepo.delete(player);
+        }
+	}
 
 	public Player update(Player player) {
 		if (player.getId() == null) {
