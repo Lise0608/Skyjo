@@ -73,4 +73,11 @@ public class GameService {
 		return gameRepo.save(gameEnBase);
 		
 	}
+	
+    public List<Game> getUserGames(Long userId) {
+        if (userId == null) {
+            throw new IllegalArgumentException("ID utilisateur est null");
+        }
+        return gameRepo.findByUserId(userId);
+    }
 }
