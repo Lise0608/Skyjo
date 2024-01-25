@@ -26,8 +26,10 @@ public class GameResponse {
 
 	public GameResponse(Game gameEntity) {
 		this.id = gameEntity.getId();
-		this.scoreAAtteindre = gameEntity.getGameMode().getScoreAAtteindre();
-		this.specificites = gameEntity.getGameMode().getSpecificites();
+		if (gameEntity.getGameMode() != null) {
+			this.scoreAAtteindre = gameEntity.getGameMode().getScoreAAtteindre();
+			this.specificites = gameEntity.getGameMode().getSpecificites();
+		}
 		if (gameEntity.getPlayers() != null) {
 			this.players = gameEntity.getPlayers().stream().map(p -> new PlayerResponse(p))
 					.collect(Collectors.toList());

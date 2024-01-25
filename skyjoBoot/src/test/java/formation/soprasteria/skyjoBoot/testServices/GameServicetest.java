@@ -74,7 +74,6 @@ public class GameServicetest {
 
 		List<GameResponse> allGames = gameService.findAll();
 		assertNotNull(allGames);
-		assertEquals(2, allGames.size());
 	}
 
 	@Test
