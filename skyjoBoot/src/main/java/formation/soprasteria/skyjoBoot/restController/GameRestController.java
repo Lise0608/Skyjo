@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import formation.soprasteria.skyjoBoot.dtorequest.GameRequest;
 import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
 import formation.soprasteria.skyjoBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.GameMode;
 import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
 import formation.soprasteria.skyjoBoot.entities.User;
@@ -50,8 +51,8 @@ public class GameRestController {
 	public Game convertGameRequestToGameEntity(GameRequest gameRequest) {
 		Game gameEntity = new Game();
 
-		// Copie des propriétées de base
-		BeanUtils.copyProperties(gameRequest, gameEntity, "players");
+		// Création du GameMode
+		gameEntity.setGameMode(new GameMode(gameRequest.getScoreAAtteindre(), gameRequest.getSpecificites()));
 
 		// Création de la liste des players de la game
 		// Pour chaque Id de la liste dans gameRequest, on créé un playerId à partir de
@@ -78,18 +79,18 @@ public class GameRestController {
 
 		return gameEntity;
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteGameById(@PathVariable Long id) {
 		gameSrv.deleteById(id);
 	}
-	
+
 	@GetMapping("/allGames")
 	public List<GameResponse> getAllGames() {
 		return gameSrv.findAll();
 	}
-	
+
 	@GetMapping("/userGames")
 	public List<GameResponse> getUserGames(@RequestParam Long userId) {
 		return gameSrv.findByUserId(userId);

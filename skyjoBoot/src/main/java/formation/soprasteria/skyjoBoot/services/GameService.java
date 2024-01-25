@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
 import formation.soprasteria.skyjoBoot.dtoresponse.PlayerResponse;
 import formation.soprasteria.skyjoBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.exceptions.GameException;
 import formation.soprasteria.skyjoBoot.exceptions.GameNotFoundException;
 import formation.soprasteria.skyjoBoot.repositories.GameRepositories;
@@ -27,7 +28,14 @@ public class GameService {
 			throw new GameException("Partie déjà existante");
 		}
 
-		return gameRepo.save(game);
+		gameRepo.save(game);
+		
+		// Sauvegarder les joueurs associés à la partie
+        for (Player player : game.getPlayers()) {
+            playerService.create(player);
+        }
+
+        return game;
 	}
 
 	public Game findById(Long id) {

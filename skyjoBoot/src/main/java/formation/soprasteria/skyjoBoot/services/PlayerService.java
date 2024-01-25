@@ -16,14 +16,11 @@ import formation.soprasteria.skyjoBoot.repositories.PlayerRepositories;
 
 @Service
 public class PlayerService {
+	
 	@Autowired
 	PlayerRepositories playerRepo;
 
 	public Player create(Player player) {
-		if (player.getId() != null) {
-			throw new PlayerException("Joueur déjà existant");
-		}
-
 		return playerRepo.save(player);
 	}
 
@@ -37,29 +34,21 @@ public class PlayerService {
 	}
 
 	public List<PlayerResponse> findAll() {
-        return playerRepo.findAll().stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
-    }
+		return playerRepo.findAll().stream().map(p -> new PlayerResponse(p)).collect(Collectors.toList());
+	}
 
-    private PlayerResponse mapToPlayerResponse(Player player) {
-        PlayerResponse response = new PlayerResponse();
-        response.setUserid(player.getId().getUser().getId());
-        response.setGameId(player.getId().getGame().getId());
-        response.setScore(player.getScore());
-        return response;
-    }
+	public List<PlayerResponse> findByUserId(Long userId) {
+		return playerRepo.findByidUserId(userId).stream().map(p -> new PlayerResponse(p)).collect(Collectors.toList());
+	}
 
-    public List<PlayerResponse> findByUserId(Long userId) {
-        return playerRepo.findByidUserId(userId).stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
-    }
-
-    public List<PlayerResponse> findByGameId(Long gameId) {
-        return playerRepo.findByidGameId(gameId).stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
-    }
+	public List<PlayerResponse> findByGameId(Long gameId) {
+		return playerRepo.findByidGameId(gameId).stream().map(p -> new PlayerResponse(p)).collect(Collectors.toList());
+	}
 
 	public void deleteById(PlayerId playerId) {
 		Player playerToDelete = findById(playerId);
 		if (playerToDelete == null) {
-		    throw new PlayerNotFoundException("Player avec l'ID: " + playerId + " non trouvé");
+			throw new PlayerNotFoundException("Player avec l'ID: " + playerId + " non trouvé");
 		}
 		try {
 			playerRepo.delete(playerToDelete);
@@ -71,17 +60,17 @@ public class PlayerService {
 
 	public void delete(Player player) {
 		if (player.getId() == null) {
-	        throw new IllegalArgumentException("Player ID est null");
-	    }
+			throw new IllegalArgumentException("Player ID est null");
+		}
 		deleteById(player.getId());
 	}
-	
+
 	public void deletePlayerByGameId(Long id) {
 		List<Player> playersToDelete = playerRepo.findByidGameId(id);
 
-        for (Player player : playersToDelete) {
-            playerRepo.delete(player);
-        }
+		for (Player player : playersToDelete) {
+			playerRepo.delete(player);
+		}
 	}
 
 	public Player update(Player player) {
