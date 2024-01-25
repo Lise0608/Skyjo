@@ -8,5 +8,6 @@ import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
 
 public interface PlayerRepositories extends JpaRepository<Player, PlayerId> {
+	List<Player> findByidUserId(Long userIs);
 	List<Player> findByidGameId(Long gameId);
 }

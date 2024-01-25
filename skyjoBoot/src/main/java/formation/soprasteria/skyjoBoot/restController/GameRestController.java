@@ -86,13 +86,13 @@ public class GameRestController {
 	}
 	
 	@GetMapping("/allGames")
-	public List<Game> getAllGames() {
+	public List<GameResponse> getAllGames() {
 		return gameSrv.findAll();
 	}
 	
 	@GetMapping("/userGames")
-	public List<Game> getUserGames(@RequestParam Long userId) {
-		return gameSrv.getUserGames(userId);
+	public List<GameResponse> getUserGames(@RequestParam Long userId) {
+		return gameSrv.findByUserId(userId);
 	}
 
 }

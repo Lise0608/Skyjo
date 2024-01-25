@@ -23,7 +23,7 @@ public class PlayerRestController {
 	
 	@GetMapping ("")
 	public List<PlayerResponse> playersList (){
-		return playerService.findAll().stream().map(pl -> new PlayerResponse(pl)).collect(Collectors.toList());
+		return playerService.findAll();
 	}
 	
 //	@GetMapping("/{userid}")

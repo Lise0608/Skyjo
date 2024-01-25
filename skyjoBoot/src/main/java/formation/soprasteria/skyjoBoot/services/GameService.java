@@ -1,11 +1,14 @@
 package formation.soprasteria.skyjoBoot.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
+import formation.soprasteria.skyjoBoot.dtoresponse.PlayerResponse;
 import formation.soprasteria.skyjoBoot.entities.Game;
 import formation.soprasteria.skyjoBoot.exceptions.GameException;
 import formation.soprasteria.skyjoBoot.exceptions.GameNotFoundException;
@@ -36,9 +39,31 @@ public class GameService {
 		});
 	}
 	
-	public List<Game> findAll() {
-		return gameRepo.findAll();
+	public List<GameResponse> findAll() {
+		List<Game> games = gameRepo.findAll();
+		List<GameResponse> gameResponses = new ArrayList<GameResponse>();
+        for (Game game : games) {
+        	GameResponse gameResponse = new GameResponse(game);
+            List<PlayerResponse> players = playerService.findByGameId(game.getId());
+            gameResponse.setPlayers(players);
+            gameResponses.add(gameResponse);
+        }
+        return gameResponses;
 	}
+	
+	public List<GameResponse> findByUserId(Long userId) {
+        List<PlayerResponse> playerResponses = playerService.findByUserId(userId);
+        List<GameResponse> gameResponses = new ArrayList<>();
+        
+        for (PlayerResponse playerResponse : playerResponses) {
+        
+        	GameResponse gameResponse = new GameResponse(findById(playerResponse.getGameId()));
+            List<PlayerResponse> players = playerService.findByGameId(playerResponse.getGameId());
+            gameResponse.setPlayers(players);
+            gameResponses.add(gameResponse);
+        }
+        return gameResponses;
+    }
 	
 	public void deleteById(Long id) {
 		Game gameToDelete = findById(id);
@@ -78,10 +103,4 @@ public class GameService {
 		
 	}
 	
-    public List<Game> getUserGames(Long userId) {
-        if (userId == null) {
-            throw new IllegalArgumentException("ID utilisateur est null");
-        }
-        return gameRepo.findByUserId(userId);
-    }
 }

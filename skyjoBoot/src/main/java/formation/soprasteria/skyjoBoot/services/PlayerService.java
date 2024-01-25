@@ -1,11 +1,13 @@
 package formation.soprasteria.skyjoBoot.services;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import formation.soprasteria.skyjoBoot.dtoresponse.PlayerResponse;
 import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
 import formation.soprasteria.skyjoBoot.exceptions.PlayerException;
@@ -34,9 +36,25 @@ public class PlayerService {
 		});
 	}
 
-	public List<Player> findAll() {
-		return playerRepo.findAll();
-	}
+	public List<PlayerResponse> findAll() {
+        return playerRepo.findAll().stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
+    }
+
+    private PlayerResponse mapToPlayerResponse(Player player) {
+        PlayerResponse response = new PlayerResponse();
+        response.setUserid(player.getId().getUser().getId());
+        response.setGameId(player.getId().getGame().getId());
+        response.setScore(player.getScore());
+        return response;
+    }
+
+    public List<PlayerResponse> findByUserId(Long userId) {
+        return playerRepo.findByidUserId(userId).stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
+    }
+
+    public List<PlayerResponse> findByGameId(Long gameId) {
+        return playerRepo.findByidGameId(gameId).stream().map(this::mapToPlayerResponse).collect(Collectors.toList());
+    }
 
 	public void deleteById(PlayerId playerId) {
 		Player playerToDelete = findById(playerId);
