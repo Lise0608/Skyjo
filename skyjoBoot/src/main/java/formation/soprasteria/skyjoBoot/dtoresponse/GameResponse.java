@@ -5,29 +5,42 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 
+import com.fasterxml.jackson.annotation.JsonView;
+
 import formation.soprasteria.skyjoBoot.entities.Game;
 
 public class GameResponse {
-	
-	private Long id; 
+
+	@JsonView(JsonViews.Game.class)
+	private Long id;
+	@JsonView(JsonViews.Game.class)
 	private int scoreAAtteindre;
+	@JsonView(JsonViews.Game.class)
 	private String specificites;
-	//private Deck deck;
-	private List <PlayerResponse> players;
+	@JsonView(JsonViews.Game.class)
+	private List<PlayerResponse> players;
 
-	public GameResponse () {
+	public GameResponse() {
 
 	}
 
-	public GameResponse (Game gameEntity) {
-		this(gameEntity, false);
+	public GameResponse(Game gameEntity) {
+		this.id = gameEntity.getId();
+		if (gameEntity.getGameMode() != null) {
+			this.scoreAAtteindre = gameEntity.getGameMode().getScoreAAtteindre();
+			this.specificites = gameEntity.getGameMode().getSpecificites();
+		}
+		if (gameEntity.getPlayers() != null) {
+			this.players = gameEntity.getPlayers().stream().map(p -> new PlayerResponse(p))
+					.collect(Collectors.toList());
+		}
 	}
 
-	public GameResponse (Game gameEntity, boolean loadPlayers) {
-		BeanUtils.copyProperties (gameEntity, this, "players");
+	public GameResponse(Game gameEntity, boolean loadPlayers) {
+		BeanUtils.copyProperties(gameEntity, this, "players");
 		if (loadPlayers) {
-			if (gameEntity.getPlayers()!= null) {
-				gameEntity.getPlayers().stream().map(p-> new PlayerResponse(p)).collect(Collectors.toList());		
+			if (gameEntity.getPlayers() != null) {
+				gameEntity.getPlayers().stream().map(p -> new PlayerResponse(p)).collect(Collectors.toList());
 			}
 		}
 	}
@@ -38,15 +51,7 @@ public class GameResponse {
 
 	public void setId(Long id) {
 		this.id = id;
-	}	
-
-//	public Deck getDeck() {
-//		return deck;
-//	}
-//
-//	public void setDeck(Deck deck) {
-//		this.deck = deck;
-//	}
+	}
 
 	public int getScoreAAtteindre() {
 		return scoreAAtteindre;
@@ -71,5 +76,5 @@ public class GameResponse {
 	public void setPlayers(List<PlayerResponse> players) {
 		this.players = players;
 	}
-	
+
 }

@@ -9,9 +9,6 @@ public class Admin extends Compte {
 
 	public Admin() {
 		// TODO Auto-generated constructor stub
-	}
-	
-	public Admin(String login, String password) {
-		super(login, password);
+
 	}
 }

@@ -3,6 +3,9 @@ package formation.soprasteria.skyjoBoot.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import formation.soprasteria.skyjoBoot.entities.Compte;
@@ -10,59 +13,61 @@ import formation.soprasteria.skyjoBoot.exceptions.CompteException;
 import formation.soprasteria.skyjoBoot.repositories.CompteRepositories;
 
 @Service
-public class CompteService {
+public class CompteService implements UserDetailsService {
 
-    @Autowired
-    private CompteRepositories compteRepo;
+	@Autowired
+	private CompteRepositories compteRepositories;
 
-    public Compte create(Compte compte) {
-        if (compte.getId() != null) {
-            throw new CompteException("L'ID du compte doit être null pour la création");
-        }
+	public Compte enregistrerUtilisateur(Compte utilisateur) {
+		// Vous pouvez générer l'ID automatique dans cette méthode si nécessaire
+		return compteRepositories.save(utilisateur);
+	}
 
-        validateCompteFields(compte);
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return compteRepositories.findByLogin(username).orElseThrow(() -> {
+			throw new UsernameNotFoundException("username" + username + "not found");
+		});
+	}
 
-        if (compteRepo.findByLogin(compte.getLogin()).isEmpty()) {
-            throw new CompteException("Login déjà utilisé");
-        }
+	// Méthode pour trouver un compte par son ID
+	public Compte findById(Long id) {
+		return compteRepositories.findById(id)
+				.orElseThrow(() -> new CompteException("Compte avec l'ID " + id + " introuvable"));
+	}
 
-        return compteRepo.save(compte);
-    }
+	// Méthode pour récupérer tous les comptes
+	public List<Compte> findAll() {
+		return compteRepositories.findAll();
+	}
 
-    public Compte findById(Long id) {
-        return compteRepo.findById(id)
-                .orElseThrow(() -> new CompteException("Compte avec l'ID " + id + " introuvable"));
-    }
+	// Méthode pour mettre à jour un compte
+	public Compte update(Compte compte) {
+		validateCompteFields(compte);
 
-    public List<Compte> findAll() {
-        return compteRepo.findAll();
-    }
+		// Vérifier si le login est déjà utilisé par un autre compte
+		compteRepositories.findByLoginAndIdNot(compte.getLogin(), compte.getId()).ifPresent(existingCompte -> {
+			throw new CompteException("Login déjà utilisé par un autre compte");
+		});
 
-    public Compte update(Compte compte) {
-        if (compte.getId() == null) {
-            throw new CompteException("L'ID du compte ne peut pas être null pour la mise à jour");
-        }
+		// Sauvegarder le compte mis à jour
+		return compteRepositories.save(compte);
+	}
 
-        validateCompteFields(compte);
+	// Méthode pour supprimer un compte par son ID
+	public void deleteById(Long id) {
+		compteRepositories.deleteById(id);
+	}
 
-        compteRepo.findByLoginAndIdNot(compte.getLogin(), compte.getId()).ifPresent(existingCompte -> {
-            throw new CompteException("Login déjà utilisé par un autre compte");
-        });
+	// Méthode privée pour valider les champs d'un compte
+	private void validateCompteFields(Compte compte) {
+		if (compte.getLogin() == null || compte.getLogin().isBlank()) {
+			throw new CompteException("Login obligatoire");
+		}
 
-        return compteRepo.save(compte);
-    }
+		if (compte.getPassword() == null || compte.getPassword().length() < 8 || compte.getPassword().contains(" ")) {
+			throw new CompteException("Le mot de passe doit avoir au moins 8 caractères et ne pas contenir d'espaces");
+		}
+	}
 
-    public void deleteById(Long id) {
-    	compteRepo.deleteById(id);
-    }
-
-    private void validateCompteFields(Compte compte) {
-        if (compte.getLogin() == null || compte.getLogin().isBlank()) {
-            throw new CompteException("Login obligatoire");
-        }
-        
-        if (compte.getPassword() == null || compte.getPassword().length() < 8 || compte.getPassword().contains(" ")) {
-            throw new CompteException("Le mot de passe doit avoir au moins 8 caractères et ne pas contenir d'espaces");
-        }
-    }
 }

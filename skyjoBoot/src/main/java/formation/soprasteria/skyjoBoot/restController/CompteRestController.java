@@ -7,10 +7,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +26,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/compte")
+@CrossOrigin(origins = "*")
 public class CompteRestController {
 
 	@Autowired
@@ -47,16 +48,7 @@ public class CompteRestController {
 		compteService.deleteById(id);
 	}
 	
-	@PostMapping("")
-	@ResponseStatus (code = HttpStatus.CREATED)
-	public CompteResponse createCompte (@Valid @RequestBody CompteRequest compteRequest, BindingResult br) {
-		if (br.hasErrors()) {
-    		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-    	}
-		Compte compte = new Compte ();
-		BeanUtils.copyProperties (compteRequest, compte);
-		return new CompteResponse(compteService.create(compte));
-	}
+	
 	
 	@PutMapping ("/{id}")
 	public CompteResponse updateCompte (@PathVariable Long id, @Valid @RequestBody CompteRequest compteRequest, BindingResult br) {

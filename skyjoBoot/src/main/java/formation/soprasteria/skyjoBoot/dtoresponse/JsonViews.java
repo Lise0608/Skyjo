@@ -5,19 +5,15 @@ public class JsonViews {
 
 	}
 
-	public static class Employe extends Common {
+	public static class Game extends Common {
 
 	}
-
-	public static class EmployeWithDepartement extends Employe {
-
-	}
-
-	public static class Departement extends Common {
+	
+	public static class Compte extends Common {
 
 	}
-
-	public static class DepartementWithEmploye extends Departement {
+	
+	public static class Player extends Common {
 
 	}
 }
