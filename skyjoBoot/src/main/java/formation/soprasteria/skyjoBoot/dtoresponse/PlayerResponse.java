@@ -1,7 +1,5 @@
 package formation.soprasteria.skyjoBoot.dtoresponse;
 
-import org.springframework.beans.BeanUtils;
-
 import com.fasterxml.jackson.annotation.JsonView;
 
 import formation.soprasteria.skyjoBoot.entities.Player;
@@ -20,7 +18,9 @@ public class PlayerResponse {
 	}
 
 	public PlayerResponse(Player playerEntity) {
-		BeanUtils.copyProperties(playerEntity, this);
+		this.userid = playerEntity.getId().getUser().getId();
+		this.gameId = playerEntity.getId().getGame().getId();
+		this.score = playerEntity.getScore();
 	}
 
 	public Long getUserid() {

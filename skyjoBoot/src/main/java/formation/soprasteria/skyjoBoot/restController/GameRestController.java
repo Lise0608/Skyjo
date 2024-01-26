@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,6 +22,7 @@ import org.springframework.web.server.ResponseStatusException;
 import formation.soprasteria.skyjoBoot.dtorequest.GameRequest;
 import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
 import formation.soprasteria.skyjoBoot.entities.Game;
+import formation.soprasteria.skyjoBoot.entities.GameMode;
 import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
 import formation.soprasteria.skyjoBoot.entities.User;
@@ -30,6 +32,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/game")
+@CrossOrigin(origins = "*")
 public class GameRestController {
 
 	@Autowired
@@ -50,8 +53,8 @@ public class GameRestController {
 	public Game convertGameRequestToGameEntity(GameRequest gameRequest) {
 		Game gameEntity = new Game();
 
-		// Copie des propriétées de base
-		BeanUtils.copyProperties(gameRequest, gameEntity, "players");
+		// Création du GameMode
+		gameEntity.setGameMode(new GameMode(gameRequest.getScoreAAtteindre(), gameRequest.getSpecificites()));
 
 		// Création de la liste des players de la game
 		// Pour chaque Id de la liste dans gameRequest, on créé un playerId à partir de
@@ -78,21 +81,21 @@ public class GameRestController {
 
 		return gameEntity;
 	}
-	
+
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deleteGameById(@PathVariable Long id) {
 		gameSrv.deleteById(id);
 	}
-	
+
 	@GetMapping("/allGames")
-	public List<Game> getAllGames() {
+	public List<GameResponse> getAllGames() {
 		return gameSrv.findAll();
 	}
-	
+
 	@GetMapping("/userGames")
-	public List<Game> getUserGames(@RequestParam Long userId) {
-		return gameSrv.getUserGames(userId);
+	public List<GameResponse> getUserGames(@RequestParam Long userId) {
+		return gameSrv.findByUserId(userId);
 	}
 
 }

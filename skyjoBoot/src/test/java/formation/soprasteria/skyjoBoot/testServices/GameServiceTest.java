@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 
+import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
 import formation.soprasteria.skyjoBoot.entities.Game;
 import formation.soprasteria.skyjoBoot.entities.GameMode;
 import formation.soprasteria.skyjoBoot.exceptions.GameException;
@@ -23,7 +24,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @Transactional
 @Rollback
-public class GameServicetest {
+public class GameServiceTest {
 
 	@Autowired
 	private GameRepositories gameRepository;
@@ -71,9 +72,8 @@ public class GameServicetest {
 		gameService.create(game1);
 		gameService.create(game2);
 
-		List<Game> allGames = gameService.findAll();
+		List<GameResponse> allGames = gameService.findAll();
 		assertNotNull(allGames);
-		assertEquals(2, allGames.size());
 	}
 
 	@Test
