@@ -58,6 +58,10 @@ public class CompteService implements UserDetailsService {
 	public void deleteById(Long id) {
 		compteRepositories.deleteById(id);
 	}
+	
+	public Compte create(Compte compte) {
+		return compteRepositories.save(compte);
+	}
 
 	// Méthode privée pour valider les champs d'un compte
 	private void validateCompteFields(Compte compte) {
