@@ -24,7 +24,7 @@ import jakarta.transaction.Transactional;
 @SpringBootTest
 @Transactional
 @Rollback
-public class GameServicetest {
+public class GameServiceTest {
 
 	@Autowired
 	private GameRepositories gameRepository;
