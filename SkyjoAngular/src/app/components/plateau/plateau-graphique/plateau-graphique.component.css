@@ -1,0 +1,406 @@
+/* Général */
+.page-container {
+  background: url("src/assets/images/Boardgame_wallpaper.png") center
+    center/cover no-repeat;
+}
+
+/* === Plateau ========================================================== */
+/* ----- Taille des images  --------------------------------------------- */
+/* Pour les écrans de petite taille */
+@media (max-width: 576px) {
+  .img-small {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+/* Pour les écrans de taille moyenne */
+@media (min-width: 577px) and (max-width: 992px) {
+  .img-md {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+/* Pour les écrans de grande taille */
+@media (min-width: 993px) {
+  .img-lg {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+/* ----- Taille des zones petit-enfants --------------------------------- */
+/* Imposer la taille maximale des zones enfant des player 2 à 5 */
+[class^="c"][class$="P2"],
+[class^="c"][class$="P3"],
+[class^="c"][class$="P4"],
+[class^="c"][class$="P5"] {
+  max-height: 8vh;
+}
+
+[class^="c"][class$="P1"] {
+  max-height: 16vh;
+}
+
+/* Pour player 1, il faut réduire l'image ET le bouton */
+.PiocheDefausse img,
+.P1 img {
+  max-height: 16vh;
+}
+/* --- Boutons --- */
+.btn-pioche,
+.btn-defausse,
+button[class^="btn-c"] {
+  padding: 0;
+}
+button[class^="btn-c"] {
+  border: none;
+  background: none;
+}
+
+/* ----- Bas de page ---------------------------------------------- */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 0.2fr 1fr 1fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "navbar navbar navbar navbar"
+    "P1 P1 P2 P3"
+    "P1 P1 P4 P5"
+    "PiocheDefausse PiocheDefausse Chat Chat";
+}
+
+.PiocheDefausse {
+  display: grid;
+  grid-template-columns: 1fr 2fr 0.5fr 2fr 1fr;
+  grid-template-rows: 0.9fr 0.1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    ". Pioche . Defausse ."
+    ". tPioche . tDefausse .";
+  grid-area: PiocheDefausse;
+  height: 29vh;
+}
+.Pioche {
+  grid-area: Pioche;
+  justify-self: center;
+  align-self: center;
+}
+.Defausse {
+  grid-area: Defausse;
+  justify-self: center;
+  align-self: center;
+}
+.tPioche {
+  justify-self: center;
+  align-self: center;
+  grid-area: tPioche;
+}
+.tDefausse {
+  justify-self: center;
+  align-self: center;
+  grid-area: tDefausse;
+}
+
+.Chat {
+  grid-area: Chat;
+  justify-self: center;
+  align-self: center;
+}
+
+/* --------------------- Player 1 --------------------------------- */
+.P1 {
+  display: grid;
+  grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 0.2fr;
+  grid-template-rows: 0.1fr auto auto auto 0.2fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    ". . . . . ."
+    ". c1-1P1 c1-2P1 c1-3P1 c1-4P1 ."
+    ". c2-1P1 c2-2P1 c2-3P1 c2-4P1 ."
+    ". c3-1P1 c3-2P1 c3-3P1 c3-4P1 ."
+    ". tP1 tP1 tP1 tP1 .";
+  grid-area: P1;
+  justify-self: center;
+  justify-content: space-between; /* Ajout de l'espacement entre les colonnes */
+  column-gap: 10px; /* Espacement */
+  align-content: space-evenly; /* Ajout de l'espacement entre les colonnes */
+  /*   overflow-y: scroll; */
+}
+
+.c1-1P1 {
+  grid-area: c1-1P1;
+}
+
+.c1-2P1 {
+  grid-area: c1-2P1;
+}
+
+.c1-3P1 {
+  grid-area: c1-3P1;
+}
+
+.c1-4P1 {
+  grid-area: c1-4P1;
+}
+
+.c2-4P1 {
+  grid-area: c2-4P1;
+}
+
+.c3-4P1 {
+  grid-area: c3-4P1;
+}
+
+.c3-3P1 {
+  grid-area: c3-3P1;
+}
+
+.c3-2P1 {
+  grid-area: c3-2P1;
+}
+
+.c3-1P1 {
+  grid-area: c3-1P1;
+}
+
+.c2-3P1 {
+  grid-area: c2-3P1;
+}
+
+.c2-2P1 {
+  grid-area: c2-2P1;
+}
+
+.c2-1P1 {
+  grid-area: c2-1P1;
+}
+
+.tP1 {
+  grid-area: tP1;
+  justify-self: center;
+  align-self: center;
+}
+
+/* --------------------- Player 2 à 5 ----------------------------- */
+.P2,
+.P3,
+.P4,
+.P5 {
+  display: grid;
+  grid-template-columns: 0.2fr 1fr 1fr 1fr 1fr 0.2fr;
+  grid-template-rows: 0.2fr auto auto auto 0.2fr;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  max-height: 32vh;
+  justify-self: center;
+  justify-content: space-between; /* Ajout de l'espacement entre les colonnes */
+  column-gap: 7px; /* Espacement */
+  /*   overflow-y: scroll; */
+}
+
+/* --------------------- Player 2 --------------------------------- */
+.P2 {
+  grid-template-areas:
+    ". . . . . ."
+    ". c1-1P2 c1-2P2 c1-3P2 c1-4P2 ."
+    ". c2-1P2 c2-2P2 c2-3P2 c2-4P2 ."
+    ". c3-1P2 c3-2P2 c3-3P2 c3-4P2 ."
+    ". tP2 tP2 tP2 tP2 .";
+  grid-area: P2;
+}
+.c1-1P2 {
+  grid-area: c1-1P2;
+}
+.c1-2P2 {
+  grid-area: c1-2P2;
+}
+.c1-3P2 {
+  grid-area: c1-3P2;
+}
+.c1-4P2 {
+  grid-area: c1-4P2;
+}
+.c2-4P2 {
+  grid-area: c2-4P2;
+}
+.c3-4P2 {
+  grid-area: c3-4P2;
+}
+.c3-3P2 {
+  grid-area: c3-3P2;
+}
+.c3-2P2 {
+  grid-area: c3-2P2;
+}
+.c3-1P2 {
+  grid-area: c3-1P2;
+}
+.c2-3P2 {
+  grid-area: c2-3P2;
+}
+.c2-2P2 {
+  grid-area: c2-2P2;
+}
+.c2-1P2 {
+  grid-area: c2-1P2;
+}
+.tP2 {
+  grid-area: tP2;
+  justify-self: center;
+  align-self: center;
+}
+/* --------------------- Player 3 --------------------------------- */
+.P3 {
+  grid-template-areas:
+    ". . . . . ."
+    ". c1-1P3 c1-2P3 c1-3P3 c1-4P3 ."
+    ". c2-1P3 c2-2P3 c2-3P3 c2-4P3 ."
+    ". c3-1P3 c3-2P3 c3-3P3 c3-4P3 ."
+    ". tP3 tP3 tP3 tP3 .";
+  grid-area: P3;
+}
+.c1-1P3 {
+  grid-area: c1-1P3;
+}
+.c1-2P3 {
+  grid-area: c1-2P3;
+}
+.c1-3P3 {
+  grid-area: c1-3P3;
+}
+.c1-4P3 {
+  grid-area: c1-4P3;
+}
+.c2-4P3 {
+  grid-area: c2-4P3;
+}
+.c3-4P3 {
+  grid-area: c3-4P3;
+}
+.c3-3P3 {
+  grid-area: c3-3P3;
+}
+.c3-2P3 {
+  grid-area: c3-2P3;
+}
+.c3-1P3 {
+  grid-area: c3-1P3;
+}
+.c2-3P3 {
+  grid-area: c2-3P3;
+}
+.c2-2P3 {
+  grid-area: c2-2P3;
+}
+.c2-1P3 {
+  grid-area: c2-1P3;
+}
+.tP3 {
+  grid-area: tP3;
+  justify-self: center;
+}
+/* --------------------- Player 4 --------------------------------- */
+.P4 {
+  grid-template-areas:
+    ". . . . . ."
+    ". c1-1P4 c1-2P4 c1-3P4 c1-4P4 ."
+    ". c2-1P4 c2-2P4 c2-3P4 c2-4P4 ."
+    ". c3-1P4 c3-2P4 c3-3P4 c3-4P4 ."
+    ". tP4 tP4 tP4 tP4 .";
+  grid-area: P4;
+}
+.c1-1P4 {
+  grid-area: c1-1P4;
+}
+.c1-2P4 {
+  grid-area: c1-2P4;
+}
+.c1-3P4 {
+  grid-area: c1-3P4;
+}
+.c1-4P4 {
+  grid-area: c1-4P4;
+}
+.c2-4P4 {
+  grid-area: c2-4P4;
+}
+.c3-4P4 {
+  grid-area: c3-4P4;
+}
+.c3-3P4 {
+  grid-area: c3-3P4;
+}
+.c3-2P4 {
+  grid-area: c3-2P4;
+}
+.c3-1P4 {
+  grid-area: c3-1P4;
+}
+.c2-3P4 {
+  grid-area: c2-3P4;
+}
+.c2-2P4 {
+  grid-area: c2-2P4;
+}
+.c2-1P4 {
+  grid-area: c2-1P4;
+}
+.tP4 {
+  grid-area: tP4;
+  justify-self: center;
+  align-self: center;
+}
+/* --------------------- Player 5 --------------------------------- */
+.P5 {
+  grid-template-areas:
+    ". . . . . ."
+    ". c1-1P5 c1-2P5 c1-3P5 c1-4P5 ."
+    ". c2-1P5 c2-2P5 c2-3P5 c2-4P5 ."
+    ". c3-1P5 c3-2P5 c3-3P5 c3-4P5 ."
+    ". tP5 tP5 tP5 tP5 .";
+  grid-area: P5;
+}
+.c1-1P5 {
+  grid-area: c1-1P5;
+}
+.c1-2P5 {
+  grid-area: c1-2P5;
+}
+.c1-3P5 {
+  grid-area: c1-3P5;
+}
+.c1-4P5 {
+  grid-area: c1-4P5;
+}
+.c2-4P5 {
+  grid-area: c2-4P5;
+}
+.c3-4P5 {
+  grid-area: c3-4P5;
+}
+.c3-3P5 {
+  grid-area: c3-3P5;
+}
+.c3-2P5 {
+  grid-area: c3-2P5;
+}
+.c3-1P5 {
+  grid-area: c3-1P5;
+}
+.c2-3P5 {
+  grid-area: c2-3P5;
+}
+.c2-2P5 {
+  grid-area: c2-2P5;
+}
+.c2-1P5 {
+  grid-area: c2-1P5;
+}
+.tP5 {
+  grid-area: tP5;
+  justify-self: center;
+  align-self: center;
+}
