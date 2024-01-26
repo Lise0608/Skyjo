@@ -2,15 +2,18 @@ package formation.soprasteria.skyjoBoot.configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import jakarta.servlet.DispatcherType;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.security.SecurityScheme;
 
 @Configuration
+@SecurityScheme(type = SecuritySchemeType.HTTP, name = "basicAuth", scheme = "basic")
 public class SecurityConfig {
 
 	// SecurityFilterChain=>filtre
@@ -25,10 +28,11 @@ public class SecurityConfig {
 				http.csrf(csrf -> csrf.disable());
 				// on definit les regles sur les requetes http
 				http.authorizeHttpRequests(auth -> {
-					auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-						.requestMatchers("/inscription").permitAll()
-						.requestMatchers("/api/auth").permitAll()
-						.anyRequest().authenticated();
+					auth.requestMatchers("/swagger-ui/**","/v3/**","/swagger-ui.html", "/api/check/**").permitAll()
+	//				auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
+					.requestMatchers(HttpMethod.POST,"/api/inscription").anonymous()
+					.requestMatchers(HttpMethod.GET,"/api/auth").authenticated()
+					.anyRequest().authenticated();
 				});
 				// on definit comment on va s'authentifier
 				http.formLogin(Customizer.withDefaults());
