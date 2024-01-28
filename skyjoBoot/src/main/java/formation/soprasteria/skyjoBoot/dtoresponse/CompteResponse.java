@@ -44,11 +44,11 @@ public class CompteResponse {
 		this.id = id;
 	}
 
-	public String getLogin() {
+	public String getUsername() {
 		return login;
 	}
 
-	public void setLogin(String login) {
+	public void setUsername(String login) {
 		this.login = login;
 	}
 
