@@ -6,13 +6,13 @@ spring:
   
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    password: root123#
+    password: root123@
     url: jdbc:mysql://localhost:3306/skyjo
     username: root
     
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect

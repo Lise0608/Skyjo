@@ -28,6 +28,7 @@ public class SecurityConfig {
 					auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 						.requestMatchers("/inscription").permitAll()
 						.requestMatchers("/api/auth").permitAll()
+						.requestMatchers("/api/**").permitAll()
 						.anyRequest().authenticated();
 				});
 				// on definit comment on va s'authentifier
