@@ -12,7 +12,7 @@ public class PlayerId {
 	
 	@ManyToOne
 	@JoinColumn(name = "user_player_id", foreignKey = @ForeignKey(name = "user_player_id_fk"))
-	private User user;
+	private Compte user;
 	@ManyToOne
 	@JoinColumn(name = "game_player_id", foreignKey = @ForeignKey(name = "game_player_id_fk"))
 	private Game game;
@@ -20,16 +20,16 @@ public class PlayerId {
 	public PlayerId() {
 	    }
 	
-	public PlayerId(User user, Game game) {
+	public PlayerId(Compte user, Game game) {
 		this.user = user;
 		this.game = game;
 	}
 	
-	public User getUser() {
+	public Compte getUser() {
 		return user;
 	}
 	
-	public void setUser(User user) {
+	public void setUser(Compte user) {
 		this.user = user;
 	}
 	

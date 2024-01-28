@@ -21,11 +21,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import formation.soprasteria.skyjoBoot.dtorequest.GameRequest;
 import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
+import formation.soprasteria.skyjoBoot.entities.Compte;
 import formation.soprasteria.skyjoBoot.entities.Game;
 import formation.soprasteria.skyjoBoot.entities.GameMode;
 import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
-import formation.soprasteria.skyjoBoot.entities.User;
 import formation.soprasteria.skyjoBoot.services.CompteService;
 import formation.soprasteria.skyjoBoot.services.GameService;
 import jakarta.validation.Valid;
@@ -64,7 +64,7 @@ public class GameRestController {
 		List<Player> players = new ArrayList<Player>();
 
 		for (Long playerId : gameRequest.getPlayerIds()) {
-			User user = (User) compteSrv.findById(playerId);
+			Compte user = compteSrv.findById(playerId);
 
 			PlayerId playerIdEntity = new PlayerId();
 			playerIdEntity.setUser(user);

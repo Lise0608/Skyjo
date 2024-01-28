@@ -18,7 +18,6 @@ import formation.soprasteria.skyjoBoot.entities.Game;
 import formation.soprasteria.skyjoBoot.entities.Player;
 import formation.soprasteria.skyjoBoot.entities.PlayerId;
 import formation.soprasteria.skyjoBoot.entities.Role;
-import formation.soprasteria.skyjoBoot.entities.User;
 import formation.soprasteria.skyjoBoot.exceptions.PlayerNotFoundException;
 import formation.soprasteria.skyjoBoot.repositories.PlayerRepositories;
 import formation.soprasteria.skyjoBoot.services.CompteService;
@@ -46,8 +45,8 @@ public class PlayerServiceTest {
 	private Compte setupCompte() {
 		Compte compte = new Compte();
 
-		compte.setLogin("test");
-		compte.setMdp("test");
+		compte.setLogin("test");			
+		compte.setPassword("test");
 		compte.setRole(Role.ROLE_USER);
 		compte.setEmail("test");
 
@@ -70,7 +69,7 @@ public class PlayerServiceTest {
 
 		Player player = new Player();
 
-		PlayerId playerId = new PlayerId((User) compte, game);
+		PlayerId playerId = new PlayerId(compte, game);
 
 		player.setId(playerId);
 
@@ -116,7 +115,25 @@ public class PlayerServiceTest {
 	@Test
 	void testFindAll() {
 		Player player1 = setuPlayer();
-		Player player2 = setuPlayer();
+		
+		
+		Compte compte = new Compte();
+
+		compte.setLogin("deuxième compte");			
+		compte.setPassword("test");
+		compte.setRole(Role.ROLE_USER);
+		compte.setEmail("test");
+
+		compteService.enregistrerUtilisateur(compte);
+		
+		Game game = setupGame();
+
+		Player player2 = new Player();
+
+		PlayerId playerId = new PlayerId(compte, game);
+
+		player2.setId(playerId);
+		
 
 		playerService.create(player1);
 		playerService.create(player2);
@@ -169,6 +186,7 @@ public class PlayerServiceTest {
 	@Test
 	void testUpdateWithNullId() {
 		Player player = setuPlayer();
+		player.setId(null);
 		assertThrows(IllegalArgumentException.class, () -> playerService.update(player));
 	}
 

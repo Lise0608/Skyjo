@@ -39,7 +39,7 @@ public class CompteRestController {
 	@Autowired
 	private CompteService compteSrv;
 	
-	@GetMapping ("")
+	@GetMapping ("/api/comptes")
 	public List<CompteResponse> listeDesComptes () {
 		return compteSrv.findAll().stream().map(c -> new CompteResponse(c)).collect(Collectors.toList());
 	}
