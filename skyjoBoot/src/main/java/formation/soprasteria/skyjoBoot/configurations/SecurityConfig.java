@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
+import jakarta.servlet.DispatcherType;
 
 @Configuration
 @SecurityScheme(type = SecuritySchemeType.HTTP, name = "basicAuth", scheme = "basic")
@@ -32,10 +33,10 @@ public class SecurityConfig {
 	//				auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
 					.requestMatchers(HttpMethod.POST,"/api/inscription").anonymous()
 					.requestMatchers(HttpMethod.GET,"/api/auth").authenticated()
-					.anyRequest().authenticated();
+					.anyRequest().denyAll();
 				});
 				// on definit comment on va s'authentifier
-				http.formLogin(Customizer.withDefaults());
+				http.httpBasic(Customizer.withDefaults());
 				// formulaire par defaut de spring
 		// @formatter:on
 

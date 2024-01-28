@@ -46,7 +46,7 @@ public class CompteService implements UserDetailsService {
 		validateCompteFields(compte);
 
 		// Vérifier si le login est déjà utilisé par un autre compte
-		compteRepositories.findByLoginAndIdNot(compte.getLogin(), compte.getId()).ifPresent(existingCompte -> {
+		compteRepositories.findByLoginAndIdNot(compte.getUsername(), compte.getId()).ifPresent(existingCompte -> {
 			throw new CompteException("Login déjà utilisé par un autre compte");
 		});
 
@@ -65,7 +65,7 @@ public class CompteService implements UserDetailsService {
 
 	// Méthode privée pour valider les champs d'un compte
 	private void validateCompteFields(Compte compte) {
-		if (compte.getLogin() == null || compte.getLogin().isBlank()) {
+		if (compte.getUsername() == null || compte.getUsername().isBlank()) {
 			throw new CompteException("Login obligatoire");
 		}
 
