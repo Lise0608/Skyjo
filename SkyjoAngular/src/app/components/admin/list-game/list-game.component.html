@@ -1,0 +1,16 @@
+<table class="table">
+  <thead>
+    <th>Id</th>
+    <th>score à atteindre</th>
+    <th>spécificités</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let g of observableGames | async">
+      <td>{{ g.id }}</td>
+      <td>{{ g.scoreAAtteindre }}</td>
+      <td>{{ g.specificites }}</td>
+      <td><button class="btn btn-outline-danger">Supprimer</button></td>
+    </tr>
+  </tbody>
+</table>

@@ -10,6 +10,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ListGameComponent } from './components/admin/list-game/list-game.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     MenuComponent,
     HomeComponent,
     ForgotPasswordComponent,
+    ListGameComponent,
   ],
   imports: [
     BrowserModule,
