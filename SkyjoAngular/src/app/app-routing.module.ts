@@ -4,12 +4,14 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'plateau', component: PlateauGraphiqueComponent },
   {
     path: '',
     redirectTo: 'home',

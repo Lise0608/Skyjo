@@ -5,6 +5,7 @@ import org.springframework.beans.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import formation.soprasteria.skyjoBoot.entities.Compte;
+import formation.soprasteria.skyjoBoot.entities.Role;
 
 public class CompteResponse {
 
@@ -12,17 +13,28 @@ public class CompteResponse {
 	private Long id;
 	@JsonView(JsonViews.Compte.class)
 	private String login;
-	@JsonView(JsonViews.Compte.class)
 	private String password;
-
+	@JsonView(JsonViews.Compte.class)
+	private String email;
+	@JsonView(JsonViews.Compte.class)
+	private Role role;
+	
 	public CompteResponse() {
 
 	}
-
+	
 	public CompteResponse(Compte compteEntity) {
 		BeanUtils.copyProperties(compteEntity, this);
-
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 
 	public Long getId() {
 		return id;
@@ -46,6 +58,14 @@ public class CompteResponse {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 }

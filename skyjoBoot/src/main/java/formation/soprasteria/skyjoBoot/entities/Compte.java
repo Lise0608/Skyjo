@@ -26,8 +26,8 @@ public class Compte implements UserDetails {
 	private Long id;
 	@Column(name = "login", nullable = false, unique = true)
 	private String login;
-	@Column(name = "mdp", nullable = false)
-	private String mdp;
+	@Column(name = "password", nullable = false)
+	private String password;
 	@Column(name = "role", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Role role;
@@ -62,12 +62,12 @@ public class Compte implements UserDetails {
 		this.login = login;
 	}
 
-	public String getMdp() {
-		return mdp;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public Role getRole() {
@@ -101,10 +101,6 @@ public class Compte implements UserDetails {
 		return Arrays.asList(new SimpleGrantedAuthority(role.toString()));
 	}
 
-	@Override
-	public String getPassword() {
-		return mdp;
-	}
 
 	@Override
 	public String getUsername() {

@@ -1,27 +1,23 @@
 package formation.soprasteria.skyjoBoot.dtorequest;
 
-import jakarta.validation.constraints.NotBlank;
-
 public class CompteRequest {
-	private Long id;
-	@NotBlank
 	private String login;
-	@NotBlank
 	private String password;
-	@NotBlank
-	private String type;
+	private String email;
+
 	
 	public CompteRequest() {
 
 	}
 
-	public Long getId() {
-		return id;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
 
 	public String getLogin() {
 		return login;
@@ -39,11 +35,4 @@ public class CompteRequest {
 		this.password = password;
 	}
 
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
 }

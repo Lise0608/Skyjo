@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ListGameComponent } from './components/admin/list-game/list-game.component';
+import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { ListGameComponent } from './components/admin/list-game/list-game.compon
     HomeComponent,
     ForgotPasswordComponent,
     ListGameComponent,
+    PlateauGraphiqueComponent,
   ],
   imports: [
     BrowserModule,
