@@ -1,7 +1,10 @@
+import { CreationDePartieComponent } from './../../creation-de-partie/creation-de-partie.component';
 import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { interval, fromEvent, merge, EMPTY } from 'rxjs';
 import completeDeck from './../deck'; // Import des cartes du deck
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, last } from 'rxjs/operators';
+import { IA } from './../../../model/plateau/ia';
+type RoundFunction = () => Promise<void>; //Pour aller d'un round à l'autre
 
 @Component({
   selector: 'app-plateau-graphique',
@@ -9,9 +12,14 @@ import { takeUntil, filter } from 'rxjs/operators';
   styleUrls: ['./plateau-graphique.component.css'],
 })
 export class PlateauGraphiqueComponent implements OnInit {
+  // À MODIFIER EN FCT DU NOMBRE DE JOUEURS
+  playersNumber = 2;
+  IA1: IA = new IA(1, 1);
+
+  // ---------------
   deck: number[] = [];
   defausse: number[] = []; //Tableau de la defausse qui accumule des cartes
-  scoreP1 = 0;
+  scorePlayer = 0;
   draggedCard: HTMLElement | null = null; // Variable pour stocker la carte en cours de drag
   discardButton = document.getElementById('btnDefausse'); // Recherche le bouton de la carte de la défausse
   isDragging = false; // Variable pour indiquer si le glisser-déposer est en cours
@@ -20,20 +28,27 @@ export class PlateauGraphiqueComponent implements OnInit {
   cardDroppedInP1 = false;
   P1CardTurned = false;
   turnP1CardOn = false;
-
+  gameOver = false;
   TourP1 = false; //Pour savoir si le P1 doit jouer
+  updateFromTurn = false;
+
   constructor(private renderer: Renderer2, private el: ElementRef) {
     this.turnP1Card = this.turnP1Card.bind(this);
     this.dragStartDefausse = this.dragStartDefausse.bind(this);
     this.dragStartPioche = this.dragStartPioche.bind(this);
     this.dropAnyToP1 = this.dropAnyToP1.bind(this);
-    this.dropPiocheToDefausse = this.dropPiocheToDefausse.bind(this);
+    /* this.dropPiocheToDefausse = this.dropPiocheToDefausse.bind(this); */
     this.replaceAnyToP1 = this.replaceAnyToP1.bind(this);
     this.dragEnter = this.dragEnter.bind(this);
     this.dragOver = this.dragOver.bind(this); //Permet de lier dragOver à toutes les variables déclarées au dessus.
     this.dragEnd = this.dragEnd.bind(this);
     this.P1Round = this.P1Round.bind(this);
-    this.updatePlayerScore = this.updatePlayerScore.bind(this);
+    this.P2Round = this.P2Round.bind(this);
+    this.updatePlayer1Score = this.updatePlayer1Score.bind(this);
+    this.updatePlayer2_5Score = this.updatePlayer2_5Score.bind(this);
+    this.updateGame = this.updateGame.bind(this);
+    this.replaceAnyToP2_5 = this.replaceAnyToP2_5.bind(this);
+    this.getValeurDefausse = this.getValeurDefausse.bind(this);
   }
 
   // === Déroulé partie ====================================================================================
@@ -44,7 +59,6 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.distribuerCartesAuJoueurP1(); //
     this.distribuerCartesAuJoueurP2(); //
     this.distribuerPremiereCarteDefausse(); //
-
     //Manque l'action du tirage au sorte
     this.P1Round(); //Appel de P1 en attendant
   }
@@ -55,6 +69,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   async P1Round() {
     console.log('Début de P1Round');
     this.TourP1 = true; //Si false, on ne peut ni retourner ni glisser de carte.
+    this.discardOn = true;
     this.afficherTexteP1(0);
     await this.waitForDrawOrDiscard(); //On attend que le joueur choisisse entre pioche et défausse
     if (this.isDrawCardTurned) {
@@ -71,15 +86,103 @@ export class PlateauGraphiqueComponent implements OnInit {
     } else if (this.cardDroppedInP1) {
       console.log('Une carte a été mise de Défausse à P1.');
     }
-    this.updatePlayerScore(1);
     this.P1CardTurned = false;
     this.cardDroppedInP1 = false;
     this.turnP1CardOn = false;
     this.discardOn = false;
+    this.TourP1 = false;
     this.cacherTexteP1();
+    this.updateGame(1);
+  }
+
+  async P2Round() {
+    console.log('Début de P2Round');
+    let nextCoord = this.IA1.nextCardPosition();
+    let nextDiv = `c` + nextCoord[0] + `-` + nextCoord[1] + `P2`; //exemple : "c1-1P2"
+    let valeurDefausse = this.getValeurDefausse();
+    let choix_pioche_defausse: boolean = false;
+    let choix_pioche_tourner: boolean = false;
+    if (valeurDefausse !== undefined) {
+      choix_pioche_defausse = this.IA1.choixValeur(valeurDefausse); //true : l'IA pioche, false : l'IA prend la défausse
+    }
+    if (choix_pioche_defausse) {
+      let valeurPioche = this.getValeurPioche();
+      if (valeurPioche !== undefined) {
+        choix_pioche_tourner = this.IA1.choixValeur(valeurPioche); //true : l'IA retourne une carte, false : l'IA utilise la pioche
+      }
+      if (choix_pioche_tourner) {
+        this.turnNextCard(nextDiv);
+      } else {
+        this.replaceAnyToP2_5(valeurPioche?.toString(), nextDiv);
+      }
+    } else {
+      this.replaceAnyToP2_5(valeurDefausse?.toString(), nextDiv);
+    }
+    this.updateGame(2);
+    // RAJOUTER UN TEXTE POUR DIRE LE DERNIER CHOIX DU PLAYER 2
+  }
+
+  async updateGame(lastPlayerNumber: number) {
+    let nextPlayerNumber: number;
+    if (lastPlayerNumber == 1) {
+      this.gameOver = this.updatePlayer1Score(lastPlayerNumber);
+    } else {
+      this.gameOver = this.updatePlayer2_5Score(lastPlayerNumber);
+    }
+    if (lastPlayerNumber < this.playersNumber) {
+      nextPlayerNumber = lastPlayerNumber + 1; // Calculer le numéro du prochain joueur
+    } else {
+      nextPlayerNumber = 1;
+    }
+    if (this.gameOver) {
+      alert('Dernier tour !');
+      // Faire jouer autres joueurs puis fin de partie
+    } else {
+      const nextRoundFunctionName = `P${nextPlayerNumber}Round` as keyof this;
+      const nextRoundFunction = this[nextRoundFunctionName] as RoundFunction;
+      await nextRoundFunction();
+    }
   }
 
   // === Fonctions =========================================================================================
+  getValeurDefausse(): number | undefined {
+    let discardButton = document.querySelector(
+      `#btnDefausse`
+    ) as HTMLDivElement | null;
+
+    if (discardButton) {
+      let discardCardNumberStr = discardButton.dataset['cardNumber'];
+
+      if (discardCardNumberStr !== undefined) {
+        let discardCardNumber = parseInt(discardCardNumberStr, 10);
+
+        if (!isNaN(discardCardNumber)) {
+          return discardCardNumber;
+        }
+      }
+    }
+    return undefined;
+  }
+
+  getValeurPioche(): number | undefined {
+    let discardButton = document.querySelector(
+      `#btnPioche`
+    ) as HTMLDivElement | null;
+
+    if (discardButton) {
+      let discardCardNumberStr = discardButton.dataset['cardNumber'];
+
+      if (discardCardNumberStr !== undefined) {
+        let discardCardNumber = parseInt(discardCardNumberStr, 10);
+
+        if (!isNaN(discardCardNumber)) {
+          return discardCardNumber;
+        }
+      }
+    }
+    return undefined;
+  }
+
   waitForDrawOrDiscard(): Promise<void> {
     return new Promise<void>((resolve) => {
       const intervalId = setInterval(() => {
@@ -117,10 +220,65 @@ export class PlateauGraphiqueComponent implements OnInit {
     ];
     texteP1.innerHTML = textes[indexTexteP1];
   }
-  updatePlayerScore(playerN: number) {
-    const scoreTextZone = this.el.nativeElement.querySelector('.tP1');
-    scoreTextZone.innerHTML =
-      '<b>Player ' + playerN + ' (' + '#####' + ' points)</b>';
+  updatePlayer1Score(playerN: number) {
+    this.scorePlayer = 0;
+    let turnedCardNumber = 0;
+    let CardNumber = 0;
+    const scoreTextZone = this.el.nativeElement.querySelector('.tP' + playerN);
+    const visibleButtons = this.el.nativeElement.querySelectorAll(
+      `[class^="btn-"][class$="P${playerN}"]`
+    );
+    visibleButtons.forEach((button: HTMLButtonElement) => {
+      CardNumber++;
+      if (button.id === 'visible') {
+        turnedCardNumber++;
+        if (button.dataset['cardNumber'] !== undefined) {
+          this.scorePlayer =
+            this.scorePlayer + parseInt(button.dataset['cardNumber']);
+        }
+      }
+    });
+    if (this.scorePlayer != 1) {
+      scoreTextZone.innerHTML =
+        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' points)</b>';
+    } else {
+      scoreTextZone.innerHTML =
+        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' point)</b>';
+    }
+    if (turnedCardNumber == CardNumber) {
+      return true; //true si c'est le dernier tour
+    }
+    return false;
+  }
+  updatePlayer2_5Score(playerN: number) {
+    this.scorePlayer = 0;
+    let turnedCardNumber = 0;
+    let CardNumber = 0;
+    const scoreTextZone = this.el.nativeElement.querySelector('.tP' + playerN);
+    const visibleDiv = this.el.nativeElement.querySelectorAll(
+      `[class^="c"][class$="P${playerN}"]`
+    );
+    visibleDiv.forEach((div: HTMLDivElement) => {
+      CardNumber++;
+      if (div.id === 'visible') {
+        turnedCardNumber++;
+        if (div.dataset['cardNumber'] !== undefined) {
+          this.scorePlayer =
+            this.scorePlayer + parseInt(div.dataset['cardNumber']);
+        }
+      }
+    });
+    if (this.scorePlayer != 1) {
+      scoreTextZone.innerHTML =
+        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' points)</b>';
+    } else {
+      scoreTextZone.innerHTML =
+        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' point)</b>';
+    }
+    if (turnedCardNumber == CardNumber) {
+      return true; //true si c'est le dernier tour
+    }
+    return false;
   }
 
   onClickP1Button(event: MouseEvent) {
@@ -140,7 +298,6 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   // === Création du deck ====================================================
-
   generateSkyjoCards() {
     // Mélange des cartes
     for (let i = completeDeck.length - 1; i > 0; i--) {
@@ -245,11 +402,11 @@ export class PlateauGraphiqueComponent implements OnInit {
       btnDefausse.dataset['cardNumber'] = drawnCard.toString();
       btnDefausse.addEventListener('dragstart', this.dragStartDefausse);
       btnDefausse.innerHTML = `<img src="/assets/images/Card_${drawnCard}.png" style="height: 16vh;" /> `;
-      btnDefausse.setAttribute('draggable', true.toString());
+      /* btnDefausse.setAttribute('draggable', true.toString());
       btnDefausse.addEventListener('dragover', this.dragOver);
       btnDefausse.addEventListener('dragenter', this.dragEnter);
-      btnDefausse.addEventListener('dragleave', this.dragLeave);
-      btnDefausse.addEventListener('drop', this.dropPiocheToDefausse);
+      btnDefausse.addEventListener('dragleave', this.dragLeave); */
+      /* btnDefausse.addEventListener('drop', this.dropPiocheToDefausse); */
       this.defausse.push(drawnCard); //On rajoute le numéro de carte à la défausse
     }
     console.log('Première carte de la défausse distribuée.');
@@ -269,6 +426,27 @@ export class PlateauGraphiqueComponent implements OnInit {
       P1Button.innerHTML = `<img src="assets/images/Card_${P1CardNumber}.png" style="height: 16vh;" />`; // Affiche la carte de P1
     }
     this.P1CardTurned = true;
+    //Maintenant il faut mettre la carte de la pioche à la défausse
+    let newDefausseCardNumber = this.getValeurPioche(); // Récupère le numéro de la carte glissée
+    if (newDefausseCardNumber != undefined) {
+      this.updateDiscard(newDefausseCardNumber?.toString());
+    }
+    this.updateFromTurn = true;
+    this.updateDraw(); //Si la carte provient de la pioche, on actualise la pioche
+  }
+
+  turnNextCard(dropDivClass: string) {
+    let P2_5Div = document.querySelector(`.${dropDivClass}`) as HTMLDivElement;
+    let turnedCardNumber = P2_5Div.dataset['cardNumber'];
+    P2_5Div.id = 'visible'; //Information pour dire que la carte est face visible désormais
+    P2_5Div.innerHTML = `<img src="assets/images/Card_${turnedCardNumber}.png" style="height: 8vh;" />`; // Affiche la carte de P1
+    //Maintenant il faut mettre la carte de la pioche à la défausse
+    let newDefausseCardNumber = this.getValeurPioche(); // Récupère le numéro de la carte glissée
+    if (newDefausseCardNumber != undefined) {
+      this.updateDiscard(newDefausseCardNumber?.toString());
+    }
+    this.updateFromTurn = true;
+    this.updateDraw(); //Si la carte provient de la pioche, on actualise la pioche
   }
 
   // --- Gestion du drag (glisser-déposer) -------------------------------
@@ -354,12 +532,16 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   updateDraw() {
-    if (this.draggedCard && this.draggedCard.classList.contains('dragPioche')) {
+    if (
+      (this.draggedCard && this.draggedCard.classList.contains('dragPioche')) ||
+      this.updateFromTurn === true
+    ) {
       console.log('La carte provient de la pioche.');
       let drawCard = document.getElementById('btnPioche'); // Recherche le bouton de la carte de la pioche
       if (drawCard) {
         drawCard.innerHTML = `<img src="assets/images/Card.png" style="height: 16vh;"/>`; // On affiche la pioche par une carte face cachée, la prochaine carte est prete à être tirée
         this.isDrawCardTurned = false;
+        this.updateFromTurn = false;
       }
     }
   }
@@ -389,6 +571,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     if (P1Button) {
       P1Button.dataset['cardNumber'] = newCardNumber; // Nouveau numéro pour le bouton P1 : anciennement pioche ou defausse
       P1Button.innerHTML = `<img src="assets/images/Card_${newCardNumber}.png" style="height: 16vh;" />`; // Met à jour la carte de P1 avec la carte de la pioche ou defausse
+      P1Button.id = 'visible'; //Information pour dire que la carte de P1 est face visible désormais
     }
     //console.log('Dans replaceAnyToP1, P1CardNumber = ' + P1CardNumber);
     if (P1CardNumber !== undefined) {
@@ -398,7 +581,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.updateDraw(); //Si la carte provient de la pioche, on actualise la pioche
   }
 
-  dropPiocheToDefausse(event: DragEvent) {
+  /*   dropPiocheToDefausse(event: DragEvent) {
     if (this.TourP1) {
       this.discardButton = document.getElementById('btnDefausse'); //On vient chercher la valeur de la défausse
       event.preventDefault();
@@ -411,5 +594,23 @@ export class PlateauGraphiqueComponent implements OnInit {
       }
       this.updateDraw(); //Si la carte provient de la pioche, on actualise la pioche
     }
+  } */
+
+  replaceAnyToP2_5(newCardNumber: string | undefined, dropDivClass: string) {
+    this.discardButton = document.getElementById('btnDefausse'); //On vient chercher la valeur de la défausse
+    let P2_5Div = document.querySelector(`.${dropDivClass}`) as HTMLDivElement; // Recherche le bouton de la carte de P1 à remplacer
+    console.log(P2_5Div);
+    let oldCard = P2_5Div.dataset['cardNumber'];
+    if (P2_5Div) {
+      P2_5Div.dataset['cardNumber'] = newCardNumber; // Nouveau numéro pour le bouton P1 : anciennement pioche ou defausse
+      P2_5Div.innerHTML = `<img src="assets/images/Card_${newCardNumber}.png" style="height: 8vh;" />`; // Met à jour la carte de P1 avec la carte de la pioche ou defausse
+      P2_5Div.id = 'visible'; //Information pour dire que la carte de P1 est face visible désormais
+    }
+    //console.log('Dans replaceAnyToP1, P1CardNumber = ' + P1CardNumber);
+    if (oldCard !== undefined) {
+      //console.log('Dans replaceAnyToP1, on lance updateDiscard.');
+      this.updateDiscard(oldCard); //Si la carte va à la défausse, on actualise la défausse
+    }
+    this.updateDraw(); //Si la carte provient de la pioche, on actualise la pioche
   }
 }
