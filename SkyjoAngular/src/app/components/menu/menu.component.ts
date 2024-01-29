@@ -11,7 +11,7 @@ export class MenuComponent {
 
   logout() {
     localStorage.clear();
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/auth');
   }
 
   get logged(): boolean {

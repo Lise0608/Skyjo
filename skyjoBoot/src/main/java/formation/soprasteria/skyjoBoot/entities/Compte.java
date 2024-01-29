@@ -54,11 +54,11 @@ public class Compte implements UserDetails {
 		this.id = id;
 	}
 
-	public String getLogin() {
+	public String getUsername() {
 		return login;
 	}
 
-	public void setLogin(String login) {
+	public void setUsername(String login) {
 		this.login = login;
 	}
 
@@ -99,12 +99,6 @@ public class Compte implements UserDetails {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// 1 role=>1 authority
 		return Arrays.asList(new SimpleGrantedAuthority(role.toString()));
-	}
-
-
-	@Override
-	public String getUsername() {
-		return login;
 	}
 
 	@Override
