@@ -45,7 +45,7 @@ public class PlayerServiceTest {
 	private Compte setupCompte() {
 		Compte compte = new Compte();
 
-		compte.setLogin("test");			
+		compte.setUsername("test");			
 		compte.setPassword("test");
 		compte.setRole(Role.ROLE_USER);
 		compte.setEmail("test");
@@ -119,7 +119,7 @@ public class PlayerServiceTest {
 		
 		Compte compte = new Compte();
 
-		compte.setLogin("deuxième compte");			
+		compte.setUsername("deuxième compte");			
 		compte.setPassword("test");
 		compte.setRole(Role.ROLE_USER);
 		compte.setEmail("test");
