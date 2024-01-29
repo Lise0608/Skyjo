@@ -98,4 +98,9 @@ public class CompteRestController {
 	public void resetPassword(@RequestParam String email) {
 		compteSrv.sendResetPasswordEmail(email);
 	}
+	
+	@GetMapping("/api/check/{login}")
+	public boolean checkUsername(@PathVariable String login) {
+		return compteSrv.checkLogin(login);
+	}
 }
