@@ -4,6 +4,7 @@ spring:
       prefix: /WEB-INF/views/
       suffix: .jsp
 
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     password: root123@
@@ -13,11 +14,25 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
         "[format_sql]": true
         "[show_sql]": false
+            
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: skyjoassistance@gmail.com
+    password: mmlm kppx nflv ntdi
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 
 server:
   servlet:

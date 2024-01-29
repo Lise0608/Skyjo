@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -91,5 +92,10 @@ public class CompteRestController {
 		compte.setEmail(compteRequest.getEmail());
 		compte.setRole(Role.ROLE_USER);
 		return new CompteResponse(compteSrv.create(compte));
+	}
+	
+	@PostMapping("/api/comptes/reset")
+	public void resetPassword(@RequestParam String email) {
+		compteSrv.sendResetPasswordEmail(email);
 	}
 }
