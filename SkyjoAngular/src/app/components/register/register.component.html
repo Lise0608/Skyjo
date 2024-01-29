@@ -5,7 +5,7 @@
         <div class="card-body">
           <h2 class="text-center mb-4">Create Account</h2>
 
-          <form [formGroup]="form">
+          <form [formGroup]="form" (ngSubmit)="save()">
             <div class="form-group mb-3">
               <label for="username" class="form-label">Username</label>
               <input
@@ -75,6 +75,7 @@
                 class="form-control rounded-pill mb-3"
                 id="email"
                 placeholder="Email"
+                formControlName="email"
                 required
               />
             </div>

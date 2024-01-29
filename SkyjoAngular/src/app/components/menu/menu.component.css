@@ -1,4 +1,3 @@
-/* menu.component.css */
 body {
   background-color: #ececec;
 }
@@ -13,7 +12,7 @@ body {
   color: #ffffff;
 }
 
-.logout-btn {
-  background: linear-gradient(to right, #007bff, #00ffb0);
-  color: #ffffff;
+.youtube-icon {
+  color: red;
+  font-size: 30px;
 }
