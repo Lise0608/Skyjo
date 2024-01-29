@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import formation.soprasteria.skyjoBoot.dtoresponse.GameResponse;
 import formation.soprasteria.skyjoBoot.entities.Compte;
 import formation.soprasteria.skyjoBoot.exceptions.CompteException;
 import formation.soprasteria.skyjoBoot.repositories.CompteRepositories;
@@ -17,6 +18,9 @@ public class CompteService implements UserDetailsService {
 
 	@Autowired
 	private CompteRepositories compteRepositories;
+
+	@Autowired
+	private GameService gameSrv;
 
 	public Compte enregistrerUtilisateur(Compte utilisateur) {
 		// Vous pouvez générer l'ID automatique dans cette méthode si nécessaire
@@ -56,9 +60,15 @@ public class CompteService implements UserDetailsService {
 
 	// Méthode pour supprimer un compte par son ID
 	public void deleteById(Long id) {
+		List<GameResponse> games = gameSrv.findByUserId(id);
+
+		for (GameResponse g : games) {
+			gameSrv.deleteById(g.getId());
+		}
+
 		compteRepositories.deleteById(id);
 	}
-	
+
 	public Compte create(Compte compte) {
 		return compteRepositories.save(compte);
 	}

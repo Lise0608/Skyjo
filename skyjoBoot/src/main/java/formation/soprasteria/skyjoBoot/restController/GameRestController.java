@@ -55,6 +55,8 @@ public class GameRestController {
 
 		// Création du GameMode
 		gameEntity.setGameMode(new GameMode(gameRequest.getScoreAAtteindre(), gameRequest.getSpecificites()));
+		
+		gameEntity.setDate(gameRequest.getDate());
 
 		// Création de la liste des players de la game
 		// Pour chaque Id de la liste dans gameRequest, on créé un playerId à partir de

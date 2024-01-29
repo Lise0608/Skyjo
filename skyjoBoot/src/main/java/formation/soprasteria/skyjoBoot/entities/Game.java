@@ -1,8 +1,10 @@
 package formation.soprasteria.skyjoBoot.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,6 +24,8 @@ public class Game {
 	private GameMode gameMode;
 	@Transient
 	private Deck deck;
+	@Column(name = "date")
+	private LocalDate date;
 	@OneToMany(mappedBy = "id.game")
 	private List<Player> players;
 
@@ -60,6 +64,14 @@ public class Game {
 
 	public void setDeck(Deck deck) {
 		this.deck = deck;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public List<Player> getPlayers() {
