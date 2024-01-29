@@ -1,0 +1,22 @@
+<table class="table table-hover">
+  <thead>
+    <th class="text-center">Id</th>
+    <th class="text-center">Login</th>
+    <th class="text-center">Role</th>
+    <th class="text-center">Email</th>
+    <th class="text-center"></th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of observableComptes | async">
+      <td class="text-center">{{ c.id }}</td>
+      <td class="text-center">{{ c.login }}</td>
+      <td class="text-center">{{ c.role }}</td>
+      <td class="text-center">{{ c.email }}</td>
+      <td class="text-center">
+        <button class="btn btn-outline-danger" (click)="delete(c.id!)">
+          Delete
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

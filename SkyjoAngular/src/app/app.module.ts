@@ -12,6 +12,8 @@ import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ListGameComponent } from './components/admin/list-game/list-game.component';
 import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
+import { ListUserComponent } from './components/admin/list-user/list-user.component';
+import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { AuthentificationInterceptor } from './interceptors/authentification.interceptors';
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 
@@ -25,6 +27,8 @@ import { CreationDePartieComponent } from './components/creation-de-partie/creat
     ForgotPasswordComponent,
     ListGameComponent,
     PlateauGraphiqueComponent,
+    ListUserComponent,
+    AdminPanelComponent,
     CreationDePartieComponent,
   ],
   imports: [

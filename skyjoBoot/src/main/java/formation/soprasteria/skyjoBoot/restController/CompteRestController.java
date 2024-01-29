@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,23 +43,23 @@ public class CompteRestController {
 	@Autowired
 	private CompteService compteSrv;
 	
-	@GetMapping ("/api/comptes")
+	@GetMapping("/api/comptes")
 	public List<CompteResponse> listeDesComptes () {
 		return compteSrv.findAll().stream().map(c -> new CompteResponse(c)).collect(Collectors.toList());
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/api/comptes/{id}")
 	public CompteResponse compteById (@PathVariable Long id) {
 		return new CompteResponse(compteSrv.findById(id));
 	}
 	
-	@DeleteMapping ("/{id}")
+	@DeleteMapping ("/api/comptes/{id}")
 	@ResponseStatus (code = HttpStatus.NO_CONTENT)
 	public void deleteCompte (@PathVariable Long id) {
 		compteSrv.deleteById(id);
 	}
 	
-	@PutMapping ("/{id}")
+	@PutMapping ("/api/comptes/{id}")
 	public CompteResponse updateCompte (@PathVariable Long id, @Valid @RequestBody CompteRequest compteRequest, BindingResult br) {
 		if (br.hasErrors()) {
     		throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
@@ -91,5 +92,10 @@ public class CompteRestController {
 		compte.setEmail(compteRequest.getEmail());
 		compte.setRole(Role.ROLE_USER);
 		return new CompteResponse(compteSrv.create(compte));
+	}
+	
+	@PostMapping("/api/comptes/reset")
+	public void resetPassword(@RequestParam String email) {
+		compteSrv.sendResetPasswordEmail(email);
 	}
 }

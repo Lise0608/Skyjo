@@ -1,5 +1,6 @@
 package formation.soprasteria.skyjoBoot.dtorequest;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,7 @@ public class GameRequest {
 
 	private int scoreAAtteindre;
 	private String specificites;
+	private LocalDate date;
 	private List<Long> playerIds;
 	private Map<Long, Integer> playerScores;
 
@@ -28,6 +30,14 @@ public class GameRequest {
 
 	public void setSpecificites(String specificites) {
 		this.specificites = specificites;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public List<Long> getPlayerIds() {

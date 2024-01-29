@@ -1,16 +1,50 @@
-<table class="table">
+<table class="table table-hover">
   <thead>
-    <th>Id</th>
-    <th>score à atteindre</th>
-    <th>spécificités</th>
-    <th></th>
+    <th class="text-center">Id</th>
+    <th class="text-center">Date</th>
+    <th class="text-center"></th>
   </thead>
   <tbody>
-    <tr *ngFor="let g of observableGames | async">
-      <td>{{ g.id }}</td>
-      <td>{{ g.scoreAAtteindre }}</td>
-      <td>{{ g.specificites }}</td>
-      <td><button class="btn btn-outline-danger">Supprimer</button></td>
-    </tr>
+    <ng-container *ngFor="let g of observableGames | async">
+      <tr>
+        <td class="text-center">{{ g.id }}</td>
+        <td class="text-center">{{ g.date }}</td>
+        <td class="text-center">
+          <button
+            class="btn btn-outline-primary"
+            (click)="toggleShowDetails(g)"
+          >
+            Details
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="g.showDetails">
+        <td colspan="3">
+          <table>
+            <thead>
+              <th class="text-center">Game rules</th>
+              <th class="text-center">Players</th>
+              <th class="text-center">Action</th>
+            </thead>
+            <tr>
+              <td class="px-5">
+                <p>Max score: {{ g.scoreAAtteindre }}</p>
+                <p>Specificities : {{ g.specificites }}</p>
+              </td>
+              <td class="px-5">
+                <li *ngFor="let p of g.players">
+                  {{ p.username }} : {{ p.score }}pts
+                </li>
+              </td>
+              <td class="px-5 text-center">
+                <button class="btn btn-outline-danger" (click)="delete(g.id!)">
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>

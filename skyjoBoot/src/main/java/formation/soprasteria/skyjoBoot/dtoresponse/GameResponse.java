@@ -1,5 +1,6 @@
 package formation.soprasteria.skyjoBoot.dtoresponse;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ public class GameResponse {
 	@JsonView(JsonViews.Game.class)
 	private String specificites;
 	@JsonView(JsonViews.Game.class)
+	private LocalDate date;
+	@JsonView(JsonViews.Game.class)
 	private List<PlayerResponse> players;
 
 	public GameResponse() {
@@ -29,6 +32,9 @@ public class GameResponse {
 		if (gameEntity.getGameMode() != null) {
 			this.scoreAAtteindre = gameEntity.getGameMode().getScoreAAtteindre();
 			this.specificites = gameEntity.getGameMode().getSpecificites();
+		}
+		if (gameEntity.getDate() != null) {
+			this.date = gameEntity.getDate();
 		}
 		if (gameEntity.getPlayers() != null) {
 			this.players = gameEntity.getPlayers().stream().map(p -> new PlayerResponse(p))
@@ -67,6 +73,14 @@ public class GameResponse {
 
 	public void setSpecificites(String specificites) {
 		this.specificites = specificites;
+	}
+
+	public LocalDate getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDate date) {
+		this.date = date;
 	}
 
 	public List<PlayerResponse> getPlayers() {
