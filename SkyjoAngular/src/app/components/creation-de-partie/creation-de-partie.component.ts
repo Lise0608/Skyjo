@@ -11,27 +11,47 @@ export class CreationDePartieComponent {
   limiteJoueurs = 8;
   boutonAjouterJoueurDesactive = false;
   ajouterJoueurClicked: boolean = false;
-  joueurs: any[] = [];
+  joueurs: { numero: number; type: string }[] = [];
   partieCommencee: boolean = false;
+
+  joueur1Selection: { numero: number; type: string } = {
+    numero: 1,
+    type: 'Joueur',
+  };
+  joueur2Selection: { numero: number; type: string } = {
+    numero: 2,
+    type: 'Joueur',
+  };
+  // joueur3Selection: string = '';
+  // joueur4Selection: string = '';
+  // joueur5Selection: string = '';
+  // joueur6Selection: string = '';
+  // joueur7Selection: string = '';
+  // joueur8Selection: string = '';
 
   constructor(private iaServ: IAService) {}
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
-      this.joueurs.push({ numero: this.numeroJoueur });
+      this.joueurs.push({ numero: this.numeroJoueur, type: 'Joueur' });
       this.numeroJoueur++;
       this.ajouterJoueurClicked = true;
+      console.log(this.joueur1Selection);
+      console.log(this.joueur2Selection);
+      console.log(this.joueurs);
     } else {
       this.boutonAjouterJoueurDesactive = true;
     }
   }
-  gererSelection(event: Event) {
+  gererSelection(event: Event, index: number) {
     if (this.partieCommencee) {
       const selectElement = event.target as HTMLSelectElement;
       const optionSelected = selectElement.value;
       if (optionSelected === 'Ordinateur') {
         this.appelerIA();
       }
+    } else {
+      this.joueurs[index].type = (event.target as HTMLSelectElement).value;
     }
   }
 

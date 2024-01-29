@@ -10,26 +10,51 @@
             <h2 class="text-center mb-4 text-dark">Skyjo</h2>
             <form>
               <div class="form-group mb-3">
-                <label for="Player 1" class="text-dark">Player 1</label>
-                <select class="form-select">
+                <label for="player1" class="text-dark">Player 1</label>
+                <select
+                  class="form-select"
+                  name="player1"
+                  [(ngModel)]="joueur1Selection.type"
+                >
                   <option>Joueur</option>
                 </select>
               </div>
               <div class="form-group mb-3">
-                <label for="Player 2" class="text-dark">Player 2</label>
-                <select class="form-select" (change)="gererSelection($event)">
+                <label for="player2" class="text-dark">Player 2</label>
+                <select
+                  class="form-select"
+                  [(ngModel)]="joueur2Selection.type"
+                  name="player2"
+                >
                   <option>Joueur</option>
                   <option>Ordinateur</option>
                 </select>
               </div>
               <div *ngIf="ajouterJoueurClicked" class="form-group mb-3">
-                <div *ngFor="let joueur of joueurs" class="form-group mb-3">
+                <div
+                  *ngFor="let joueur of joueurs; let i = index"
+                  class="form-group mb-3"
+                >
                   <label for="Player{{ joueur.numero }}" class="text-dark"
                     >Player {{ joueur.numero }}</label
                   >
-                  <select class="form-select" (change)="gererSelection($event)">
-                    <option>Joueur</option>
-                    <option>Ordinateur</option>
+                  <select
+                    class="form-select"
+                    (change)="gererSelection($event, i)"
+                    name="player{{ joueur.numero }}"
+                  >
+                    <option
+                      [value]="'Joueur'"
+                      [selected]="joueur.type === 'Joueur'"
+                    >
+                      Joueur
+                    </option>
+                    <option
+                      [value]="'Ordinateur'"
+                      [selected]="joueur.type === 'Ordinateur'"
+                    >
+                      Ordinateur
+                    </option>
                   </select>
                 </div>
               </div>
