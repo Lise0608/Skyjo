@@ -8,7 +8,7 @@ import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphiqu
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
+  { path: 'auth', component: LoginComponent },
   { path: 'inscription', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'plateau', component: PlateauGraphiqueComponent },
