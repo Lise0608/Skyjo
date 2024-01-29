@@ -77,7 +77,7 @@ button[class^="btn-c"] {
   grid-template-rows: 0.9fr 0.1fr;
   gap: 0px 0px;
   grid-template-areas:
-    ". Pioche . Defausse ."
+    ". Pioche . Defausse TexteP1"
     ". tPioche . tDefausse .";
   grid-area: PiocheDefausse;
   height: 29vh;
@@ -101,6 +101,11 @@ button[class^="btn-c"] {
   justify-self: center;
   align-self: center;
   grid-area: tDefausse;
+}
+#TexteP1 {
+  justify-self: center;
+  align-self: center;
+  grid-area: TexteP1;
 }
 
 .Chat {
