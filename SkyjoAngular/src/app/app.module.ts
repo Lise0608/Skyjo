@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ListGameComponent } from './components/admin/list-game/list-game.component';
 import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
+import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphiqu
     ForgotPasswordComponent,
     ListGameComponent,
     PlateauGraphiqueComponent,
+    CreationDePartieComponent,
   ],
   imports: [
     BrowserModule,

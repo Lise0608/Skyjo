@@ -1,0 +1,13 @@
+.btn {
+  background: linear-gradient(to right, #007bff, #00ffb0);
+  color: white;
+}
+
+body {
+  background-color: #ececec;
+}
+
+.navbar {
+  background: #007bff;
+  background: linear-gradient(to right, #007bff, #00ffb0);
+}

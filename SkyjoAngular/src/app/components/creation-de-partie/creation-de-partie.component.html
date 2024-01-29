@@ -1,0 +1,88 @@
+<head>
+  <link rel="stylesheet" href="creation-de-partie.component.css" />
+</head>
+<body>
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
+          <div class="card-body">
+            <h2 class="text-center mb-4 text-dark">Skyjo</h2>
+            <form>
+              <div class="form-group mb-3">
+                <label for="Player 1" class="text-dark">Player 1</label>
+                <select class="form-select">
+                  <option>Joueur</option>
+                </select>
+              </div>
+              <div class="form-group mb-3">
+                <label for="Player 2" class="text-dark">Player 2</label>
+                <select class="form-select" (change)="gererSelection($event)">
+                  <option>Joueur</option>
+                  <option>Ordinateur</option>
+                </select>
+              </div>
+              <div *ngIf="ajouterJoueurClicked" class="form-group mb-3">
+                <div *ngFor="let joueur of joueurs" class="form-group mb-3">
+                  <label for="Player{{ joueur.numero }}" class="text-dark"
+                    >Player {{ joueur.numero }}</label
+                  >
+                  <select class="form-select" (change)="gererSelection($event)">
+                    <option>Joueur</option>
+                    <option>Ordinateur</option>
+                  </select>
+                </div>
+              </div>
+              <div class="d-grid" id="buttonContainer">
+                <button
+                  type="button"
+                  class="btn rounded-pill mb-3"
+                  style="
+                    background: linear-gradient(to right, #007bff, #00ffb0);
+                    color: white;
+                  "
+                  (click)="ajouterJoueur()"
+                  [disabled]="boutonAjouterJoueurDesactive"
+                >
+                  Ajouter joueur
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert alert-danger" id="limiteAtteinte" style="display: none">
+    <strong>Limite de joueurs atteinte !</strong> Vous avez atteint la limite du
+    nombre de joueurs autorisés pour une partie.
+  </div>
+  <footer>
+    <div>
+      <button
+        type="button"
+        class="btn rounded-pill mb-3 float-start"
+        style="
+          background: linear-gradient(to right, #007bff, #00ffb0);
+          color: white;
+        "
+        href="#"
+      >
+        <- Précédent
+      </button>
+    </div>
+    <div>
+      <button
+        type="button"
+        class="btn rounded-pill mb-3 float-end"
+        style="
+          background: linear-gradient(to right, #007bff, #00ffb0);
+          color: white;
+        "
+        routerLink="/plateau"
+      >
+        Let's GO ! ->
+      </button>
+    </div>
+  </footer>
+</body>
