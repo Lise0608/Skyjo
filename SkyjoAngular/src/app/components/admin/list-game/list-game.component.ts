@@ -1,19 +1,30 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Game } from 'src/app/model/game';
+import { CompteService } from 'src/app/services/compte.service';
 import { GameService } from 'src/app/services/game.service';
 
 @Component({
-  selector: 'app-list-game',
+  selector: 'admin-list-game',
   templateUrl: './list-game.component.html',
   styleUrls: ['./list-game.component.css'],
 })
 export class ListGameComponent implements OnInit {
   observableGames!: Observable<Game[]>;
 
-  constructor(private gameSrv: GameService) {}
+  constructor(private gameSrv: GameService, private compteSrv: CompteService) {}
 
   ngOnInit(): void {
     this.observableGames = this.gameSrv.findall();
+  }
+
+  delete(id: number) {
+    this.gameSrv.delete(id).subscribe(() => {
+      this.observableGames = this.gameSrv.findall();
+    });
+  }
+
+  toggleShowDetails(game: Game) {
+    game.showDetails = !game.showDetails;
   }
 }
