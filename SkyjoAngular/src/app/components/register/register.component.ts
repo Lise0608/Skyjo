@@ -8,6 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable, map, switchMap, timer } from 'rxjs';
 import { RegisterService } from 'src/app/services/register.service';
 
 @Component({
@@ -17,10 +18,11 @@ import { RegisterService } from 'src/app/services/register.service';
 })
 export class RegisterComponent {
   form: FormGroup;
+  showPassword: boolean;
 
   constructor(private RegisterSrv: RegisterService, private router: Router) {
     this.form = new FormGroup({
-      login: new FormControl('', Validators.required),
+      login: new FormControl('', Validators.required, this.loginLibre()),
       passwordGroup: new FormGroup(
         {
           password: new FormControl('', [
@@ -38,6 +40,7 @@ export class RegisterComponent {
         ),
       ]),
     });
+    this.showPassword = false;
   }
 
   passwordAndConfirmEqual(control: AbstractControl): ValidationErrors | null {
@@ -47,6 +50,24 @@ export class RegisterComponent {
     return control.get('password')?.value == control.get('confirm')?.value
       ? null
       : { notEquals: true };
+  }
+
+  loginLibre(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return timer(500).pipe(
+        switchMap(() => {
+          return this.RegisterSrv.checkLogin(control.value).pipe(
+            map((bool) => {
+              return bool ? { loginExist: true } : null;
+            })
+          );
+        })
+      );
+    };
+  }
+
+  showHidePassword(e: Event) {
+    this.showPassword = (e.target as HTMLInputElement).checked;
   }
 
   save() {

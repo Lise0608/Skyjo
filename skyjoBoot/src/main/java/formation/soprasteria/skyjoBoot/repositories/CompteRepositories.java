@@ -13,6 +13,8 @@ public interface CompteRepositories extends JpaRepository<Compte, Long> {
 	Optional<Compte> findByLoginAndIdNot(String login, Long id);
 	
 	Optional<Compte> findByEmail(String email);
+	
+	boolean existsByLogin(String login);
 
 }
 

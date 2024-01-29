@@ -19,10 +19,10 @@
                 *ngIf="form.get('login')?.dirty && form.get('login')?.invalid"
               >
                 <span *ngIf="form.get('login')?.hasError('required')"
-                  >*obligatoire</span
+                  >*required</span
                 >
                 <span *ngIf="form.get('login')?.hasError('loginExist')"
-                  >*login deja utilise</span
+                  >*Login already in use</span
                 >
               </div>
             </div>
@@ -31,11 +31,11 @@
               <div class="form-group mb-3">
                 <label for="password" class="form-label">Create password</label>
                 <input
-                  type="password"
                   class="form-control rounded-pill mb-3"
                   formControlName="password"
                   id="createPassword"
                   placeholder="Create password"
+                  [type]="showPassword ? 'text' : 'password'"
                 />
                 <div
                   *ngIf="
@@ -43,20 +43,20 @@
                     form.get('passwordGroup.password')?.invalid
                   "
                 >
-                  *obligatoire avec 1 majuscule, 1 minuscule et 1 chiffre
+                  *Required with 1 uppercase, 1 lowercase, and 1 digit
                 </div>
               </div>
 
               <div class="form-group mb-3">
-                <label for="password" class="form-label"
+                <label for="confirmPassword" class="form-label"
                   >Confirm password</label
                 >
                 <input
-                  type="password"
                   class="form-control rounded-pill mb-3"
                   formControlName="confirm"
                   id="confirmPassword"
                   placeholder="Confirm password"
+                  [type]="showPassword ? 'text' : 'password'"
                 />
                 <div
                   *ngIf="
@@ -64,8 +64,13 @@
                     form.get('passwordGroup')?.invalid
                   "
                 >
-                  *mot de passe different
+                  *Password mismatch
                 </div>
+              </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" (change)="showHidePassword($event)" />
+                show passwords
               </div>
             </ng-container>
             <div class="form-group mb-3">
@@ -76,8 +81,17 @@
                 id="email"
                 placeholder="Email"
                 formControlName="email"
-                required
               />
+              <div
+                *ngIf="form.get('email')?.dirty && form.get('email')?.invalid"
+              >
+                <span *ngIf="form.get('email')?.hasError('required')"
+                  >*required</span
+                >
+                <span *ngIf="form.get('email')?.hasError('pattern')"
+                  >*invalid email format</span
+                >
+              </div>
             </div>
 
             <div class="d-grid">

@@ -115,5 +115,8 @@ public class CompteService implements UserDetailsService {
 	public void resetPassword(String newPassword) {
 		
 	}
-
+	
+	public boolean checkLogin(String login) {
+		return compteRepositories.existsByLogin(login);
+	}
 }

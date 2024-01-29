@@ -1,0 +1,15 @@
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper .bi {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.password-input-wrapper .bi-check::before {
+  content: "\2713";
+}
