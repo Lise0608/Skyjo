@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   get login(): string {
     return localStorage.getItem('token')
-      ? JSON.parse(localStorage.getItem('compte')!).username
+      ? JSON.parse(localStorage.getItem('compte')!).login
       : '';
   }
 }

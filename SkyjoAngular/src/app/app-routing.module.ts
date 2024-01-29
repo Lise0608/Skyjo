@@ -9,8 +9,8 @@ import { CreationDePartieComponent } from './components/creation-de-partie/creat
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
+  { path: 'auth', component: LoginComponent },
+  { path: 'inscription', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'creation-de-partie', component: CreationDePartieComponent },
   { path: 'plateau', component: PlateauGraphiqueComponent },

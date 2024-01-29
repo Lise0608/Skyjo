@@ -153,7 +153,7 @@
         </div>
         <div class="tP2"><b>Player 2</b></div>
       </div>
-      <div class="P3">
+      <div class="P3" class="d-none">
         <div class="c1-1P3">
           <img
             src="./assets/images/Card.png"
@@ -240,7 +240,7 @@
         </div>
         <div class="tP3"><b>Player 3</b></div>
       </div>
-      <div class="P4">
+      <div class="P4" class="d-none">
         <div class="c1-1P4">
           <img
             src="./assets/images/Card.png"
@@ -329,7 +329,7 @@
 
         <div class="tP4"><b>Player 4</b></div>
       </div>
-      <div class="P5">
+      <div class="P5" class="d-none">
         <div class="c1-1P5">
           <img
             src="./assets/images/Card.png"
@@ -423,7 +423,7 @@
             class="btn-pioche"
             type="button"
             id="btnPioche"
-            (click)="updateImagePioche()"
+            (click)="TourP1 && turnDrawCard()"
             (dragstart)="dragStartPioche($event)"
           >
             <img src="./assets/images/Card.png" />
@@ -449,6 +449,7 @@
         </div>
         <div class="tPioche"><b>Pioche</b></div>
         <div class="tDefausse"><b>Défausse</b></div>
+        <div id="TexteP1" class="d-none"></div>
       </div>
 
       <div class="Chat">Chat</div>

@@ -12,6 +12,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 import { ListGameComponent } from './components/admin/list-game/list-game.component';
 import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
+import { AuthentificationInterceptor } from './interceptors/authentification.interceptors';
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 
 @NgModule({
@@ -33,7 +34,13 @@ import { CreationDePartieComponent } from './components/creation-de-partie/creat
     HttpClientModule,
     ReactiveFormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthentificationInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
