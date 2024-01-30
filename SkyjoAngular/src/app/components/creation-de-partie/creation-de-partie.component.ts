@@ -17,18 +17,26 @@ export class CreationDePartieComponent {
 
   joueur1Selection: { numero: number; type: string } = {
     numero: 1,
-    type: 'Joueur',
+    type: 'Human',
   };
   joueur2Selection: { numero: number; type: string } = {
     numero: 2,
-    type: 'Joueur',
+    type: 'IA',
   };
+
+  choixDuScore: number | undefined;
+  choixDuNombreDeTours: number | undefined;
 
   constructor(private iaServ: IAService, private router: Router) {}
 
+  gestionDesOptionsDeJeu() {
+    let donseesDesOptions = [this?.choixDuScore, this?.choixDuNombreDeTours];
+    // console.log(this.choixDuScore, this.choixDuNombreDeTours);
+  }
+
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
-      this.joueurs.push({ numero: this.numeroJoueur, type: 'Joueur' });
+      this.joueurs.push({ numero: this.numeroJoueur, type: 'IA' });
       this.numeroJoueur++;
       this.ajouterJoueurClicked = true;
     } else {
@@ -39,7 +47,7 @@ export class CreationDePartieComponent {
     if (this.partieCommencee) {
       const selectElement = event.target as HTMLSelectElement;
       const optionSelected = selectElement.value;
-      if (optionSelected === 'Ordinateur') {
+      if (optionSelected === 'IA') {
         this.appelerIA();
       }
     } else {
@@ -56,12 +64,26 @@ export class CreationDePartieComponent {
         type: joueur.type,
       })),
     ];
+
     //const donneesJson = JSON.stringify(donneesJoueurs);
+    let gameData = {
+      scoreAAtteindre: this.choixDuScore,
+      nombreDeTours: this.choixDuNombreDeTours,
+      donneesJoueurs,
+    };
+    /* const queryParams = {
+      joueurs: JSON.stringify(donneesJoueurs),
+      optionsJeu: JSON.stringify(optionsJeu),
+    }; */
+
     this.router.navigateByUrl(`/plateau`, {
       ///plateau/${donneesJson}
-      state: { data: donneesJoueurs },
+      state: { data: gameData },
     });
+
+    /* this.router.navigate(['/plateau'], { queryParams: queryParams }); */
   }
+  // this.router.navigateByUrl(`/plateau/${donneesJson}`);
 
   appelerIA() {
     this.iaServ.basicIA();

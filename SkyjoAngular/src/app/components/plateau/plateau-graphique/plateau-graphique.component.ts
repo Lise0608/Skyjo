@@ -19,6 +19,8 @@ interface DynamicProperties {
 export class PlateauGraphiqueComponent implements OnInit {
   // À MODIFIER EN FCT DU NOMBRE DE JOUEURS
   donneesJoueurs: any;
+  nombreDeTours: any;
+  scoreAAtteindre: any;
   playersNumber = 0;
   IA_P2: IA = new IA(1, 1);
   IA_P3: IA = new IA(1, 1);
@@ -93,7 +95,10 @@ export class PlateauGraphiqueComponent implements OnInit {
 
     const navigation = this.router.getCurrentNavigation(); //On récupère le formulaire de création de partie
     if (navigation && navigation.extras.state) {
-      this.donneesJoueurs = navigation.extras.state['data'];
+      let data = navigation.extras.state['data'];
+      this.donneesJoueurs = data.donneesJoueurs;
+      this.nombreDeTours = data.nombreDeTours;
+      this.scoreAAtteindre = data.scoreAAtteindre;
     }
     this.playersNumber = this.donneesJoueurs.length;
   }
@@ -102,6 +107,8 @@ export class PlateauGraphiqueComponent implements OnInit {
   // ----- Initialisation du plateau après avoir lu toutes les fonctions -----------------
   ngOnInit() {
     console.log('Il y a', this.playersNumber, 'joueurs.'); //Récupération infos création partie
+    console.log(`Le score maximal est de`, this.scoreAAtteindre, `points.`);
+    console.log(`Le nombre maximal de tours est ` + this.nombreDeTours + `.`);
     for (let n = 1; n <= this.playersNumber; n++) {
       console.log('P' + n + ' est un', this.donneesJoueurs[n - 1].type);
       this.donneesJoueurs.IA = 'IA' + n;
@@ -148,7 +155,7 @@ export class PlateauGraphiqueComponent implements OnInit {
       /* alert(this.donneesJoueurs[PN - 1].type); */
       let dynamicPropertyName = `IA_P${PN}`;
       let IA = this.dynamicIAs[dynamicPropertyName];
-      if (this.donneesJoueurs[PN - 1].type === `Ordinateur`) {
+      if (this.donneesJoueurs[PN - 1].type === `IA`) {
         for (let i = 1; i <= 2; i++) {
           let nextCoord = IA.nextCardPosition();
           let nextDiv = `c${nextCoord[0]}-${nextCoord[1]}P${PN}`; //exemple : "c1-1P2"
@@ -264,9 +271,9 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   async nextRound(playerNumber: number, playerType: String) {
-    if (playerType === 'Joueur') {
+    if (playerType === 'Human') {
       this.humanRound();
-    } else if (playerType === 'Ordinateur') {
+    } else if (playerType === 'IA') {
       this.IARound(playerNumber);
     }
   }
