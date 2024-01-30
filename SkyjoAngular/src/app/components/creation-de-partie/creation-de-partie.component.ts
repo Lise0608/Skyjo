@@ -9,7 +9,7 @@ import { IAService } from 'src/app/services/iaservice.service';
 })
 export class CreationDePartieComponent {
   numeroJoueur = 3;
-  limiteJoueurs = 8;
+  limiteJoueurs = 5;
   boutonAjouterJoueurDesactive = false;
   ajouterJoueurClicked: boolean = false;
   joueurs: { numero: number; type: string }[] = [];
@@ -56,8 +56,11 @@ export class CreationDePartieComponent {
         type: joueur.type,
       })),
     ];
-    const donneesJson = JSON.stringify(donneesJoueurs);
-    this.router.navigateByUrl(`/plateau/${donneesJson}`);
+    //const donneesJson = JSON.stringify(donneesJoueurs);
+    this.router.navigateByUrl(`/plateau`, {
+      ///plateau/${donneesJson}
+      state: { data: donneesJoueurs },
+    });
   }
 
   appelerIA() {
