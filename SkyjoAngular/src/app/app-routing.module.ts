@@ -7,6 +7,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphique/plateau-graphique.component';
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'creation-de-partie', component: CreationDePartieComponent },
   { path: 'plateau', component: PlateauGraphiqueComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'admin', component: AdminPanelComponent },
   {
     path: '',
     redirectTo: 'home',

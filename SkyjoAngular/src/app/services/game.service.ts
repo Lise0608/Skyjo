@@ -21,6 +21,12 @@ export class GameService {
     );
   }
 
+  findUserGames(id: number): Observable<Game[]> {
+    return this.getPlayerName(
+      this.http.get<Game[]>(`${this.urlGame}/userGames?userId=${id}`)
+    );
+  }
+
   // Récupération du username de chaque player de chaque partie dans le compteService à partir de l'id du player
   getPlayerName(games: Observable<Game[]>): Observable<Game[]> {
     return games.pipe(
