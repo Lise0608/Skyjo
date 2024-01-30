@@ -1,6 +1,7 @@
 package formation.soprasteria.skyjoBoot.restController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
@@ -103,4 +104,14 @@ public class CompteRestController {
 	public boolean checkUsername(@PathVariable String login) {
 		return compteSrv.checkLogin(login);
 	}
+	
+	@PostMapping("/api/comptes/updatePassword")
+    public CompteResponse updatePassword(@Valid @RequestBody Map<String, Long> requestBody) {
+        Compte compte = compteSrv.findById(requestBody.get("compteId"));
+        String newPassword = requestBody.get("newPassword").toString();
+
+        compte.setPassword(passwordEncoder.encode(newPassword));
+
+        return new CompteResponse(compte);
+    }
 }

@@ -23,4 +23,16 @@ export class CompteService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.urlCompte}/${id}`);
   }
+
+  reset(password: string, compteId: number) {
+    const data = { newPassword: password, compteId: compteId };
+    return this.http.post(`${this.urlCompte}/api/comptes/updatePassword`, data);
+  }
+
+  sendEmail(email: string) {
+    return this.http.post(
+      `${this.urlCompte}/api/comptes/reset?email=${email}`,
+      null
+    );
+  }
 }

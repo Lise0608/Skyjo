@@ -95,13 +95,14 @@ public class CompteService implements UserDetailsService {
 		Optional<Compte> optionalCompte = compteRepositories.findByEmail(email);
 
 		if (optionalCompte.isPresent()) {
+			Compte compte = optionalCompte.get();
 			// Créer un message d'e-mail avec le nouveau mot de passe
-			String frontendUrlString = "http://localhost:4200/forgot-password";
+			String frontendUrlString = "http://localhost:4200/reset-password";
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("skyjoassistance@gmail.com");
 			message.setTo(email);
 			message.setSubject("Réinitialisation de votre mot de passe");
-			message.setText("Cliquez sur ce lien pour réinitialiser votre mot de passe : " + frontendUrlString);
+			message.setText("Cliquez sur ce lien pour réinitialiser votre mot de passe : " + frontendUrlString+"?compteId="+ compte.getId());
 
 			System.out.println("message : " + message);
 
