@@ -16,6 +16,7 @@ import { ListUserComponent } from './components/admin/list-user/list-user.compon
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { AuthentificationInterceptor } from './interceptors/authentification.interceptors';
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { CreationDePartieComponent } from './components/creation-de-partie/creat
     ListUserComponent,
     AdminPanelComponent,
     CreationDePartieComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,
