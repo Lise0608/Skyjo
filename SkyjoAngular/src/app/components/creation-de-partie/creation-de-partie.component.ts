@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { IAService } from 'src/app/services/iaservice.service';
 
 @Component({
@@ -22,12 +22,8 @@ export class CreationDePartieComponent {
     numero: 2,
     type: 'Joueur',
   };
-  // joueur3Selection: string = '';
-  // joueur4Selection: string = '';
-  // joueur5Selection: string = '';
-  // joueur6Selection: string = '';
-  // joueur7Selection: string = '';
-  // joueur8Selection: string = '';
+  @Output() envoyerDonnesFormulaire: EventEmitter<any> =
+    new EventEmitter<any>();
 
   constructor(private iaServ: IAService) {}
 
@@ -36,9 +32,6 @@ export class CreationDePartieComponent {
       this.joueurs.push({ numero: this.numeroJoueur, type: 'Joueur' });
       this.numeroJoueur++;
       this.ajouterJoueurClicked = true;
-      console.log(this.joueur1Selection);
-      console.log(this.joueur2Selection);
-      console.log(this.joueurs);
     } else {
       this.boutonAjouterJoueurDesactive = true;
     }
@@ -53,6 +46,18 @@ export class CreationDePartieComponent {
     } else {
       this.joueurs[index].type = (event.target as HTMLSelectElement).value;
     }
+  }
+
+  public recupererDonneesFormulaire() {
+    let donneesJoueurs = [
+      { numero: 'Joueur 1', type: this.joueur1Selection.type },
+      { numero: 'Joueur 2', type: this.joueur2Selection.type },
+      ...this.joueurs.map((joueur) => ({
+        numero: `Joueur ${joueur.numero}`,
+        type: joueur.type,
+      })),
+    ];
+    this.envoyerDonnesFormulaire.emit(donneesJoueurs);
   }
 
   appelerIA() {
