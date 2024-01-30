@@ -8,6 +8,53 @@
         <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
           <div class="card-body">
             <h2 class="text-center mb-4 text-dark">Skyjo</h2>
+
+            <div class="dropdown">
+              <button
+                type="button"
+                class="btn rounded-pill mb-3 dropdown-toggle"
+                data-bs-toggle="dropdown"
+                style="
+                  background: linear-gradient(to right, #007bff, #00ffb0);
+                  color: white;
+                "
+              >
+                Options de jeu
+              </button>
+              <ul class="dropdown-menu">
+                <li>
+                  Score à (ne pas) atteindre :
+                  <select class="form-select" [(ngModel)]="choixDuScore">
+                    <option>50</option>
+                    <option>100</option>
+                    <option>200</option>
+                    <option>400</option>
+                    <option>600</option>
+                    <option>800</option>
+                    <option>1000</option>
+                  </select>
+                </li>
+                <li>
+                  Nombre de tours :
+                  <select
+                    class="form-select"
+                    [(ngModel)]="choixDuNombreDeTours"
+                  >
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                  </select>
+                </li>
+              </ul>
+            </div>
+
             <form (ngSubmit)="recupererDonneesFormulaire()">
               <div class="form-group mb-3">
                 <label for="player1" class="text-dark">Player 1</label>

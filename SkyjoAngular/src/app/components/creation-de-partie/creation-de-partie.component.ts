@@ -24,7 +24,15 @@ export class CreationDePartieComponent {
     type: 'Joueur',
   };
 
+  choixDuScore: number | undefined;
+  choixDuNombreDeTours: number | undefined;
+
   constructor(private iaServ: IAService, private router: Router) {}
+
+  gestionDesOptionsDeJeu() {
+    let donseesDesOptions = [this?.choixDuScore, this?.choixDuNombreDeTours];
+    // console.log(this.choixDuScore, this.choixDuNombreDeTours);
+  }
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
@@ -56,9 +64,18 @@ export class CreationDePartieComponent {
         type: joueur.type,
       })),
     ];
-    const donneesJson = JSON.stringify(donneesJoueurs);
-    this.router.navigateByUrl(`/plateau/${donneesJson}`);
+    let optionsJeu = {
+      scoreAAtteindre: this.choixDuScore,
+      nombreDeTours: this.choixDuNombreDeTours,
+    };
+    const queryParams = {
+      joueurs: JSON.stringify(donneesJoueurs),
+      optionsJeu: JSON.stringify(optionsJeu),
+    };
+
+    this.router.navigate(['/plateau'], { queryParams: queryParams });
   }
+  // this.router.navigateByUrl(`/plateau/${donneesJson}`);
 
   appelerIA() {
     this.iaServ.basicIA();

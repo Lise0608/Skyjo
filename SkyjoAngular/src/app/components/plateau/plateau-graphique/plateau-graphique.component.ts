@@ -80,12 +80,17 @@ export class PlateauGraphiqueComponent implements OnInit {
   ngOnInit() {
     this.deck = this.generateSkyjoCards(); // On génère le deck
     console.log(this.deck); // Affichage du nombre de cartes restantes dans le deck dans la console
-    this.route.paramMap.subscribe((params) => {
-      const donneesJson = params.get('donneesJoueurs')!;
-      this.donneesJoueurs = JSON.parse(donneesJson); // Désérialiser les données JSON
-      console.log('Données des joueurs:', this.donneesJoueurs);
-      // Utilisez les données des joueurs ici
+
+    this.route.queryParams.subscribe((params) => {
+      if (params && params['joueurs'] && params['optionsJeu']) {
+        const joueurs = JSON.parse(params['joueurs']);
+        const optionsJeu = JSON.parse(params['optionsJeu']);
+
+        console.log('Données des joueurs :', joueurs);
+        console.log('Options de jeu :', optionsJeu);
+      }
     });
+
     /* console.log(this.deck); // Affichage du nombre de cartes restantes dans le deck dans la console */
     this.distribuerCartesAuJoueurP1(); //
     this.distribuerCartesAuJoueurP2(); //
