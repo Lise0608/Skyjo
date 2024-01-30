@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { IAService } from 'src/app/services/iaservice.service';
 
 @Component({
@@ -22,10 +23,8 @@ export class CreationDePartieComponent {
     numero: 2,
     type: 'Joueur',
   };
-  @Output() envoyerDonnesFormulaire: EventEmitter<any> =
-    new EventEmitter<any>();
 
-  constructor(private iaServ: IAService) {}
+  constructor(private iaServ: IAService, private router: Router) {}
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
@@ -57,7 +56,8 @@ export class CreationDePartieComponent {
         type: joueur.type,
       })),
     ];
-    this.envoyerDonnesFormulaire.emit(donneesJoueurs);
+    const donneesJson = JSON.stringify(donneesJoueurs);
+    this.router.navigateByUrl(`/plateau/${donneesJson}`);
   }
 
   appelerIA() {

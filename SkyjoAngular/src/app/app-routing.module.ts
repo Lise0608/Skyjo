@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'inscription', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'creation-de-partie', component: CreationDePartieComponent },
+  { path: 'plateau/:donneesJoueurs', component: PlateauGraphiqueComponent },
   { path: 'plateau', component: PlateauGraphiqueComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   {
