@@ -1,5 +1,5 @@
 import { CreationDePartieComponent } from './../../creation-de-partie/creation-de-partie.component';
-import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
 import { interval, fromEvent, merge, EMPTY } from 'rxjs';
 import completeDeck from './../deck'; // Import des cartes du deck
 import { takeUntil, filter, last } from 'rxjs/operators';
@@ -13,7 +13,8 @@ type RoundFunction = () => Promise<void>; //Pour aller d'un round à l'autre
 })
 export class PlateauGraphiqueComponent implements OnInit {
   // À MODIFIER EN FCT DU NOMBRE DE JOUEURS
-  playersNumber = 2;
+  @Input() donneesJoueurs: any;
+  playersNumber = 0;
   IA1: IA = new IA(1, 1);
 
   // ---------------
@@ -56,12 +57,20 @@ export class PlateauGraphiqueComponent implements OnInit {
   ngOnInit() {
     this.deck = this.generateSkyjoCards(); // On génère le deck
     console.log(this.deck); // Affichage du nombre de cartes restantes dans le deck dans la console
+    this.recevoirDonneesJoueurs(this.playersNumber);
     this.distribuerCartesAuJoueurP1(); //
     this.distribuerCartesAuJoueurP2(); //
     this.distribuerPremiereCarteDefausse(); //
     //Manque l'action du tirage au sorte
     this.P1Round(); //Appel de P1 en attendant
   }
+
+  recevoirDonneesJoueurs(donneesJoueurs: any) {
+    this.playersNumber = donneesJoueurs.length;
+    console.log('Nombre de joueurs:', this.playersNumber);
+    console.log('Données des joueurs:', donneesJoueurs);
+  }
+
   // ----- Chacun tire un carte pour voir qui commence ---------------------------------------
   // À FAIRE
   // Action pour appeler ensuite le tour du P1 ou P2

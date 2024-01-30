@@ -8,7 +8,7 @@
         <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
           <div class="card-body">
             <h2 class="text-center mb-4 text-dark">Skyjo</h2>
-            <form>
+            <form (ngSubmit)="recupererDonneesFormulaire()">
               <div class="form-group mb-3">
                 <label for="player1" class="text-dark">Player 1</label>
                 <select
@@ -70,6 +70,18 @@
                   [disabled]="boutonAjouterJoueurDesactive"
                 >
                   Ajouter joueur
+                </button>
+              </div>
+              <div class="d-grid" id="buttonContainer">
+                <button
+                  type="submit"
+                  class="btn rounded-pill mb-3"
+                  style="
+                    background: linear-gradient(to right, #007bff, #00ffb0);
+                    color: white;
+                  "
+                >
+                  Valider
                 </button>
               </div>
             </form>
