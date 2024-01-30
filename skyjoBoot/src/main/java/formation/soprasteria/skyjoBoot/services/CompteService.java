@@ -93,7 +93,7 @@ public class CompteService implements UserDetailsService {
 
 	public void sendResetPasswordEmail(String email) {
 		Optional<Compte> optionalCompte = compteRepositories.findByEmail(email);
-
+		
 		if (optionalCompte.isPresent()) {
 			Compte compte = optionalCompte.get();
 			// Créer un message d'e-mail avec le nouveau mot de passe

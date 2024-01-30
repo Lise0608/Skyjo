@@ -40,9 +40,9 @@ export class ResetPasswordComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => [
-      (this.compteId = params['compteId']),
-    ]);
+    this.route.queryParams.subscribe((params) => {
+      this.compteId = +params['compteId']; // Convertir en nombre si nécessaire
+    });
   }
 
   // passwordAndConfirmEqual(control: AbstractControl): ValidationErrors | null {
@@ -59,7 +59,6 @@ export class ResetPasswordComponent implements OnInit {
   // }
 
   save() {
-    console.log('test');
     this.compteSrv
       .reset(this.form.get('passwordGroup.password')?.value, this.compteId!)
       .subscribe(() => {

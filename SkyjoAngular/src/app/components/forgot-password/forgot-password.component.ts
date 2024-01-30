@@ -22,6 +22,15 @@ export class ForgotPasswordComponent {
   }
 
   sendEmail() {
-    this.compteSrv.sendEmail(this.form.get('email')?.value);
+    const email = this.form.get('email')?.value;
+    console.log('email composant ', email);
+    this.compteSrv.sendEmail(email!).subscribe({
+      next: () => {
+        console.log('Email sent successfully');
+      },
+      error: (error) => {
+        console.error('Error sending email:', error);
+      },
+    });
   }
 }

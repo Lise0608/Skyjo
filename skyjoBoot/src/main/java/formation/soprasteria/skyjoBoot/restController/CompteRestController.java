@@ -96,7 +96,9 @@ public class CompteRestController {
 	}
 	
 	@PostMapping("/api/comptes/reset")
-	public void resetPassword(@RequestParam String email) {
+	public void resetPassword(@RequestBody Map<String, String> requestBody) {
+		String email = requestBody.get("email");
+		System.out.println("reset password" + email);
 		compteSrv.sendResetPasswordEmail(email);
 	}
 	
@@ -106,12 +108,11 @@ public class CompteRestController {
 	}
 	
 	@PostMapping("/api/comptes/updatePassword")
-    public CompteResponse updatePassword(@Valid @RequestBody Map<String, Long> requestBody) {
-        Compte compte = compteSrv.findById(requestBody.get("compteId"));
+    public CompteResponse updatePassword(@Valid @RequestBody Map<String, String> requestBody) {
+        Compte compte = compteSrv.findById(Long.parseLong(requestBody.get("compteId")));
         String newPassword = requestBody.get("newPassword").toString();
 
         compte.setPassword(passwordEncoder.encode(newPassword));
-
         return new CompteResponse(compte);
     }
 }
