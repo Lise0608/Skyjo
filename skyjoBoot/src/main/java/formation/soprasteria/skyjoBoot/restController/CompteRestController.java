@@ -98,7 +98,6 @@ public class CompteRestController {
 	@PostMapping("/api/comptes/reset")
 	public void resetPassword(@RequestBody Map<String, String> requestBody) {
 		String email = requestBody.get("email");
-		System.out.println("reset password" + email);
 		compteSrv.sendResetPasswordEmail(email);
 	}
 	
@@ -113,6 +112,7 @@ public class CompteRestController {
         String newPassword = requestBody.get("newPassword").toString();
 
         compte.setPassword(passwordEncoder.encode(newPassword));
+        compteSrv.update(compte);
         return new CompteResponse(compte);
     }
 }
