@@ -1,0 +1,47 @@
+<div class="mt-5">
+  <h6>Vos parties :</h6>
+  <table class="table table-hover">
+    <thead>
+      <th class="text-center">Id</th>
+      <th class="text-center">Date</th>
+      <th class="text-center"></th>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let g of observableGames | async">
+        <tr>
+          <td class="text-center">{{ g.id }}</td>
+          <td class="text-center">{{ g.date }}</td>
+          <td class="text-center">
+            <button
+              class="btn btn-outline-primary"
+              (click)="toggleShowDetails(g)"
+            >
+              Details
+            </button>
+          </td>
+        </tr>
+        <tr *ngIf="g.showDetails">
+          <td colspan="3">
+            <table>
+              <thead>
+                <th class="text-center">Game rules</th>
+                <th class="text-center">Players</th>
+              </thead>
+              <tr>
+                <td class="px-5">
+                  <p>Max score: {{ g.scoreAAtteindre }}</p>
+                  <p>Specificities : {{ g.specificites }}</p>
+                </td>
+                <td class="px-5">
+                  <li *ngFor="let p of g.players">
+                    {{ p.username }} : {{ p.score }}pts
+                  </li>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>

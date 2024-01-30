@@ -17,6 +17,7 @@ import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.
 import { AuthentificationInterceptor } from './interceptors/authentification.interceptors';
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { ListGamesUserComponent } from './components/user/list-games-user/list-games-user.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     AdminPanelComponent,
     CreationDePartieComponent,
     ResetPasswordComponent,
+    ListGamesUserComponent,
   ],
   imports: [
     BrowserModule,

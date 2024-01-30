@@ -37,6 +37,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   turnedP1CardNumber = '';
   playerDidSkyjo = 0;
   private resolveCallback: ((event: MouseEvent) => void) | null = null;
+  attributsRecus: any;
 
   constructor(
     private renderer: Renderer2,
@@ -70,6 +71,8 @@ export class PlateauGraphiqueComponent implements OnInit {
 
     this.waitForDrawOrDiscard = this.waitForDrawOrDiscard.bind(this);
     this.waitForDrawOrTurn = this.waitForDrawOrTurn.bind(this);
+
+    this.attributsRecus = this.route.snapshot.data;
   }
 
   // === Déroulé partie ====================================================================================
@@ -88,18 +91,14 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.distribuerCartesAuJoueurP2(); //
     this.distribuerPremiereCarteDefausse(); //
     this.P1twoCardsDraw();
-    //this.P1Round(); //Appel de P1 en attendant le tirage au sort
   }
 
-  recevoirDonneesJoueurs(donneesJoueurs: any) {
-    this.playersNumber = donneesJoueurs.length;
+  recevoirDonneesJoueurs(attributsRecus: any) {
+    this.playersNumber = attributsRecus.length;
     console.log('Nombre de joueurs:', this.playersNumber);
-    console.log('Données des joueurs:', donneesJoueurs);
+    console.log('Données des joueurs:', attributsRecus);
   }
 
-  // ----- Chacun tire un carte pour voir qui commence ---------------------------------------
-  // À FAIRE
-  // Action pour appeler ensuite le tour du P1 ou P2
   // ----- Chacun tire deux cartes, la plus grande somme commence ---------------------------------------
   async P1twoCardsDraw() {
     this.afficherTexteP1(5);
