@@ -91,17 +91,22 @@ public class CompteService implements UserDetailsService {
 		}
 	}
 
-	public void sendResetPasswordEmail(String email) {
+		public void sendResetPasswordEmail(String email) {
 		Optional<Compte> optionalCompte = compteRepositories.findByEmail(email);
-
+		
 		if (optionalCompte.isPresent()) {
+			Compte compte = optionalCompte.get();
 			// Créer un message d'e-mail avec le nouveau mot de passe
-			String frontendUrlString = "http://localhost:4200/forgot-password";
+			String frontendUrlString = "http://localhost:4200/reset-password";
 			SimpleMailMessage message = new SimpleMailMessage();
 			message.setFrom("skyjoassistance@gmail.com");
 			message.setTo(email);
-			message.setSubject("Réinitialisation de votre mot de passe");
-			message.setText("Cliquez sur ce lien pour réinitialiser votre mot de passe : " + frontendUrlString);
+			message.setSubject("Skyjo - Votre demande de réinitialisation de votre mot de passe");
+			message.setText("Cher(e) utilisateur(trice),\n\n"
+					 + "Nous avons reçu une demande de réinitialisation de mot de passe pour votre compte.\n"
+					 + "Veuillez cliquer sur le lien suivant pour réinitialiser votre mot de passe : " + frontendUrlString +"?compteId="+ compte.getId() + ".\n"  
+					 + "Si vous n'avez pas effectué cette demande, veuillez ignorer ce message.\n\n"
+					 + "Cordialement,\n L'équipe de support - Skyjo"); 
 
 			System.out.println("message : " + message);
 
@@ -111,7 +116,7 @@ public class CompteService implements UserDetailsService {
 			throw new EntityNotFoundException("Compte introuvable pour cet e-mail");
 		}
 	}
-	
+		
 	public void resetPassword(String newPassword) {
 		
 	}
