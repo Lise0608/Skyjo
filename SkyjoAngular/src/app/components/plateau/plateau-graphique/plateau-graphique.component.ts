@@ -17,7 +17,6 @@ interface DynamicProperties {
   styleUrls: ['./plateau-graphique.component.css'],
 })
 export class PlateauGraphiqueComponent implements OnInit {
-  // À MODIFIER EN FCT DU NOMBRE DE JOUEURS
   donneesJoueurs: any;
   nombreDeTours: any;
   scoreAAtteindre: any;
