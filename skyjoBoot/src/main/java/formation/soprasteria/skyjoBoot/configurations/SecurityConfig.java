@@ -29,11 +29,23 @@ public class SecurityConfig {
 				http.csrf(csrf -> csrf.disable());
 				// on definit les regles sur les requetes http
 				http.authorizeHttpRequests(auth -> {
-					auth.requestMatchers("/swagger-ui/**","/v3/**","/swagger-ui.html", "/api/check/**").permitAll()
+					auth.requestMatchers("/swagger-ui/**","/v3/**","/swagger-ui.html").permitAll()
 	//				auth.dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-					.requestMatchers(HttpMethod.POST,"/api/inscription").anonymous()
-					.requestMatchers(HttpMethod.GET,"/api/auth").authenticated()
-					.requestMatchers("/api/**").permitAll()
+					
+					// Inscription
+					.requestMatchers(HttpMethod.POST,"/api/inscription", "/api/comptes/reset", "/api/comptes/updatePassword").anonymous()
+					.requestMatchers(HttpMethod.GET,"/api/check/**").anonymous()
+					
+					//Utilisateur simple
+					.requestMatchers(HttpMethod.GET,"/api/auth", "/api/game/userGames", "/api/player").authenticated()
+					.requestMatchers(HttpMethod.POST, "/api/game","/api/player").authenticated()
+					
+					// Admin
+					.requestMatchers(HttpMethod.GET, "/api/game/allGames", "/api/comptes").hasAnyRole("ADMIN")
+					.requestMatchers(HttpMethod.DELETE, "/api/game/**", "/api/comptes/**").hasAnyRole("ADMIN")
+					
+					// Sécurité désactivée
+//					.requestMatchers("/api/**").permitAll()
 					.anyRequest().denyAll();
 				});
 				// on definit comment on va s'authentifier
