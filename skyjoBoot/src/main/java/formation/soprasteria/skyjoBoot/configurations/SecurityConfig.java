@@ -11,7 +11,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
-import jakarta.servlet.DispatcherType;
 
 @Configuration
 @SecurityScheme(type = SecuritySchemeType.HTTP, name = "basicAuth", scheme = "basic")
@@ -37,12 +36,17 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.GET,"/api/check/**").anonymous()
 					
 					//Utilisateur simple
-					.requestMatchers(HttpMethod.GET,"/api/auth", "/api/game/userGames", "/api/player").authenticated()
+					.requestMatchers(HttpMethod.GET,"/api/auth", "/api/game/userGames", "/api/player", "/api/comptes/**").authenticated()
 					.requestMatchers(HttpMethod.POST, "/api/game","/api/player").authenticated()
 					
 					// Admin
 					.requestMatchers(HttpMethod.GET, "/api/game/allGames", "/api/comptes").hasAnyRole("ADMIN")
 					.requestMatchers(HttpMethod.DELETE, "/api/game/**", "/api/comptes/**").hasAnyRole("ADMIN")
+					
+					//WebSocket
+					.requestMatchers("/websocket/**").permitAll()
+					
+					//.requestMatchers(null)
 					
 					// Sécurité désactivée
 //					.requestMatchers("/api/**").permitAll()
