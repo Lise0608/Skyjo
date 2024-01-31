@@ -135,6 +135,7 @@ export class PlateauGraphiqueComponent implements OnInit {
       this.donneesJoueurs = data.donneesJoueurs;
       this.nombreDeTours = data.nombreDeTours;
       this.scoreAAtteindre = data.scoreAAtteindre;
+      this.multiplicateurMilisecondes = data.playingSpeed;
       if (this.scoreAAtteindre === undefined) {
         this.scoreAAtteindre = 100;
       }
@@ -168,6 +169,8 @@ export class PlateauGraphiqueComponent implements OnInit {
       IA_P5: this.IA_P5,
     };
 
+    console.log(`Vitesse de jeu :`, this.multiplicateurMilisecondes);
+
     this.humanTwoCardsDraw();
   }
 
@@ -176,27 +179,23 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.visible = 0;
     this.afficherTexteP1(5);
     this.turnP1CardStart = true;
-
     const cardSelectionHandler = (event: any) => {
       if (this.visible === 1) {
         this.updatePlayerNScore(1);
         this.resolveVisibleEvent();
       }
     };
-
     const cardSelectionHandler2 = (event: any) => {
       if (this.visible === 2) {
         this.updatePlayerNScore(1);
         this.resolveVisibleEvent2();
       }
     };
-
     document.addEventListener('visibleChange', cardSelectionHandler);
     console.log(
       'En attente des sélections de carte 1, visible =',
       this.visible
     );
-
     this.visiblePromise.then(() => {
       this.event1OK = true;
       console.log(
@@ -206,15 +205,13 @@ export class PlateauGraphiqueComponent implements OnInit {
       this.turnP1CardStart = true;
       document.addEventListener('visibleChange2', cardSelectionHandler2);
     });
-
     this.visiblePromise2.then(() => {
       this.P2_PNtwoCardsDraw(this.playersNumber);
     });
-
-    await this.pauseInSeconds(2);
   }
 
   async P2_PNtwoCardsDraw(playersNumber: number) {
+    await this.pauseInSeconds(2);
     for (let PN = 2; PN <= playersNumber; PN++) {
       /*  console.log(`Tirage au sort pour P${PN}`); */
       /* alert(this.donneesJoueurs[PN - 1].type); */

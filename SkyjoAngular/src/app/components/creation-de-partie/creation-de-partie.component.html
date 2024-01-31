@@ -45,29 +45,50 @@
             <ul class="dropdown-menu">
               <li>
                 Maximal score :
-                <select class="form-select" [(ngModel)]="choixDuScore">
-                  <option>50</option>
-                  <option>100</option>
-                  <option>200</option>
-                  <option>400</option>
-                  <option>600</option>
-                  <option>800</option>
-                  <option>1000</option>
+                <select
+                  class="form-select"
+                  [(ngModel)]="choixDuScore"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option
+                    *ngFor="let option of [50, 100, 200, 400, 600, 800, 1000]"
+                    [value]="option"
+                    [selected]="option === 100"
+                  >
+                    {{ option }}
+                  </option>
                 </select>
               </li>
               <li>
                 Maximal number of turn :
-                <select class="form-select" [(ngModel)]="choixDuNombreDeTours">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                  <option>6</option>
-                  <option>7</option>
-                  <option>8</option>
-                  <option>9</option>
-                  <option>10</option>
+                <select
+                  class="form-select"
+                  [(ngModel)]="choixDuNombreDeTours"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option
+                    *ngFor="let option of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]"
+                    [value]="option"
+                    [selected]="option === 10"
+                  >
+                    {{ option }}
+                  </option>
+                </select>
+              </li>
+              <li>
+                Playing speed:
+                <select
+                  class="form-select"
+                  [(ngModel)]="playingSpeed"
+                  [ngModelOptions]="{ standalone: true }"
+                >
+                  <option
+                    *ngFor="let option of playingSpeedOptions"
+                    [value]="option.value"
+                    [selected]="option.value === playingSpeed"
+                  >
+                    {{ option.label }}
+                  </option>
                 </select>
               </li>
             </ul>
@@ -129,86 +150,6 @@
                 class="btn rounded-pill mb-3"
                 style="
                   background: linear-gradient(to right, #007bff, #00ffb0);
-                  color: white;
-                "
-                (click)="ajouterJoueur()"
-                [disabled]="boutonAjouterJoueurDesactive"
-              >
-                Add Player
-              </button>
-            </div>
-            <div class="d-grid" id="buttonContainer">
-              <button
-                type="submit"
-                class="btn rounded-pill mb-3"
-                style="
-                  background: linear-gradient(to right, #007bff, #00ffb0);
-                  background-repeat: no-repeat;
-                  color: white;
-                "
-              >
-                Create Game
-              </button>
-            </div>
-          </form>
-
-          <form (ngSubmit)="recupererDonneesFormulaire()">
-            <div class="form-group mb-3">
-              <label for="player1" class="text-dark">Player 1</label>
-              <select
-                class="form-select"
-                name="player1"
-                [(ngModel)]="joueur1Selection.type"
-              >
-                <option>Human</option>
-              </select>
-            </div>
-            <div class="form-group mb-3">
-              <label for="player2" class="text-dark">Player 2</label>
-              <select
-                class="form-select"
-                [(ngModel)]="joueur2Selection.type"
-                name="player2"
-              >
-                <option>IA</option>
-                <option>Human</option>
-              </select>
-            </div>
-            <div *ngIf="ajouterJoueurClicked" class="form-group mb-3">
-              <div
-                *ngFor="let joueur of joueurs; let i = index"
-                class="form-group mb-3"
-              >
-                <label for="Player{{ joueur.numero }}" class="text-dark"
-                  >Player {{ joueur.numero }}</label
-                >
-                <select
-                  class="form-select"
-                  (change)="gererSelection($event, i)"
-                  name="player{{ joueur.numero }}"
-                >
-                  <option
-                    [value]="'Ordinateur'"
-                    [selected]="joueur.type === 'Ordinateur'"
-                  >
-                    IA
-                  </option>
-                  <option
-                    [value]="'Joueur'"
-                    [selected]="joueur.type === 'Joueur'"
-                  >
-                    Human
-                  </option>
-                </select>
-              </div>
-            </div>
-            <div class="d-grid" id="buttonContainer">
-              <button
-                type="button"
-                class="btn rounded-pill mb-3"
-                style="
-                  background: linear-gradient(to right, #007bff, #00ffb0);
-                  background-repeat: no-repeat;
                   color: white;
                 "
                 (click)="ajouterJoueur()"

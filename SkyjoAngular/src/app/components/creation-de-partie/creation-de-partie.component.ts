@@ -24,15 +24,16 @@ export class CreationDePartieComponent {
     type: 'IA',
   };
 
-  choixDuScore: number | undefined;
-  choixDuNombreDeTours: number | undefined;
+  choixDuScore: number = 100;
+  choixDuNombreDeTours: number = 10;
+  playingSpeed: number = 1000;
+  playingSpeedOptions: { value: number; label: string }[] = [
+    { value: 1, label: 'Fast' },
+    { value: 1000, label: 'Normal' },
+    { value: 2000, label: 'Slow' },
+  ];
 
   constructor(private iaServ: IAService, private router: Router) {}
-
-  gestionDesOptionsDeJeu() {
-    let donseesDesOptions = [this?.choixDuScore, this?.choixDuNombreDeTours];
-    // console.log(this.choixDuScore, this.choixDuNombreDeTours);
-  }
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
@@ -69,6 +70,7 @@ export class CreationDePartieComponent {
     let gameData = {
       scoreAAtteindre: this.choixDuScore,
       nombreDeTours: this.choixDuNombreDeTours,
+      playingSpeed: this.playingSpeed,
       donneesJoueurs,
     };
     /* const queryParams = {
