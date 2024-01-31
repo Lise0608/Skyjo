@@ -175,7 +175,11 @@ export class PlateauGraphiqueComponent implements OnInit {
       IA_P5: this.IA_P5,
     };
 
-    console.log(`Vitesse de jeu :`, this.multiplicateurMilisecondes);
+    console.log(
+      `Vitesse de jeu :`,
+      this.multiplicateurMilisecondes,
+      `millisecondes par pauses.`
+    );
 
     this.humanTwoCardsDraw();
   }
@@ -463,6 +467,14 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.renderer.removeClass(texteP1, 'd-none');
     this.renderer.addClass(texteP1, 'd-block');
     let textes = [
+      '<b>Your turn!</b><br />Draw a card <b>or</b> drag that of the discard toward your board.',
+      `<b>Card drawn!</b><br />Drag it toward the board <b>or</b> turn one your board's card.`,
+      '<b>SKYJO ! Last Turn …</b>',
+      '<b>Game over, on retourne les cartes !</b>',
+      '<b>Sauvegarde de la partie !</b>',
+      '<b>Retourne deux cartes sur ton plateau pour savoir qui commence.</b>',
+    ];
+    let textesFR = [
       '<b>À toi de jouer !</b><br />Pioche une carte <b>ou</b> glisse celle de la défausse vers le plateau.',
       '<b>Carte piochée !</b><br />Glisse la carte vers le plateau <b>ou</b> retourne une des cartes du plateau.',
       '<b>SKYJO ! Dernier Tour …</b>',
@@ -599,8 +611,9 @@ export class PlateauGraphiqueComponent implements OnInit {
         };
         console.log(`Sauvegarde de la partie à partir de :`, [gameData]);
         await this.pauseInSeconds(5);
-        this.gameSrv.saveGame(gameData);
-        this.router.navigateByUrl(`/home`);
+        this.gameSrv.saveGame(gameData).subscribe(() => {
+          this.router.navigateByUrl(`/home`);
+        });
       }
     }
     // Si pas fin de partie, on met un bouton "Manche suivante"
