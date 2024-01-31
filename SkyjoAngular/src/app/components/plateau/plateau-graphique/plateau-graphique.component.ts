@@ -1,8 +1,16 @@
 import { CreationDePartieComponent } from './../../creation-de-partie/creation-de-partie.component';
 import { Component, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
-import { interval, fromEvent, merge, EMPTY } from 'rxjs';
+import {
+  interval,
+  fromEvent,
+  merge,
+  EMPTY,
+  Subject,
+  Observable,
+  firstValueFrom,
+} from 'rxjs';
 import completeDeck from './../deck'; // Import des cartes du deck
-import { takeUntil, filter, last } from 'rxjs/operators';
+import { takeUntil, filter, last, take, skip } from 'rxjs/operators';
 import { IA } from './../../../model/plateau/ia';
 import { ActivatedRoute, Router } from '@angular/router';
 type RoundFunction = () => Promise<void>; //Pour aller d'un round à l'autre
@@ -28,9 +36,10 @@ export class PlateauGraphiqueComponent implements OnInit {
   dynamicIAs: DynamicProperties = {};
 
   // ---------------
+  completeImportedDeck = completeDeck.slice();
   deck: number[] = [];
+  gameScorePlayers: number[] = [0]; //Attention, la première valeur de ce tableau n'est attribuée à aucun joueur, tableau[1] est pour P2 et ainsi du suite
   defausse: number[] = []; //Tableau de la defausse qui accumule des cartes
-  scorePlayer = 0;
   changeClass: string[] = [
     'none',
     'd-block',
@@ -43,19 +52,38 @@ export class PlateauGraphiqueComponent implements OnInit {
   discardButton = document.getElementById('btnDefausse'); // Recherche le bouton de la carte de la défausse
   isDragging = false; // Variable pour indiquer si le glisser-déposer est en cours
   isDrawCardTurned = false;
+  lastClickTime = 0;
   discardOn = true;
   cardDroppedInP1 = false;
   P1CardTurned = false;
   turnP1CardOn = false;
   turnP1CardStart = false;
   gameOver = false;
+  P1StartCard1 = false;
+  visible = 0;
+  event1OK = false;
+  P1StartCard2 = false;
   TourP1 = false; //Pour savoir si le P1 doit jouer
-  updateFromTurn = false;
+  //updateFromTurn = false;
   lastTurn = false;
   turnedP1CardNumber = '';
   playerDidSkyjo = 0;
-  private resolveCallback: ((event: MouseEvent) => void) | null = null;
+
+  private visibleEvent = new Event('visible');
+  private visibleEvent2 = new Event('visible');
+  private resolveVisibleEvent!: () => void;
+  private resolveVisibleEvent2!: () => void;
+  private visiblePromise = new Promise<void>((resolve) => {
+    this.resolveVisibleEvent = resolve;
+  });
+  private visiblePromise2 = new Promise<void>((resolve) => {
+    this.resolveVisibleEvent2 = resolve;
+  });
+  private visibleChangeEvent = new Event('visibleChange');
+  private visibleChangeEvent2 = new Event('visibleChange2');
+
   attributsRecus: any;
+  multiplicateurMilisecondes = 1; //1000 pour une partie
 
   constructor(
     private renderer: Renderer2,
@@ -82,7 +110,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.humanTwoCardsDraw = this.humanTwoCardsDraw.bind(this);
     this.P2_PNtwoCardsDraw = this.P2_PNtwoCardsDraw.bind(this);
     this.whoStart = this.whoStart.bind(this);
-    this.getScorePlayerN = this.getScorePlayerN.bind(this);
+    this.getVisibleScorePN = this.getVisibleScorePN.bind(this);
     this.turnP2_PNCard = this.turnP2_PNCard.bind(this);
     this.IAturn1CardAtStart = this.IAturn1CardAtStart.bind(this);
     this.distributeCardsP2ToPN = this.distributeCardsP2ToPN.bind(this);
@@ -91,6 +119,15 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.IARound = this.IARound.bind(this);
     this.nextRound = this.nextRound.bind(this);
     this.hideDraw = this.hideDraw.bind(this);
+    this.envoyerTexteP1 = this.envoyerTexteP1.bind(this);
+    this.newRound = this.newRound.bind(this);
+    this.hideAllCards = this.hideAllCards.bind(this);
+    this.generateSkyjoCards = this.generateSkyjoCards.bind(this);
+    this.distribuerCartesAuJoueurP1 =
+      this.distribuerCartesAuJoueurP1.bind(this);
+    this.distribuerPremiereCarteDefausse =
+      this.distribuerPremiereCarteDefausse.bind(this);
+    /* this.twoVisibleCardsP1 = this.twoVisibleCardsP1.bind(this); */
 
     const navigation = this.router.getCurrentNavigation(); //On récupère le formulaire de création de partie
     if (navigation && navigation.extras.state) {
@@ -98,6 +135,9 @@ export class PlateauGraphiqueComponent implements OnInit {
       this.donneesJoueurs = data.donneesJoueurs;
       this.nombreDeTours = data.nombreDeTours;
       this.scoreAAtteindre = data.scoreAAtteindre;
+      if (this.scoreAAtteindre === undefined) {
+        this.scoreAAtteindre = 100;
+      }
     }
     this.playersNumber = this.donneesJoueurs.length;
   }
@@ -111,7 +151,9 @@ export class PlateauGraphiqueComponent implements OnInit {
     for (let n = 1; n <= this.playersNumber; n++) {
       console.log('P' + n + ' est un', this.donneesJoueurs[n - 1].type);
       this.donneesJoueurs.IA = 'IA' + n;
+      this.gameScorePlayers[n] = 0;
     }
+    /* console.log(this.gameScorePlayers); */
     this.deck = this.generateSkyjoCards(); // On génère le deck
     /* console.log(this.deck); // Affichage du nombre de cartes restantes dans le deck dans la console */
     this.distribuerCartesAuJoueurP1(); //
@@ -131,21 +173,45 @@ export class PlateauGraphiqueComponent implements OnInit {
 
   // ----- Chacun tire deux cartes, la plus grande somme commence ---------------------------------------
   async humanTwoCardsDraw() {
+    this.visible = 0;
     this.afficherTexteP1(5);
-    this.turnP1CardStart = true; //Pour autoriser le joueur à cliquer sur une des cartes du plateau
-    const clickEventPromise1 = new Promise<MouseEvent>((resolve) => {
-      this.resolveCallback = resolve;
-    });
-    await clickEventPromise1; //On attend que P1 retourne la première carte
-    this.updatePlayerNScore(1);
     this.turnP1CardStart = true;
-    const clickEventPromise2 = new Promise<MouseEvent>((resolve) => {
-      this.resolveCallback = resolve;
+
+    const cardSelectionHandler = (event: any) => {
+      if (this.visible === 1) {
+        this.updatePlayerNScore(1);
+        this.resolveVisibleEvent();
+      }
+    };
+
+    const cardSelectionHandler2 = (event: any) => {
+      if (this.visible === 2) {
+        this.updatePlayerNScore(1);
+        this.resolveVisibleEvent2();
+      }
+    };
+
+    document.addEventListener('visibleChange', cardSelectionHandler);
+    console.log(
+      'En attente des sélections de carte 1, visible =',
+      this.visible
+    );
+
+    this.visiblePromise.then(() => {
+      this.event1OK = true;
+      console.log(
+        'En attente des sélections de carte 2, visible =',
+        this.visible
+      );
+      this.turnP1CardStart = true;
+      document.addEventListener('visibleChange2', cardSelectionHandler2);
     });
-    await clickEventPromise2; //On attend que P1 retourne la deuxième carte
-    this.updatePlayerNScore(1);
+
+    this.visiblePromise2.then(() => {
+      this.P2_PNtwoCardsDraw(this.playersNumber);
+    });
+
     await this.pauseInSeconds(2);
-    this.P2_PNtwoCardsDraw(this.playersNumber);
   }
 
   async P2_PNtwoCardsDraw(playersNumber: number) {
@@ -170,9 +236,9 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   async whoStart() {
-    let scoreMax: number[] = [1, this.getScorePlayerN(1)]; //Score player 1
+    let scoreMax: number[] = [1, this.getVisibleScorePN(1)]; //Score player 1
     for (let playerN = 2; playerN <= this.playersNumber; playerN++) {
-      let scoreP: number[] = [playerN, this.getScorePlayerN(playerN)]; // Prendre score max en fonction des autres players
+      let scoreP: number[] = [playerN, this.getVisibleScorePN(playerN)]; // Prendre score max en fonction des autres players
       if (scoreP[1] > scoreMax[1]) {
         scoreMax = scoreP;
       }
@@ -278,8 +344,12 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   async updateGame(lastPlayerNumber: number) {
-    /* console.log('Défausse :', this.defausse); */
-    /* console.log('Pioche :', this.deck); */
+    console.log(
+      'Défausse :',
+      this.defausse.length,
+      'et pioche :',
+      this.deck.length
+    );
     let nextPlayerNumber: number;
     this.gameOver = this.updatePlayerNScore(lastPlayerNumber);
     await this.pauseInSeconds(2);
@@ -316,7 +386,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-      }, secondes * 1000); // 1000 millisecondes équivalent à 1 seconde
+      }, secondes * this.multiplicateurMilisecondes); // 1000 millisecondes équivalent à 1 seconde
     });
   }
 
@@ -400,6 +470,10 @@ export class PlateauGraphiqueComponent implements OnInit {
     texteP1.innerHTML = textes[indexTexteP1];
   }
 
+  envoyerTexteP1(message: string) {
+    this.el.nativeElement.querySelector('#TexteP1').innerHTML = message;
+  }
+
   messageWhatPlayed(carteN: number, playerN: number, typeOfPlay: number) {
     let texteP1 = this.el.nativeElement.querySelector('#TexteP1');
     this.renderer.removeClass(texteP1, 'd-none');
@@ -416,6 +490,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.afficherTexteP1(3);
     let cardNumber: number;
     for (let PN = 1; PN <= this.playersNumber; PN++) {
+      let scorePlayer = this.getVisibleScorePN(PN);
       if (PN == 1 && this.playerDidSkyjo !== PN) {
         let P1Buttons: NodeListOf<HTMLButtonElement> =
           this.el.nativeElement.querySelectorAll(
@@ -425,16 +500,29 @@ export class PlateauGraphiqueComponent implements OnInit {
           if (button.id !== 'visible') {
             if (button.dataset['cardNumber'] !== undefined) {
               cardNumber = parseInt(button.dataset['cardNumber']);
-              this.scorePlayer = this.scorePlayer + cardNumber;
+              scorePlayer += cardNumber;
               button.innerHTML = `<img src="assets/images/Card_${cardNumber}.png" style="height: 16vh;" />`; // Affiche la carte
+              button.id = 'visible';
             }
             let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
-            if (this.scorePlayer != 1) {
+            if (scorePlayer != 1) {
               scoreTextZone.innerHTML =
-                '<b>Player ' + PN + ' (' + this.scorePlayer + ' points)</b>';
+                '<b>Player ' +
+                PN +
+                ' (manche : ' +
+                scorePlayer +
+                ' pts, partie : ' +
+                this.gameScorePlayers[PN] +
+                ' pts)</b>';
             } else {
               scoreTextZone.innerHTML =
-                '<b>Player ' + PN + ' (' + this.scorePlayer + ' point)</b>';
+                '<b>Player ' +
+                PN +
+                ' (manche : ' +
+                scorePlayer +
+                ' pt, partie : ' +
+                this.gameScorePlayers[PN] +
+                ' pts)</b>';
             }
           }
           await this.pauseInSeconds(1);
@@ -448,28 +536,78 @@ export class PlateauGraphiqueComponent implements OnInit {
           if (div.id !== 'visible') {
             if (div.dataset['cardNumber'] !== undefined) {
               cardNumber = parseInt(div.dataset['cardNumber']);
-              this.scorePlayer = this.scorePlayer + cardNumber;
+              scorePlayer += cardNumber;
               div.innerHTML = `<img src="assets/images/Card_${cardNumber}.png" style="height: 16vh;" />`; // Affiche la carte
+              div.id = 'visible';
             }
             let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
-            if (this.scorePlayer != 1) {
+            if (scorePlayer != 1) {
               scoreTextZone.innerHTML =
-                '<b>Player ' + PN + ' (' + this.scorePlayer + ' points)</b>';
+                '<b>Player ' +
+                PN +
+                ' (manche : ' +
+                scorePlayer +
+                ' pts, partie : ' +
+                this.gameScorePlayers[PN] +
+                ' pts)</b>';
             } else {
               scoreTextZone.innerHTML =
-                '<b>Player ' + PN + ' (' + this.scorePlayer + ' point)</b>';
+                '<b>Player ' +
+                PN +
+                ' (manche : ' +
+                scorePlayer +
+                ' pt, partie : ' +
+                this.gameScorePlayers[PN] +
+                ' pts)</b>';
             }
           }
           await this.pauseInSeconds(1);
         }
       }
     }
-
-    this.afficherTexteP1(4);
+    // On affiche qui remporte la manche
+    let scoreMin = this.getVisibleScorePN(1); //Le score max est celui du P1 pour le moment
+    this.gameScorePlayers[1] += scoreMin; //Score total de P1
+    let winnerRound = 1;
+    for (let PN = 2; PN <= this.playersNumber; PN++) {
+      let scorePN = this.getVisibleScorePN(PN);
+      this.gameScorePlayers[PN] += scorePN;
+      /* console.log(`scorePN`, scorePN,`scoreMin`, scoreMin); */
+      if (scorePN < scoreMin) {
+        scoreMin = scorePN;
+        winnerRound = PN;
+      }
+    }
+    // Si fin de partie
+    for (let gSP of this.gameScorePlayers) {
+      if (gSP >= this.scoreAAtteindre) {
+        this.afficherTexteP1(4); // Que quand toutes les manches sont effectuées ou score dépasse
+        alert(
+          `Lancer fonction de sauvegarde de partie et redirection vers la page des scores de l'utilisateur.`
+        );
+        //Lancer fonction de fin de partie ici
+      }
+    }
+    // Si pas fin de partie, on met un bouton "Manche suivante"
+    this.envoyerTexteP1(
+      `Player ${winnerRound} remporte la manche avec ${scoreMin} points !`
+    );
+    let txtDiv = this.el.nativeElement.querySelector('#TexteP1');
+    if (txtDiv) {
+      let txtButton = document.createElement('button');
+      txtButton.textContent = `Manche suivante`;
+      txtButton.addEventListener('click', () => {
+        if (txtDiv.contains(txtButton)) {
+          txtDiv.removeChild(txtButton);
+        }
+        this.newRound();
+      });
+      txtDiv.appendChild(txtButton); //On ajoute le bouton à la division
+    }
   }
 
   updatePlayerNScore(playerN: number) {
-    this.scorePlayer = 0;
+    let scorePlayer = 0;
     let turnedCardNumber = 0;
     let CardNumber = 0;
     let scoreTextZone = this.el.nativeElement.querySelector('.tP' + playerN);
@@ -484,8 +622,7 @@ export class PlateauGraphiqueComponent implements OnInit {
           turnedCardNumber++;
           if (button.dataset['cardNumber'] !== undefined) {
             /* console.log('avant calcul score :', this.scorePlayer); */
-            this.scorePlayer =
-              this.scorePlayer + parseInt(button.dataset['cardNumber']);
+            scorePlayer += parseInt(button.dataset['cardNumber']);
             /* console.log('après calcul score :', this.scorePlayer); */
           }
         }
@@ -500,18 +637,29 @@ export class PlateauGraphiqueComponent implements OnInit {
         if (div.id === 'visible') {
           turnedCardNumber++;
           if (div.dataset['cardNumber'] !== undefined) {
-            this.scorePlayer =
-              this.scorePlayer + parseInt(div.dataset['cardNumber']);
+            scorePlayer += parseInt(div.dataset['cardNumber']);
           }
         }
       });
     }
-    if (this.scorePlayer != 1) {
+    if (scorePlayer != 1) {
       scoreTextZone.innerHTML =
-        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' points)</b>';
+        '<b>Player ' +
+        playerN +
+        ' (manche : ' +
+        scorePlayer +
+        ' pts, partie : ' +
+        this.gameScorePlayers[playerN] +
+        ' pts)</b>';
     } else {
       scoreTextZone.innerHTML =
-        '<b>Player ' + playerN + ' (' + this.scorePlayer + ' point)</b>';
+        '<b>Player ' +
+        playerN +
+        ' (manche :' +
+        scorePlayer +
+        ' pt, partie : ' +
+        this.gameScorePlayers[playerN] +
+        ' pts)</b>';
     }
     if (turnedCardNumber == CardNumber) {
       return true; //true si c'est le dernier tour
@@ -519,30 +667,32 @@ export class PlateauGraphiqueComponent implements OnInit {
     return false;
   }
 
-  getScorePlayerN(playerN: number): number {
+  getVisibleScorePN(PN: number): number {
     let score = 0;
-    let scoreTextZone = this.el.nativeElement.querySelector('.tP' + playerN);
-    if (playerN == 1) {
+    if (PN == 1) {
       let playerButtons;
       playerButtons = this.el.nativeElement.querySelectorAll(
-        `[class^="btn-"][class$="P${playerN}"]`
+        `[class^="btn-"][class$="P${PN}"]`
       );
+      /* console.log([playerButtons]); */
       playerButtons.forEach((button: HTMLButtonElement) => {
         if (button.id === 'visible') {
+          /* console.log(`Visible ? Oui`); */
           if (button.dataset['cardNumber'] !== undefined) {
-            score = score + parseInt(button.dataset['cardNumber']);
+            score += parseInt(button.dataset['cardNumber']);
           }
         }
+        /* console.log(`getVisibleScorePN :`, score); */
       });
     } else {
       let playerDivs;
       playerDivs = this.el.nativeElement.querySelectorAll(
-        `[class^="c"][class$="P${playerN}"]`
+        `[class^="c"][class$="P${PN}"]`
       );
       playerDivs.forEach((div: HTMLDivElement) => {
         if (div.id === 'visible') {
           if (div.dataset['cardNumber'] !== undefined) {
-            score = score + parseInt(div.dataset['cardNumber']);
+            score += parseInt(div.dataset['cardNumber']);
           }
         }
       });
@@ -550,30 +700,17 @@ export class PlateauGraphiqueComponent implements OnInit {
     return score;
   }
 
-  /*  onClickP1Button(event: MouseEvent) {
-    // Vérification si un glisser-déposer est en cours
-    if (this.isDragging) {
-      let cardNumber = (event.target as HTMLButtonElement).dataset[
-        'cardNumber'
-      ];
-      (
-        event.target as HTMLButtonElement
-      ).innerHTML = `<img src="assets/images/Card_${cardNumber}.png" />`;
-      (event.target as HTMLButtonElement).removeEventListener(
-        'click',
-        this.onClickP1Button
-      );
-    }
-  } */
-
   // === Création du deck ====================================================
   generateSkyjoCards() {
     // Mélange des cartes
-    for (let i = completeDeck.length - 1; i > 0; i--) {
+    for (let i = this.completeImportedDeck.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1)); //Mélange de Fisher-Yates : on prend une carte au hasard dans les cartes restantes
-      [completeDeck[i], completeDeck[j]] = [completeDeck[j], completeDeck[i]]; //Échange entre 2 cartes : j va dans i et i va dans j
+      [this.completeImportedDeck[i], this.completeImportedDeck[j]] = [
+        this.completeImportedDeck[j],
+        this.completeImportedDeck[i],
+      ]; //Échange entre 2 cartes : j va dans i et i va dans j
     }
-    return completeDeck;
+    return this.completeImportedDeck;
   }
 
   // ---- Pioche ------------------------------------------------------------------------
@@ -612,23 +749,6 @@ export class PlateauGraphiqueComponent implements OnInit {
       this.isDrawCardTurned = true;
     }
   }
-
-  /*  updateDraw() {
-    if (
-      (this.draggedCard && this.draggedCard.classList.contains('dragPioche')) ||
-      this.updateFromTurn === true
-    ) {
-      console.log('On retourne une carte de la pioche.');
-      this.isDrawCardTurned = false;
-      this.turnDrawCard();
-      let drawCard = document.getElementById('btnPioche'); // Recherche le bouton de la carte de la pioche
-      if (drawCard) {
-        drawCard.innerHTML = `<img src="assets/images/Card.png" style="height: 16vh;"/>`; // On affiche la pioche par une carte face cachée, la prochaine carte est prete à être tirée
-        this.isDrawCardTurned = false;
-        this.updateFromTurn = false;
-      }
-    }
-  } */
 
   hideDraw() {
     /* console.log('On met face cachée la pioche.'); */
@@ -721,36 +841,58 @@ export class PlateauGraphiqueComponent implements OnInit {
   // === Fonctions diverses =================================================================================
   // Fonction appelée au clic sur une carte de P1
   turnP1Card(event: MouseEvent) {
-    const currentTarget = event.currentTarget as HTMLElement;
-    if (
-      (currentTarget.id != 'visible' && this.TourP1 && this.turnP1CardOn) ||
-      this.turnP1CardStart
-    ) {
-      this.turnedP1CardNumber = currentTarget.dataset['cardNumber'] ?? '';
-      /* console.log(
+    console.log('Rentre dans turnP1Card');
+    const currentTime = event.timeStamp;
+
+    // Vérifier si le temps écoulé depuis le dernier clic est supérieur au délai minimum (par exemple, 1000 ms)
+    if (currentTime - this.lastClickTime > 10) {
+      console.log("L'événement a été déclenché!");
+      this.lastClickTime = currentTime; // Mettre à jour le temps du dernier clic
+
+      const currentTarget = event.currentTarget as HTMLElement;
+
+      console.log(`this.turnP1CardStart :`, this.turnP1CardStart);
+      if (
+        (currentTarget.id != 'visible' && this.TourP1 && this.turnP1CardOn) ||
+        this.turnP1CardStart
+      ) {
+        console.log('Rentre dans boucle 1');
+        this.turnedP1CardNumber = currentTarget.dataset['cardNumber'] ?? '';
+        /* console.log(
         'Activation de turnCard. P1CardNumber =',
         this.turnedP1CardNumber
       ); */
-      let P1Button = document.querySelector(
-        '.' + currentTarget.className
-      ) as HTMLElement; // Pour avoir la classe du bouton du dépôt P1
-      P1Button.innerHTML = `<img src="assets/images/Card_${this.turnedP1CardNumber}.png" style="height: 16vh;" />`; // Affiche la carte de P1
-      P1Button.id = 'visible';
-      this.P1CardTurned = true;
-      //Maintenant il faut mettre la carte de la pioche à la défausse ssi on est en plein jeu et pas au début
-      if (!this.turnP1CardStart) {
-        let newDefausseCardNumber = this.getValeurPioche(); // Récupère le numéro de la carte glissée
-        if (newDefausseCardNumber != undefined) {
-          this.updateDiscard(newDefausseCardNumber?.toString());
+        let P1Button = document.querySelector(
+          '.' + currentTarget.className
+        ) as HTMLElement; // Pour avoir la classe du bouton du dépôt P1
+        P1Button.innerHTML = `<img src="assets/images/Card_${this.turnedP1CardNumber}.png" style="height: 16vh;" />`; // Affiche la carte de P1
+        P1Button.id = 'visible';
+        console.log('Carte rendue visible');
+        this.visible++;
+        document.dispatchEvent(this.visibleChangeEvent);
+        if (this.event1OK) {
+          console.log('event1OK, dispatchEvent !');
+          document.dispatchEvent(this.visibleChangeEvent2);
         }
-        this.updateFromTurn = true;
-        this.hideDraw(); //Si la carte provient de la pioche, on cache la pioche. Elle sera actualisé en cliquant dessus
-      } else {
-        this.turnP1CardStart = false;
+        this.P1CardTurned = true;
+        //Maintenant il faut mettre la carte de la pioche à la défausse ssi on est en plein jeu et pas au début
+        if (!this.turnP1CardStart) {
+          console.log('Passe par turnP1CardStart');
+          let newDefausseCardNumber = this.getValeurPioche(); // Récupère le numéro de la carte glissée
+          if (newDefausseCardNumber != undefined) {
+            this.updateDiscard(newDefausseCardNumber?.toString());
+          }
+          //this.updateFromTurn = true;
+          this.hideDraw(); //Si la carte provient de la pioche, on cache la pioche. Elle sera actualisé en cliquant dessus
+        } else {
+          this.turnP1CardStart = false;
+        }
+        /* if (this.P1StartCard1 && !this.P1StartCard2) {
+        this.P1StartCard2 = true;
       }
-      if (this.resolveCallback) {
-        this.resolveCallback(event);
-        this.resolveCallback = null; // Réinitialiser la fonction de résolution
+      if (!this.P1StartCard1) {
+        this.P1StartCard1 = true;
+      } */
       }
     }
   }
@@ -765,7 +907,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     if (newDefausseCardNumber != undefined) {
       this.updateDiscard(newDefausseCardNumber?.toString());
     }
-    this.updateFromTurn = true;
+    //this.updateFromTurn = true;
     this.hideDraw(); //Si la carte provient de la pioche, on actualise la pioche
     return turnedCardNumber ?? 'defaultValue';
   }
@@ -906,7 +1048,78 @@ export class PlateauGraphiqueComponent implements OnInit {
     if (oldCard !== undefined) {
       this.updateDiscard(oldCard); //Si la carte va à la défausse, on actualise la défausse
     }
-    this.updateFromTurn = true;
+    /* this.updateFromTurn = true; */
     this.hideDraw(); //Si la carte provient de la pioche, on actualise la pioche
+  }
+
+  newRound() {
+    // promesses
+    this.visibleEvent = new Event('visible');
+    this.visibleEvent2 = new Event('visible');
+    this.resolveVisibleEvent = () => {};
+    this.resolveVisibleEvent2 = () => {};
+    this.visiblePromise = new Promise<void>((resolve) => {
+      this.resolveVisibleEvent = resolve;
+    });
+    this.visiblePromise2 = new Promise<void>((resolve) => {
+      this.resolveVisibleEvent2 = resolve;
+    });
+    this.visibleChangeEvent = new Event('visibleChange');
+    this.visibleChangeEvent2 = new Event('visibleChange2');
+    // autre
+    this.hideAllCards();
+    this.defausse = []; //Tableau de la defausse qui accumule des cartes
+    this.isDragging = false; // Variable pour indiquer si le glisser-déposer est en cours
+    this.isDrawCardTurned = false;
+    this.discardOn = true;
+    this.cardDroppedInP1 = false;
+    this.P1CardTurned = false;
+    this.turnP1CardOn = false;
+    this.turnP1CardStart = false;
+    this.gameOver = false;
+    this.P1StartCard1 = false;
+    this.P1StartCard2 = false;
+    this.event1OK = false;
+    this.TourP1 = false; //Pour savoir si le P1 doit jouer
+    this.lastTurn = false;
+    this.playerDidSkyjo = 0;
+    this.IA_P2 = new IA(1, 1);
+    this.IA_P3 = new IA(1, 1);
+    this.IA_P4 = new IA(1, 1);
+    this.IA_P5 = new IA(1, 1);
+    this.completeImportedDeck = completeDeck.slice(); //On réimporte 150 cartes
+    this.deck = this.generateSkyjoCards(); // On regénère le deck
+    this.distribuerCartesAuJoueurP1(); //
+    this.distributeCardsP2ToPN(this.playersNumber); //
+    this.distribuerPremiereCarteDefausse(); //
+    this.dynamicIAs = {
+      //Réinitialisation des variables
+      IA_P2: this.IA_P2,
+      IA_P3: this.IA_P3,
+      IA_P4: this.IA_P4,
+      IA_P5: this.IA_P5,
+    };
+    this.humanTwoCardsDraw();
+  }
+
+  hideAllCards() {
+    let linkHiddenCardP1 = `<img src="./assets/images/Card.png" style="height: 16vh;" />`;
+    let linkHiddenCardP2_P5 = `<img src="./assets/images/Card.png" style="height: 8vh;" />`;
+    // Player 1
+    let P1Buttons: NodeListOf<HTMLButtonElement> =
+      this.el.nativeElement.querySelectorAll('[class^="btn-"][class$="P1"]');
+    for (let button of Array.from(P1Buttons)) {
+      button.innerHTML = linkHiddenCardP1;
+      button.id = '';
+    }
+    // Player 2 à Player 5
+    for (let PN = 2; PN <= this.playersNumber; PN++) {
+      let PNDiv: NodeListOf<HTMLDivElement> =
+        this.el.nativeElement.querySelectorAll(`[class^="c"][class$="P${PN}"]`);
+      for (let div of Array.from(PNDiv)) {
+        div.innerHTML = linkHiddenCardP2_P5;
+        div.id = '';
+      }
+    }
   }
 }
