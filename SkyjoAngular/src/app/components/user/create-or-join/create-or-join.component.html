@@ -1,27 +1,45 @@
 <div class="mt-5">
   <h6>Create or Join a game now !</h6>
 
-  <div class="mt-4">
-    <div class="d-flex align-items-center justify-content-start ms-5 col-3">
-      <button
-        class="flex-fill btn rounded-pill mb-3 shadow-lg"
-        style="
-          background: linear-gradient(to right, #007bff, #00ffb0);
-          background-repeat: no-repeat;
-          color: white;
-        "
-        (click)="goToCreate()"
-      >
-        Create a new game
-      </button>
-    </div>
-    <div class="d-flex flex-row">
-      <div
-        class="d-flex justify-content-start align-items-center ms-5 col-3 me-3"
-      >
+  <div class="mt-4 text-center">
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex col-3">
         <button
-          class="flex-fill btn rounded-pill mb-3 bg-white text-primary shadow-lg"
+          class="flex-fill btn rounded-pill mb-3 shadow-lg"
+          style="
+            background: linear-gradient(to right, #007bff, #00ffb0);
+            background-repeat: no-repeat;
+            color: white;
+          "
+          (click)="goToCreate()"
+        >
+          Create a new game
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="mt-4 text-center">
+    <div class="d-flex flex-column align-items-center">
+      <div class="d-flex justify-content-start align-items-center col-3">
+        <button
+          class="flex-fill btn rounded-pill mb-3 bg-white shadow-lg"
           (click)="toggleShowLinkInput()"
+          style="
+            display: inline-block;
+            background: linear-gradient(
+              to left,
+              red,
+              orange,
+              yellow,
+              green,
+              rgb(131, 205, 241),
+              blue,
+              indigo
+            );
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+          "
         >
           Join a game with a link
         </button>
@@ -34,12 +52,15 @@
         />
         <button
           class="rounded-end-4 mb-3 border border-secondary p-1 pe-2 bg-white shadow-lg"
-          style="--bs-border-opacity: 0.5"
+          style="
+            background: linear-gradient(to right, #007bff, #00ffb0);
+            background-repeat: no-repeat;
+            color: white;
+          "
         >
           Join
         </button>
       </div>
     </div>
-    <div class="d-flex justify-content-center align-items-center"></div>
   </div>
 </div>

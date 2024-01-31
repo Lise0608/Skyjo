@@ -1,11 +1,29 @@
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-10">
+    <div class="col-md-8">
       <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
-        <div class="card-body">
-          <h4 class="text-center mb-4 fw-semibold text-primary">
+        <div class="card-body text-center">
+          <h3
+            class="text-center mb-4 fw-semibold"
+            style="
+              display: inline-block;
+              background: linear-gradient(
+                to left,
+                red,
+                orange,
+                yellow,
+                green,
+                rgb(131, 205, 241),
+                blue,
+                indigo
+              );
+              background-clip: text;
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+            "
+          >
             Hello {{ login }}, welcome to Skyjo !
-          </h4>
+          </h3>
           <app-create-or-join></app-create-or-join>
           <app-list-games-user></app-list-games-user>
         </div>

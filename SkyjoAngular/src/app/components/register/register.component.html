@@ -3,8 +3,29 @@
     <div class="col-md-6">
       <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
         <div class="card-body">
-          <h2 class="text-center mb-4">Create Account</h2>
-
+          <div class="text-center">
+            <h2
+              class="text-center mb-4"
+              style="
+                display: inline-block;
+                background: linear-gradient(
+                  to left,
+                  red,
+                  orange,
+                  yellow,
+                  green,
+                  rgb(131, 205, 241),
+                  blue,
+                  indigo
+                );
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+              "
+            >
+              Create Account
+            </h2>
+          </div>
           <form [formGroup]="form" (ngSubmit)="save()">
             <div class="form-group mb-3">
               <label for="username" class="form-label">Username</label>
