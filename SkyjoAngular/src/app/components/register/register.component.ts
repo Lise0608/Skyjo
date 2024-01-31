@@ -33,12 +33,16 @@ export class RegisterComponent {
         },
         this.passwordAndConfirmEqual
       ),
-      email: new FormControl('', [
-        Validators.required,
-        Validators.pattern(
-          /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/
-        ),
-      ]),
+      email: new FormControl(
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/
+          ),
+        ],
+        this.emailLibre()
+      ),
     });
     this.showPassword = false;
   }
@@ -59,6 +63,20 @@ export class RegisterComponent {
           return this.RegisterSrv.checkLogin(control.value).pipe(
             map((bool) => {
               return bool ? { loginExist: true } : null;
+            })
+          );
+        })
+      );
+    };
+  }
+
+  emailLibre(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      return timer(500).pipe(
+        switchMap(() => {
+          return this.RegisterSrv.checkEmail(control.value).pipe(
+            map((bool) => {
+              return bool ? { emailExist: true } : null;
             })
           );
         })

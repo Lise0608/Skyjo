@@ -16,7 +16,7 @@ import { CompteService } from 'src/app/services/compte.service';
 })
 export class ResetPasswordComponent implements OnInit {
   form: FormGroup;
-  // showPassword: boolean;
+  showPassword: boolean;
   compteId?: number;
 
   constructor(
@@ -28,15 +28,15 @@ export class ResetPasswordComponent implements OnInit {
       passwordGroup: new FormGroup(
         {
           password: new FormControl('', [
-            // Validators.required,
-            // Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{3,}$/),
+            Validators.required,
+            Validators.pattern(/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{3,}$/),
           ]),
           confirm: new FormControl(''),
-        }
-        // this.passwordAndConfirmEqual
+        },
+        this.passwordAndConfirmEqual
       ),
     });
-    // this.showPassword = false;
+    this.showPassword = false;
   }
 
   ngOnInit(): void {
@@ -45,18 +45,18 @@ export class ResetPasswordComponent implements OnInit {
     });
   }
 
-  // passwordAndConfirmEqual(control: AbstractControl): ValidationErrors | null {
-  //   if (control.get('password')?.invalid) {
-  //     return null;
-  //   }
-  //   return control.get('password')?.value == control.get('confirm')?.value
-  //     ? null
-  //     : { notEquals: true };
-  // }
+  passwordAndConfirmEqual(control: AbstractControl): ValidationErrors | null {
+    if (control.get('password')?.invalid) {
+      return null;
+    }
+    return control.get('password')?.value == control.get('confirm')?.value
+      ? null
+      : { notEquals: true };
+  }
 
-  // showHidePassword(e: Event) {
-  //   this.showPassword = (e.target as HTMLInputElement).checked;
-  // }
+  showHidePassword(e: Event) {
+    this.showPassword = (e.target as HTMLInputElement).checked;
+  }
 
   save() {
     this.compteSrv

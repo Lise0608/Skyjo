@@ -8,17 +8,35 @@ import { PlateauGraphiqueComponent } from './components/plateau/plateau-graphiqu
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
+import { LoggedGuardService } from './services/logged-guard.service';
+import { AdminGuardService } from './services/admin-guard.service';
 
 const routes: Routes = [
-  { path: 'home', component: HomeComponent },
+  { path: 'home', component: HomeComponent, canActivate: [LoggedGuardService] },
   { path: 'auth', component: LoginComponent },
   { path: 'inscription', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  { path: 'creation-de-partie', component: CreationDePartieComponent },
-  { path: 'plateau/:donneesJoueurs', component: PlateauGraphiqueComponent },
-  { path: 'plateau', component: PlateauGraphiqueComponent },
+  {
+    path: 'creation-de-partie',
+    component: CreationDePartieComponent,
+    canActivate: [LoggedGuardService],
+  },
+  {
+    path: 'plateau/:donneesJoueurs',
+    component: PlateauGraphiqueComponent,
+    canActivate: [LoggedGuardService],
+  },
+  {
+    path: 'plateau',
+    component: PlateauGraphiqueComponent,
+    canActivate: [LoggedGuardService],
+  },
   { path: 'reset-password', component: ResetPasswordComponent },
-  { path: 'admin', component: AdminPanelComponent },
+  {
+    path: 'admin',
+    component: AdminPanelComponent,
+    canActivate: [AdminGuardService],
+  },
   {
     path: '',
     redirectTo: 'home',

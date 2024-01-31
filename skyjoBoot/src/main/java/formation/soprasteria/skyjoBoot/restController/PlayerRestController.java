@@ -19,31 +19,18 @@ import formation.soprasteria.skyjoBoot.services.PlayerService;
 @RequestMapping("/api/player")
 @CrossOrigin(origins = "*")
 public class PlayerRestController {
-	
+
 	@Autowired
 	private PlayerService playerService;
-	
-	@GetMapping ("")
-	public List<PlayerResponse> playersList (){
+
+	@GetMapping("")
+	public List<PlayerResponse> playersList() {
 		return playerService.findAll();
 	}
-	
-//	@GetMapping("/{userid}")
-//	public PlayerResponse playerByUserId (@PathVariable Long userid) {
-//		return new PlayerResponse(playerService.findByUserId(userid));
-//	}
-//	
-//	@GetMapping("/{gameid}")
-//	public PlayerResponse playerByGameId (@PathVariable Long gameid) {
-//		return new PlayerResponse(playerService.findByGameId(gameid));
-//	}
-	
-//	@DeleteMapping
-	
+
 	@PostMapping
 	public PlayerResponse savePlayer(Player player) {
 		return new PlayerResponse(playerService.create(player));
 	}
-	
-//	@PutMapping
+
 }

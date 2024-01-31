@@ -9,6 +9,8 @@ import { CompteService } from 'src/app/services/compte.service';
 })
 export class ForgotPasswordComponent {
   form: FormGroup;
+  message = 'dededede';
+  style = '';
 
   constructor(private compteSrv: CompteService) {
     this.form = new FormGroup({
@@ -27,9 +29,13 @@ export class ForgotPasswordComponent {
     this.compteSrv.sendEmail(email!).subscribe({
       next: () => {
         console.log('Email sent successfully');
+        this.message = 'Email sent successfully';
+        this.style = 'text-success';
       },
       error: (error) => {
         console.error('Error sending email:', error);
+        this.message = 'We encountered an error while emailing you';
+        this.style = 'text-danger';
       },
     });
   }

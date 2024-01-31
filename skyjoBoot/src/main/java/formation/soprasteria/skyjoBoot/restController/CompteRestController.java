@@ -106,6 +106,11 @@ public class CompteRestController {
 		return compteSrv.checkLogin(login);
 	}
 	
+	@GetMapping("api/check/email/{email}")
+	public boolean checkEmail(@PathVariable String email) {
+		return compteSrv.checkEmail(email);
+	}
+	
 	@PostMapping("/api/comptes/updatePassword")
     public CompteResponse updatePassword(@Valid @RequestBody Map<String, String> requestBody) {
         Compte compte = compteSrv.findById(Long.parseLong(requestBody.get("compteId")));

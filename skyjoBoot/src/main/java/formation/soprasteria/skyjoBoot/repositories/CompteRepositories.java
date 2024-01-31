@@ -15,6 +15,8 @@ public interface CompteRepositories extends JpaRepository<Compte, Long> {
 	Optional<Compte> findByEmail(String email);
 	
 	boolean existsByLogin(String login);
+	
+	boolean existsByEmail(String email);
 
 }
 

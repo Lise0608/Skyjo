@@ -25,106 +25,118 @@
             >
               Skyjo
             </h3>
-          </div>
-          <form [formGroup]="form" (ngSubmit)="check()">
-            <div class="mb-3">
-              <label for="user" class="form-label">User</label>
-              <input
-                type="text"
-                class="form-control rounded-pill mb-3"
-                id="user"
-                name="user"
-                formControlName="login"
-                placeholder="Username"
-                [(ngModel)]="login"
-                required
-              />
-              <div
-                *ngIf="form.get('login')?.dirty && form.get('login')?.invalid"
-              >
-                <span *ngIf="form.get('login')?.hasError('required')"
-                  >*username required</span
-                >
-              </div>
+            <h3 class="text-center mb-4">Skyjo</h3>
+            <div
+              *ngIf="erreur"
+              class="text-danger d-flex justify-content-center mb-1"
+            >
+              Invalid username or password
             </div>
-            <div class="mb-3 password-input-wrapper">
-              <label for="password" class="form-label">Password</label>
-              <input
-                type="{{ showPassword ? 'text' : 'password' }}"
-                class="form-control rounded-pill mb-3"
-                id="password"
-                formControlName="password"
-                name="password"
-                placeholder="Enter your Password"
-                [(ngModel)]="password"
-              />
-              <div
-                *ngIf="
-                  form.get('password')?.dirty && form.get('password')?.invalid
-                "
-              >
-                <span *ngIf="form.get('password')?.hasError('required')"
-                  >*password required</span
-                >
-              </div>
-              <span
-                class="bi"
-                [ngClass]="{
-                  'bi-eye': !showPassword,
-                  'bi-eye-slash': showPassword
-                }"
-                (click)="togglePasswordVisibility()"
-              ></span>
-            </div>
-
-            <div class="mb-3">
-              <a routerLink="/forgot-password">Forgot password?</a>
-            </div>
-            <div class="d-grid">
-              <button
-                type="submit"
-                class="btn rounded-pill mb-3"
-                style="
-                  background: linear-gradient(to right, #007bff, #00ffb0);
-                  color: white;
-                "
-                [disabled]="form.invalid"
-              >
-                Login
-              </button>
-            </div>
-            <div class="d-grid mt-2">
-              <p style="text-align: center; margin-bottom: 10px">
-                Don't have an account?
-              </p>
-              <div class="d-flex justify-content-start align-items-center">
-                <button
-                  routerLink="/inscription"
-                  class="flex-fill btn rounded-pill mb-3 bg-white shadow-lg"
+            <form [formGroup]="form" (ngSubmit)="check()">
+              <div class="mb-3">
+                <label for="user" class="form-label">User</label>
+                <input
+                  type="text"
+                  class="form-control rounded-pill mb-3"
+                  id="user"
+                  name="user"
+                  formControlName="login"
+                  placeholder="Username"
+                  [(ngModel)]="login"
+                  required
+                />
+                <div
+                  *ngIf="form.get('login')?.dirty && form.get('login')?.invalid"
                 >
                   <span
-                    style="
-                      background: linear-gradient(
-                        to left,
-                        red,
-                        orange,
-                        yellow,
-                        green,
-                        rgb(131, 205, 241),
-                        blue,
-                        indigo
-                      );
-                      background-clip: text;
-                      -webkit-background-clip: text;
-                      -webkit-text-fill-color: transparent;
-                    "
+                    class="text-danger"
+                    *ngIf="form.get('login')?.hasError('required')"
+                    >*Username required</span
                   >
-                    Register
-                  </span>
+                </div>
+              </div>
+              <div class="mb-3 password-input-wrapper">
+                <label for="password" class="form-label">Password</label>
+                <input
+                  type="{{ showPassword ? 'text' : 'password' }}"
+                  class="form-control rounded-pill mb-3"
+                  id="password"
+                  formControlName="password"
+                  name="password"
+                  placeholder="Enter your Password"
+                  [(ngModel)]="password"
+                />
+                <div
+                  *ngIf="
+                    form.get('password')?.dirty && form.get('password')?.invalid
+                  "
+                >
+                  <span
+                    class="text-danger"
+                    *ngIf="form.get('password')?.hasError('required')"
+                    >*Password required</span
+                  >
+                </div>
+                <span
+                  class="bi"
+                  [ngClass]="{
+                    'bi-eye': !showPassword,
+                    'bi-eye-slash': showPassword
+                  }"
+                  (click)="togglePasswordVisibility()"
+                ></span>
+              </div>
+
+              <div class="mb-3">
+                <a routerLink="/forgot-password">Forgot password?</a>
+              </div>
+              <div class="d-grid">
+                <button
+                  type="submit"
+                  class="btn rounded-pill mb-3"
+                  style="
+                    background: linear-gradient(to right, #007bff, #00ffb0);
+                    background-repeat: no-repeat;
+                    color: white;
+                  "
+                  [disabled]="form.invalid"
+                >
+                  Login
                 </button>
               </div>
-            </div>
-          </form>
+              <div class="d-grid mt-2">
+                <p style="text-align: center; margin-bottom: 10px">
+                  Don't have an account?
+                </p>
+                <div class="d-flex justify-content-start align-items-center">
+                  <button
+                    routerLink="/inscription"
+                    class="flex-fill btn rounded-pill mb-3 bg-white shadow-lg"
+                  >
+                    <span
+                      style="
+                        background: linear-gradient(
+                          to left,
+                          red,
+                          orange,
+                          yellow,
+                          green,
+                          rgb(131, 205, 241),
+                          blue,
+                          indigo
+                        );
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                      "
+                    >
+                      Register
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
