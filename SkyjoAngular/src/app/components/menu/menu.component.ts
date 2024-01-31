@@ -17,4 +17,16 @@ export class MenuComponent {
   get logged(): boolean {
     return localStorage.getItem('token') !== null;
   }
+
+  get admin(): boolean {
+    const token = localStorage.getItem('token');
+    const compte = localStorage.getItem('compte');
+
+    if (token && compte) {
+      const role = JSON.parse(compte).role;
+      return role === 'ROLE_ADMIN';
+    } else {
+      return false;
+    }
+  }
 }

@@ -19,7 +19,6 @@ export class ListGamesUserComponent implements OnInit {
     this.userAccount = localStorage.getItem('token')
       ? JSON.parse(localStorage.getItem('compte')!)
       : null;
-    console.log('userAccount :', this.userAccount);
 
     this.observableGames = this.gameSrv.findUserGames(this.userAccount.id!);
   }

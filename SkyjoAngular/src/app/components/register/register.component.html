@@ -18,11 +18,15 @@
               <div
                 *ngIf="form.get('login')?.dirty && form.get('login')?.invalid"
               >
-                <span *ngIf="form.get('login')?.hasError('required')"
-                  >*required</span
+                <span
+                  class="text-danger"
+                  *ngIf="form.get('login')?.hasError('required')"
+                  >*Username Required</span
                 >
-                <span *ngIf="form.get('login')?.hasError('loginExist')"
-                  >*Login already in use</span
+                <span
+                  class="text-danger"
+                  *ngIf="form.get('login')?.hasError('loginExist')"
+                  >*Username already in use</span
                 >
               </div>
             </div>
@@ -38,6 +42,7 @@
                   [type]="showPassword ? 'text' : 'password'"
                 />
                 <div
+                  class="text-danger"
                   *ngIf="
                     form.get('passwordGroup.password')?.dirty &&
                     form.get('passwordGroup.password')?.invalid
@@ -59,6 +64,7 @@
                   [type]="showPassword ? 'text' : 'password'"
                 />
                 <div
+                  class="text-danger"
                   *ngIf="
                     form.get('passwordGroup.confirm')?.dirty &&
                     form.get('passwordGroup')?.invalid
@@ -85,11 +91,20 @@
               <div
                 *ngIf="form.get('email')?.dirty && form.get('email')?.invalid"
               >
-                <span *ngIf="form.get('email')?.hasError('required')"
+                <span
+                  class="text-danger"
+                  *ngIf="form.get('email')?.hasError('required')"
                   >*required</span
                 >
-                <span *ngIf="form.get('email')?.hasError('pattern')"
-                  >*invalid email format</span
+                <span
+                  class="text-danger"
+                  *ngIf="form.get('email')?.hasError('pattern')"
+                  >*Invalid email format</span
+                >
+                <span
+                  class="text-danger"
+                  *ngIf="form.get('email')?.hasError('emailExist')"
+                  >*Email already in use</span
                 >
               </div>
             </div>

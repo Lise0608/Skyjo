@@ -2,7 +2,7 @@
   <h6>Your games history :</h6>
   <table
     class="table table-hover mt-4"
-    *ngIf="(observableGames | async)!.length > 0; else noGamesMessage"
+    *ngIf="observableGames | async as games; else noGamesMessage"
   >
     <thead>
       <th class="text-center">Id</th>

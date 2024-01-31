@@ -124,4 +124,8 @@ public class CompteService implements UserDetailsService {
 	public boolean checkLogin(String login) {
 		return compteRepositories.existsByLogin(login);
 	}
+	
+	public boolean checkEmail(String email) {
+		return compteRepositories.existsByEmail(email);
+	}
 }

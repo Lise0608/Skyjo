@@ -26,4 +26,8 @@ export class RegisterService {
   public checkLogin(login: string): Observable<boolean> {
     return this.http.get<boolean>(API_SKYJO + '/api/check/' + login);
   }
+
+  public checkEmail(email: string): Observable<boolean> {
+    return this.http.get<boolean>(`${API_SKYJO}/api/check/email/${email}`);
+  }
 }
