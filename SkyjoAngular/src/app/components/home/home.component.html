@@ -1,7 +1,15 @@
-<h1
-  [ngStyle]="{ 'font-size': '1.2em', color: '#007bff', 'font-weight': 'bold' }"
->
-  Hello {{ login }}
-</h1>
-
-<app-list-games-user></app-list-games-user>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="card shadow p-3 mb-5 bg-body-tertiary rounded-4">
+        <div class="card-body">
+          <h4 class="text-center mb-4 fw-semibold text-primary">
+            Hello {{ login }}, welcome to Skyjo !
+          </h4>
+          <app-create-or-join></app-create-or-join>
+          <app-list-games-user></app-list-games-user>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

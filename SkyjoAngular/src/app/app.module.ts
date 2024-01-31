@@ -18,6 +18,7 @@ import { AuthentificationInterceptor } from './interceptors/authentification.int
 import { CreationDePartieComponent } from './components/creation-de-partie/creation-de-partie.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { ListGamesUserComponent } from './components/user/list-games-user/list-games-user.component';
+import { CreateOrJoinComponent } from './components/user/create-or-join/create-or-join.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ListGamesUserComponent } from './components/user/list-games-user/list-g
     CreationDePartieComponent,
     ResetPasswordComponent,
     ListGamesUserComponent,
+    CreateOrJoinComponent,
   ],
   imports: [
     BrowserModule,
