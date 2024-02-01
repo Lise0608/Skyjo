@@ -1,0 +1,40 @@
+/* chat.component.css */
+.chat-container {
+  border-radius: 10px;
+  background-color: #f0f0f0; /* Couleur de fond du conteneur de chat */
+}
+/* Style pour le conteneur de messages avec défilement */
+.message-container {
+  max-height: 120px; /* Ajustez la hauteur maximale selon vos besoins */
+  overflow-y: auto; /* Activation du défilement vertical si nécessaire */
+}
+
+/* Style pour chaque message */
+.message {
+  margin-bottom: 10px;
+}
+
+/* Style pour le formulaire de saisie du message */
+.input-container {
+  display: flex;
+  align-items: center;
+  padding: 10px; /* Espace supplémentaire pour améliorer l'apparence */
+}
+
+/* Style pour le champ de saisie du message */
+.message-input {
+  flex-grow: 1;
+  padding: 8px;
+  font-size: 16px;
+}
+
+/* Style pour le bouton "Send" */
+.send-button {
+  margin-left: 8px;
+  padding: 8px 16px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
