@@ -13,6 +13,9 @@ import completeDeck from './../deck'; // Import des cartes du deck
 import { takeUntil, filter, last, take, skip } from 'rxjs/operators';
 import { IA } from './../../../model/plateau/ia';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GameService } from 'src/app/services/game.service';
+import { DatePipe } from '@angular/common';
+
 type RoundFunction = () => Promise<void>; //Pour aller d'un round à l'autre
 
 interface DynamicProperties {
@@ -23,6 +26,7 @@ interface DynamicProperties {
   selector: 'app-plateau-graphique',
   templateUrl: './plateau-graphique.component.html',
   styleUrls: ['./plateau-graphique.component.css'],
+  providers: [DatePipe],
 })
 export class PlateauGraphiqueComponent implements OnInit {
   donneesJoueurs: any;
@@ -88,6 +92,8 @@ export class PlateauGraphiqueComponent implements OnInit {
   constructor(
     private renderer: Renderer2,
     private el: ElementRef,
+    private gameSrv: GameService,
+    private datePipe: DatePipe,
     private router: Router
   ) {
     this.turnP1Card = this.turnP1Card.bind(this);
@@ -171,7 +177,11 @@ export class PlateauGraphiqueComponent implements OnInit {
       IA_P5: this.IA_P5,
     };
 
-    console.log(`Vitesse de jeu :`, this.multiplicateurMilisecondes);
+    console.log(
+      `Vitesse de jeu :`,
+      this.multiplicateurMilisecondes,
+      `millisecondes par pauses.`
+    );
 
     this.humanTwoCardsDraw();
   }
@@ -194,16 +204,16 @@ export class PlateauGraphiqueComponent implements OnInit {
       }
     };
     document.addEventListener('visibleChange', cardSelectionHandler);
-    console.log(
+    /* console.log(
       'En attente des sélections de carte 1, visible =',
       this.visible
-    );
+    ); */
     this.visiblePromise.then(() => {
       this.event1OK = true;
-      console.log(
+      /* console.log(
         'En attente des sélections de carte 2, visible =',
         this.visible
-      );
+      ); */
       this.turnP1CardStart = true;
       document.addEventListener('visibleChange2', cardSelectionHandler2);
     });
@@ -343,12 +353,12 @@ export class PlateauGraphiqueComponent implements OnInit {
   }
 
   async updateGame(lastPlayerNumber: number) {
-    console.log(
+    /* console.log(
       'Défausse :',
       this.defausse.length,
       'et pioche :',
       this.deck.length
-    );
+    ); */
     let nextPlayerNumber: number;
     this.gameOver = this.updatePlayerNScore(lastPlayerNumber);
     await this.pauseInSeconds(2);
@@ -459,6 +469,14 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.renderer.removeClass(texteP1, 'd-none');
     this.renderer.addClass(texteP1, 'd-block');
     let textes = [
+      '<b>Your turn!</b><br />Draw a card <b>or</b> drag that of the discard toward your board.',
+      `<b>Card drawn!</b><br />Drag it toward the board <b>or</b> turn one your board's card.`,
+      '<b>SKYJO ! Last Turn …</b>',
+      '<b>Game over, on retourne les cartes !</b>',
+      '<b>Sauvegarde de la partie !</b>',
+      '<b>Retourne deux cartes sur ton plateau pour savoir qui commence.</b>',
+    ];
+    let textesFR = [
       '<b>À toi de jouer !</b><br />Pioche une carte <b>ou</b> glisse celle de la défausse vers le plateau.',
       '<b>Carte piochée !</b><br />Glisse la carte vers le plateau <b>ou</b> retourne une des cartes du plateau.',
       '<b>SKYJO ! Dernier Tour …</b>',
@@ -581,10 +599,23 @@ export class PlateauGraphiqueComponent implements OnInit {
     for (let gSP of this.gameScorePlayers) {
       if (gSP >= this.scoreAAtteindre) {
         this.afficherTexteP1(4); // Que quand toutes les manches sont effectuées ou score dépasse
-        alert(
-          `Lancer fonction de sauvegarde de partie et redirection vers la page des scores de l'utilisateur.`
-        );
-        //Lancer fonction de fin de partie ici
+        let currentDate = new Date();
+        let formattedDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
+        let gameData = {
+          scoreAAtteindre: this.scoreAAtteindre,
+          specificites: 'delete game',
+          date: formattedDate,
+          playerIds: [1, 2], //À compléter avec les IA
+          playerScores: {
+            '1': this.gameScorePlayers[1],
+            '2': this.gameScorePlayers[2],
+          },
+        };
+        console.log(`Sauvegarde de la partie à partir de :`, [gameData]);
+        await this.pauseInSeconds(5);
+        this.gameSrv.saveGame(gameData).subscribe(() => {
+          this.router.navigateByUrl(`/home`);
+        });
       }
     }
     // Si pas fin de partie, on met un bouton "Manche suivante"
@@ -840,22 +871,20 @@ export class PlateauGraphiqueComponent implements OnInit {
   // === Fonctions diverses =================================================================================
   // Fonction appelée au clic sur une carte de P1
   turnP1Card(event: MouseEvent) {
-    console.log('Rentre dans turnP1Card');
+    /* console.log('Rentre dans turnP1Card'); */
     const currentTime = event.timeStamp;
 
     // Vérifier si le temps écoulé depuis le dernier clic est supérieur au délai minimum (par exemple, 1000 ms)
     if (currentTime - this.lastClickTime > 10) {
-      console.log("L'événement a été déclenché!");
       this.lastClickTime = currentTime; // Mettre à jour le temps du dernier clic
 
       const currentTarget = event.currentTarget as HTMLElement;
 
-      console.log(`this.turnP1CardStart :`, this.turnP1CardStart);
+      /* console.log(`this.turnP1CardStart :`, this.turnP1CardStart); */
       if (
         (currentTarget.id != 'visible' && this.TourP1 && this.turnP1CardOn) ||
         this.turnP1CardStart
       ) {
-        console.log('Rentre dans boucle 1');
         this.turnedP1CardNumber = currentTarget.dataset['cardNumber'] ?? '';
         /* console.log(
         'Activation de turnCard. P1CardNumber =',
@@ -866,17 +895,17 @@ export class PlateauGraphiqueComponent implements OnInit {
         ) as HTMLElement; // Pour avoir la classe du bouton du dépôt P1
         P1Button.innerHTML = `<img src="assets/images/Card_${this.turnedP1CardNumber}.png" style="height: 16vh;" />`; // Affiche la carte de P1
         P1Button.id = 'visible';
-        console.log('Carte rendue visible');
+        /* console.log('Carte rendue visible'); */
         this.visible++;
         document.dispatchEvent(this.visibleChangeEvent);
         if (this.event1OK) {
-          console.log('event1OK, dispatchEvent !');
+          /* console.log('event1OK, dispatchEvent !'); */
           document.dispatchEvent(this.visibleChangeEvent2);
         }
         this.P1CardTurned = true;
         //Maintenant il faut mettre la carte de la pioche à la défausse ssi on est en plein jeu et pas au début
         if (!this.turnP1CardStart) {
-          console.log('Passe par turnP1CardStart');
+          /* console.log('Passe par turnP1CardStart'); */
           let newDefausseCardNumber = this.getValeurPioche(); // Récupère le numéro de la carte glissée
           if (newDefausseCardNumber != undefined) {
             this.updateDiscard(newDefausseCardNumber?.toString());
