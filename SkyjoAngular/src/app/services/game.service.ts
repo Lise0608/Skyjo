@@ -62,4 +62,8 @@ export class GameService {
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.urlGame}/${id}`);
   }
+
+  saveGame(data: any): Observable<Game> {
+    return this.http.post<Game>(`${this.urlGame}`, data);
+  }
 }

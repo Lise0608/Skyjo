@@ -9,7 +9,7 @@ import { CompteService } from 'src/app/services/compte.service';
 })
 export class ForgotPasswordComponent {
   form: FormGroup;
-  message = 'dededede';
+  message = '';
   style = '';
 
   constructor(private compteSrv: CompteService) {
