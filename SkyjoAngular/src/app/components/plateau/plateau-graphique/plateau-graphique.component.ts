@@ -126,8 +126,8 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.nextRound = this.nextRound.bind(this);
     this.hideDraw = this.hideDraw.bind(this);
     this.envoyerTexteP1 = this.envoyerTexteP1.bind(this);
+    this.endRoundUpdateScore = this.endRoundUpdateScore.bind(this);
     this.newRound = this.newRound.bind(this);
-
     this.checkCompleteColumns = this.checkCompleteColumns.bind(this);
     this.hideAllCards = this.hideAllCards.bind(this);
     this.generateSkyjoCards = this.generateSkyjoCards.bind(this);
@@ -590,6 +590,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     for (let PN = 2; PN <= this.playersNumber; PN++) {
       let scorePN = this.getVisibleScorePN(PN);
       this.gameScorePlayers[PN] += scorePN;
+      this.endRoundUpdateScore();
       /* console.log(`scorePN`, scorePN,`scoreMin`, scoreMin); */
       if (scorePN < scoreMin) {
         scoreMin = scorePN;
@@ -696,6 +697,14 @@ export class PlateauGraphiqueComponent implements OnInit {
       return true; //true si c'est le dernier tour
     }
     return false;
+  }
+
+  endRoundUpdateScore() {
+    for (let PN = 1; PN <= this.playersNumber; PN++) {
+      let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
+      scoreTextZone.innerHTML =
+        '<b>P' + PN + ' (game: ' + this.gameScorePlayers[PN] + ' pts)</b>';
+    }
   }
 
   getVisibleScorePN(PN: number): number {
