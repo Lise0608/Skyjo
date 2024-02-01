@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+
+import { CompteService } from 'src/app/services/compte.service';
 import { IAService } from 'src/app/services/iaservice.service';
 
 @Component({
@@ -33,7 +35,11 @@ export class CreationDePartieComponent {
     { value: 2000, label: 'Slow' },
   ];
 
-  constructor(private iaServ: IAService, private router: Router) {}
+  constructor(
+    private iaServ: IAService,
+    private router: Router,
+    private compteServ: CompteService
+  ) {}
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {

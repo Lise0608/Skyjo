@@ -1,9 +1,10 @@
+import { Compte } from '../compte';
+
 export class IA {
   public constructor(public id?: number, public level?: number) {}
-
   public _lastTurnedCard = [1, 0]; //On initialise la variable à la "position -1"
   public _score = 0;
-
+  public _name = 'IA';
   public pickCard(lastTurnedCard: number): any {}
 
   get score(): number {
@@ -11,6 +12,13 @@ export class IA {
   }
   set score(value: number) {
     this._score = value;
+  }
+
+  get name(): string {
+    return this._name;
+  }
+  set name(value: string) {
+    this._name = value;
   }
 
   get lastTurnedCard(): number[] {
