@@ -17,6 +17,8 @@ public class GameResponse {
 	@JsonView(JsonViews.Game.class)
 	private int scoreAAtteindre;
 	@JsonView(JsonViews.Game.class)
+	private int nombreDeTours;
+	@JsonView(JsonViews.Game.class)
 	private String specificites;
 	@JsonView(JsonViews.Game.class)
 	private LocalDate date;
@@ -31,6 +33,7 @@ public class GameResponse {
 		this.id = gameEntity.getId();
 		if (gameEntity.getGameMode() != null) {
 			this.scoreAAtteindre = gameEntity.getGameMode().getScoreAAtteindre();
+			this.nombreDeTours = gameEntity.getGameMode().getNombreDeTours();
 			this.specificites = gameEntity.getGameMode().getSpecificites();
 		}
 		if (gameEntity.getDate() != null) {
@@ -65,6 +68,15 @@ public class GameResponse {
 
 	public void setScoreAAtteindre(int scoreAAtteindre) {
 		this.scoreAAtteindre = scoreAAtteindre;
+	}
+	
+
+	public int getNombreDeTours() {
+		return nombreDeTours;
+	}
+
+	public void setNombreDeTours(int nombreDeTours) {
+		this.nombreDeTours = nombreDeTours;
 	}
 
 	public String getSpecificites() {

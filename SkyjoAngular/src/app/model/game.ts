@@ -4,6 +4,7 @@ export class Game {
   constructor(
     public id?: number,
     public scoreAAtteindre?: number,
+    public nombreDeTours?: string,
     public specificites?: string,
     public players?: Player[],
     public date?: Date,

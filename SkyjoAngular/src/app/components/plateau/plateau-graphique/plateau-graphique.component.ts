@@ -75,6 +75,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   turnedP1CardNumber = '';
   playerDidSkyjo = 0;
   userAccount!: Compte;
+  currentRound: number = 1;
 
   private visibleEvent = new Event('visible');
   private visibleEvent2 = new Event('visible');
@@ -166,6 +167,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     console.log('Il y a', this.playersNumber, 'joueurs.'); //Récupération infos création partie
     console.log(`Le score maximal est de`, this.scoreAAtteindre, `points.`);
     console.log(`Le nombre maximal de tours est ` + this.nombreDeTours + `.`);
+    console.log(`Le tour actuel est ` + this.currentRound + `.`);
     for (let n = 1; n <= this.playersNumber; n++) {
       console.log('P' + n + ' est un', this.donneesJoueurs[n - 1].type);
       this.donneesJoueurs.IA = 'IA' + n;
@@ -609,7 +611,10 @@ export class PlateauGraphiqueComponent implements OnInit {
     // Si fin de partie
     console.log('Score en fin de manche :', this.gameScorePlayers);
     for (let gSP of this.gameScorePlayers) {
-      if (gSP >= this.scoreAAtteindre) {
+      if (
+        this.currentRound >= this.nombreDeTours ||
+        gSP >= this.scoreAAtteindre
+      ) {
         this.afficherTexteP1(4); // Que quand toutes les manches sont effectuées ou score dépasse
         let currentDate = new Date();
         this.userAccount = this.getUserAccount();
@@ -655,6 +660,7 @@ export class PlateauGraphiqueComponent implements OnInit {
         if (txtDiv.contains(txtButton)) {
           txtDiv.removeChild(txtButton);
         }
+        this.currentRound++;
         this.newRound();
       });
       txtDiv.appendChild(txtButton); //On ajoute le bouton à la division

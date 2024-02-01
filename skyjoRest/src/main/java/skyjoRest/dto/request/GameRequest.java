@@ -5,6 +5,7 @@ import java.util.List;
 public class GameRequest {
 		private Long id; 
 		private int scoreAAtteindre;
+		private int nombreDeTours;
 		private String specificites;
 		private List <Long> playerIds;
 		
@@ -26,6 +27,15 @@ public class GameRequest {
 
 		public void setScoreAAtteindre(int scoreAAtteindre) {
 			this.scoreAAtteindre = scoreAAtteindre;
+		}
+		
+
+		public int getNombreDeTours() {
+			return nombreDeTours;
+		}
+
+		public void setNombreDeTours(int nombreDeTours) {
+			this.nombreDeTours = nombreDeTours;
 		}
 
 		public String getSpecificites() {

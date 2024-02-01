@@ -11,8 +11,8 @@ public class GameResponse {
 	
 	private Long id; 
 	private int scoreAAtteindre;
+	private int nombreDeTours;
 	private String specificites;
-	//private Deck deck;
 	private List <PlayerResponse> players;
 
 	public GameResponse () {
@@ -40,20 +40,21 @@ public class GameResponse {
 		this.id = id;
 	}	
 
-//	public Deck getDeck() {
-//		return deck;
-//	}
-//
-//	public void setDeck(Deck deck) {
-//		this.deck = deck;
-//	}
-
 	public int getScoreAAtteindre() {
 		return scoreAAtteindre;
 	}
 
 	public void setScoreAAtteindre(int scoreAAtteindre) {
 		this.scoreAAtteindre = scoreAAtteindre;
+	}
+	
+
+	public int getNombreDeTours() {
+		return nombreDeTours;
+	}
+
+	public void setNombreDeTours(int nombreDeTours) {
+		this.nombreDeTours = nombreDeTours;
 	}
 
 	public String getSpecificites() {

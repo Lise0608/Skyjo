@@ -7,6 +7,7 @@ import java.util.Map;
 public class GameRequest {
 
 	private int scoreAAtteindre;
+	private int nombreDeTours;
 	private String specificites;
 	private LocalDate date;
 	private List<Long> playerIds;
@@ -22,6 +23,14 @@ public class GameRequest {
 
 	public void setScoreAAtteindre(int scoreAAtteindre) {
 		this.scoreAAtteindre = scoreAAtteindre;
+	}
+
+	public int getNombreDeTours() {
+		return nombreDeTours;
+	}
+
+	public void setNombreDeTours(int nombreDeTours) {
+		this.nombreDeTours = nombreDeTours;
 	}
 
 	public String getSpecificites() {
