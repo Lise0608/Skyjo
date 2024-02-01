@@ -9,6 +9,8 @@ export class IA {
     [0, 0, 0, 0],
   ];
 
+  private pileOuFace = true;
+
   public pickCard(lastTurnedCard: number): any {}
 
   get score(): number {
@@ -34,10 +36,30 @@ export class IA {
     }
     return this._lastTurnedCard;
   }
-  public nextCardPosition(): number[] {
-    let coordonneesAleatoires = this.choisirCoordonneesAleatoires(
+
+  public nextCardPositionVierge(): number[] {
+    let coordonneesAleatoires = this.choisirCoordonneesAleatoiresVierges(
       this.plateau_retourne
     );
+    this.plateau_retourne[coordonneesAleatoires.ligne][
+      coordonneesAleatoires.colonne
+    ] = 1;
+    return [coordonneesAleatoires.ligne + 1, coordonneesAleatoires.colonne + 1]; //+1 pour correspondre aux coordonnes de plateau qui vont de 1 à 4
+  }
+
+  public nextCardPosition(doesIASupressAColumn: boolean): number[] {
+    let coordonneesAleatoires: { ligne: number; colonne: number };
+    if (this.pileOuFace && !doesIASupressAColumn) {
+      coordonneesAleatoires = this.choisirCoordonneesAleatoires(
+        this.plateau_retourne
+      ); //Si pile, ça remplace aléatoirement une des 12 cartes
+      this.pileOuFace = false;
+    } else {
+      coordonneesAleatoires = this.choisirCoordonneesAleatoiresVierges(
+        this.plateau_retourne
+      ); //Si face, ça remplace aléatoirement une des cartes face cachées
+      this.pileOuFace = true;
+    }
     this.plateau_retourne[coordonneesAleatoires.ligne][
       coordonneesAleatoires.colonne
     ] = 1;
@@ -53,7 +75,7 @@ export class IA {
     }
   }
 
-  private choisirCoordonneesAleatoires(tableau: number[][]): {
+  private choisirCoordonneesAleatoiresVierges(tableau: number[][]): {
     ligne: number;
     colonne: number;
   } {
@@ -61,7 +83,7 @@ export class IA {
     let case_vierge = false;
     let ligneAleatoire = 0;
     let colonneAleatoire = 0;
-    while (i <= 12 || !case_vierge) {
+    while (i <= 12 && case_vierge === false) {
       const Nlignes = tableau.length;
       const Ncolonnes = tableau[0].length;
       ligneAleatoire = Math.floor(Math.random() * Nlignes);
@@ -71,6 +93,19 @@ export class IA {
       }
       i++;
     }
+    return { ligne: ligneAleatoire, colonne: colonneAleatoire };
+  }
+
+  private choisirCoordonneesAleatoires(tableau: number[][]): {
+    ligne: number;
+    colonne: number;
+  } {
+    let ligneAleatoire = 0;
+    let colonneAleatoire = 0;
+    const Nlignes = tableau.length;
+    const Ncolonnes = tableau[0].length;
+    ligneAleatoire = Math.floor(Math.random() * Nlignes);
+    colonneAleatoire = Math.floor(Math.random() * Ncolonnes);
     return { ligne: ligneAleatoire, colonne: colonneAleatoire };
   }
 }

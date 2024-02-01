@@ -66,6 +66,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   P1StartCard1 = false;
   visible = 0;
   event1OK = false;
+  doesAnyIASupressAColumn = [false, false, false, false, false, false];
   P1StartCard2 = false;
   TourP1 = false; //Pour savoir si le P1 doit jouer
   //updateFromTurn = false;
@@ -231,7 +232,7 @@ export class PlateauGraphiqueComponent implements OnInit {
       let IA = this.dynamicIAs[dynamicPropertyName];
       if (this.donneesJoueurs[PN - 1].type === `IA`) {
         for (let i = 1; i <= 2; i++) {
-          let nextCoord = IA.nextCardPosition();
+          let nextCoord = IA.nextCardPositionVierge();
           let nextDiv = `c${nextCoord[0]}-${nextCoord[1]}P${PN}`; //exemple : "c1-1P2"
           let cardNString = this.IAturn1CardAtStart(nextDiv);
           this.messageWhatPlayed(parseInt(cardNString), PN, 0);
@@ -308,7 +309,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     /* console.log(`Round de P${PN}`); */
     let dynamicPropertyName = `IA_P${PN}`;
     let IA = this.dynamicIAs[dynamicPropertyName];
-    let nextCoord = IA.nextCardPosition();
+    let nextCoord = IA.nextCardPosition(this.doesAnyIASupressAColumn[PN]);
     let nextDiv = `c` + nextCoord[0] + `-` + nextCoord[1] + `P${PN}`; //exemple : "c1-1P2"
     let valeurDefausse = this.getValeurDefausse();
     let choix_pioche_defausse: boolean = false;
@@ -904,14 +905,23 @@ export class PlateauGraphiqueComponent implements OnInit {
           '.' + currentTarget.className
         ) as HTMLElement; // Pour avoir la classe du bouton du dépôt P1
         P1Button.innerHTML = `<img src="assets/images/Card_${this.turnedP1CardNumber}.png" style="height: 16vh;" />`; // Affiche la carte de P1
-        P1Button.id = 'visible';
-        /* console.log('Carte rendue visible'); */
-        this.visible++;
-        document.dispatchEvent(this.visibleChangeEvent);
-        if (this.event1OK) {
-          /* console.log('event1OK, dispatchEvent !'); */
-          document.dispatchEvent(this.visibleChangeEvent2);
+        if (P1Button.id != 'visible') {
+          P1Button.id = 'visible';
+          this.visible++;
+          console.log('Carte rendue visible');
+          document.dispatchEvent(this.visibleChangeEvent);
+          if (this.event1OK) {
+            document.dispatchEvent(this.visibleChangeEvent2);
+          }
         }
+        /* else { //Au cas ou les evenements se déclenchent mal, on tourne automatiquement la carte 1 1
+          let card11 = this.el.nativeElement.querySelectorAll(
+            '[class^="btn-c1-1P1"]'
+          ).dataset['cardNumber'];
+          this.el.nativeElement.querySelectorAll(
+            '[class^="btn-c1-1P1"]'
+          ).innerHTML = `<img src="assets/images/Card_${card11}.png" style="height: 16vh;" />`;
+        } */
         this.P1CardTurned = true;
         //Maintenant il faut mettre la carte de la pioche à la défausse ssi on est en plein jeu et pas au début
         if (!this.turnP1CardStart) {
@@ -1150,6 +1160,7 @@ export class PlateauGraphiqueComponent implements OnInit {
             div.innerHTML = linkCardP2_P5;
             div.dataset['cardNumber'] = '0';
             index++;
+            this.doesAnyIASupressAColumn[PN] = true;
           }
         }
       }
@@ -1182,6 +1193,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.turnP1CardStart = false;
     this.gameOver = false;
     this.P1StartCard1 = false;
+    this.doesAnyIASupressAColumn = [false, false, false, false, false, false];
     this.P1StartCard2 = false;
     this.event1OK = false;
     this.TourP1 = false; //Pour savoir si le P1 doit jouer
