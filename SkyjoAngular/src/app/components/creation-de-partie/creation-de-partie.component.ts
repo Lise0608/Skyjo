@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAService } from 'src/app/services/iaservice.service';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'creation-de-partie',
@@ -78,9 +79,11 @@ export class CreationDePartieComponent {
       optionsJeu: JSON.stringify(optionsJeu),
     }; */
 
+    const uniqueToken = uuidv4();
+
     this.router.navigateByUrl(`/plateau`, {
       ///plateau/${donneesJson}
-      state: { data: gameData },
+      state: { data: gameData, token: uniqueToken },
     });
 
     /* this.router.navigate(['/plateau'], { queryParams: queryParams }); */

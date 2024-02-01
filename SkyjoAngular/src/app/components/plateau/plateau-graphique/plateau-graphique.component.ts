@@ -132,6 +132,8 @@ export class PlateauGraphiqueComponent implements OnInit {
     const navigation = this.router.getCurrentNavigation(); //On récupère le formulaire de création de partie
     if (navigation && navigation.extras.state) {
       let data = navigation.extras.state['data'];
+      let token = navigation.extras.state['toekn'];
+      console.log('tokeninGame : ', token);
       this.donneesJoueurs = data.donneesJoueurs;
       this.nombreDeTours = data.nombreDeTours;
       this.scoreAAtteindre = data.scoreAAtteindre;
