@@ -644,7 +644,9 @@ export class PlateauGraphiqueComponent implements OnInit {
         console.log(`Sauvegarde de la partie à partir de :`, [gameData]);
         await this.pauseInSeconds(5);
         this.gameSrv.saveGame(gameData).subscribe(() => {
-          this.router.navigateByUrl(`/home`, { state: { data: gameData } }); //Commande pour le receveur : let data = navigation.extras.state['data'];
+          this.router.navigateByUrl(`/partie-terminee`, {
+            state: { data: gameData },
+          }); //Commande pour le receveur : let data = navigation.extras.state['data'];
         });
       }
     }

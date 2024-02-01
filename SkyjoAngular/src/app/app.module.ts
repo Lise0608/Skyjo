@@ -20,6 +20,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { ListGamesUserComponent } from './components/user/list-games-user/list-games-user.component';
 import { CreateOrJoinComponent } from './components/user/create-or-join/create-or-join.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { PartieTermineeComponent } from './components/partie-terminee/partie-terminee.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ChatComponent } from './components/chat/chat.component';
     ListGamesUserComponent,
     CreateOrJoinComponent,
     ChatComponent,
+    PartieTermineeComponent,
   ],
   imports: [
     BrowserModule,

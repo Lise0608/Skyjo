@@ -10,12 +10,14 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
 import { AdminPanelComponent } from './components/admin/admin-panel/admin-panel.component';
 import { LoggedGuardService } from './services/logged-guard.service';
 import { AdminGuardService } from './services/admin-guard.service';
+import { PartieTermineeComponent } from './components/partie-terminee/partie-terminee.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [LoggedGuardService] },
   { path: 'auth', component: LoginComponent },
   { path: 'inscription', component: RegisterComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'partie-terminee', component: PartieTermineeComponent },
   {
     path: 'creation-de-partie',
     component: CreationDePartieComponent,
