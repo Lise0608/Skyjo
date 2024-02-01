@@ -29,6 +29,7 @@ interface DynamicProperties {
   providers: [DatePipe],
 })
 export class PlateauGraphiqueComponent implements OnInit {
+  token!: string | null;
   donneesJoueurs: any;
   nombreDeTours: any;
   scoreAAtteindre: any;
@@ -94,7 +95,8 @@ export class PlateauGraphiqueComponent implements OnInit {
     private el: ElementRef,
     private gameSrv: GameService,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.turnP1Card = this.turnP1Card.bind(this);
     this.dragStartDefausse = this.dragStartDefausse.bind(this);
@@ -138,8 +140,6 @@ export class PlateauGraphiqueComponent implements OnInit {
     const navigation = this.router.getCurrentNavigation(); //On récupère le formulaire de création de partie
     if (navigation && navigation.extras.state) {
       let data = navigation.extras.state['data'];
-      let token = navigation.extras.state['toekn'];
-      console.log('tokeninGame : ', token);
       this.donneesJoueurs = data.donneesJoueurs;
       this.nombreDeTours = data.nombreDeTours;
       this.scoreAAtteindre = data.scoreAAtteindre;
@@ -154,6 +154,11 @@ export class PlateauGraphiqueComponent implements OnInit {
   // === Déroulé partie ====================================================================================
   // ----- Initialisation du plateau après avoir lu toutes les fonctions -----------------
   ngOnInit() {
+    this.route.queryParamMap.subscribe((params) => {
+      this.token = params.get('token'); // Récupération du token depuis les paramètres de la requête
+      console.log('token depuis url :', this.token);
+    });
+
     console.log('Il y a', this.playersNumber, 'joueurs.'); //Récupération infos création partie
     console.log(`Le score maximal est de`, this.scoreAAtteindre, `points.`);
     console.log(`Le nombre maximal de tours est ` + this.nombreDeTours + `.`);

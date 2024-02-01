@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	@Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // Configure le préfixe des canaux de publication (où le serveur envoie des messages)
-        config.enableSimpleBroker("/topic");
+        config.enableSimpleBroker("/topic", "/game");
         // Configure le préfixe des canaux d'application (où les clients envoient des messages)
         config.setApplicationDestinationPrefixes("/app");
     }

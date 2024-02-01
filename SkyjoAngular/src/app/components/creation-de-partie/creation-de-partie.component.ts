@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Compte } from 'src/app/model/compte';
+import { GameService } from 'src/app/services/game.service';
 import { IAService } from 'src/app/services/iaservice.service';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -15,6 +17,8 @@ export class CreationDePartieComponent {
   ajouterJoueurClicked: boolean = false;
   joueurs: { numero: number; type: string }[] = [];
   partieCommencee: boolean = false;
+  userAccount!: Compte;
+  token!: string;
 
   joueur1Selection: { numero: number; type: string } = {
     numero: 1,
@@ -34,7 +38,11 @@ export class CreationDePartieComponent {
     { value: 2000, label: 'Slow' },
   ];
 
-  constructor(private iaServ: IAService, private router: Router) {}
+  constructor(
+    private iaServ: IAService,
+    private router: Router,
+    private gameSrv: GameService
+  ) {}
 
   ajouterJoueur() {
     if (this.numeroJoueur <= this.limiteJoueurs) {
@@ -67,33 +75,33 @@ export class CreationDePartieComponent {
       })),
     ];
 
-    //const donneesJson = JSON.stringify(donneesJoueurs);
     let gameData = {
       scoreAAtteindre: this.choixDuScore,
       nombreDeTours: this.choixDuNombreDeTours,
       playingSpeed: this.playingSpeed,
       donneesJoueurs,
     };
-    /* const queryParams = {
-      joueurs: JSON.stringify(donneesJoueurs),
-      optionsJeu: JSON.stringify(optionsJeu),
-    }; */
 
-    const uniqueToken = uuidv4();
+    this.token = uuidv4();
+    this.userAccount = this.getUserAccount();
 
-    this.router.navigateByUrl(`/plateau`, {
-      ///plateau/${donneesJson}
-      state: { data: gameData, token: uniqueToken },
+    this.gameSrv.createGame(this.token, this.userAccount);
+
+    this.router.navigateByUrl(`/plateau?token=${this.token}`, {
+      state: { data: gameData },
     });
-
-    /* this.router.navigate(['/plateau'], { queryParams: queryParams }); */
   }
-  // this.router.navigateByUrl(`/plateau/${donneesJson}`);
 
   appelerIA() {
     this.iaServ.basicIA();
   }
   commencerPartie() {
     this.partieCommencee = true;
+  }
+
+  getUserAccount() {
+    return localStorage.getItem('token')
+      ? JSON.parse(localStorage.getItem('compte')!)
+      : null;
   }
 }
