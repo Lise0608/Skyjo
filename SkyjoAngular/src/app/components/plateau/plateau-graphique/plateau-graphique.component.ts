@@ -127,6 +127,8 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.hideDraw = this.hideDraw.bind(this);
     this.envoyerTexteP1 = this.envoyerTexteP1.bind(this);
     this.newRound = this.newRound.bind(this);
+
+    this.checkCompleteColumns = this.checkCompleteColumns.bind(this);
     this.hideAllCards = this.hideAllCards.bind(this);
     this.generateSkyjoCards = this.generateSkyjoCards.bind(this);
     this.distribuerCartesAuJoueurP1 =
@@ -253,7 +255,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     let texteP1 = this.el.nativeElement.querySelector('#TexteP1');
     this.renderer.removeClass(texteP1, 'd-none');
     this.renderer.addClass(texteP1, 'd-block');
-    texteP1.innerHTML = `<b>Player ${scoreMax[0]} a ${scoreMax[1]} points, il commence !</b>`;
+    texteP1.innerHTML = `<b>Player ${scoreMax[0]} has ${scoreMax[1]} points, he starts!</b>`;
     await this.pauseInSeconds(4);
     const nextRoundFunction = this.nextRound.bind(
       this,
@@ -358,6 +360,7 @@ export class PlateauGraphiqueComponent implements OnInit {
       this.deck.length
     ); */
     let nextPlayerNumber: number;
+    this.checkCompleteColumns();
     this.gameOver = this.updatePlayerNScore(lastPlayerNumber);
     await this.pauseInSeconds(2);
     if (lastPlayerNumber < this.playersNumber) {
@@ -470,9 +473,9 @@ export class PlateauGraphiqueComponent implements OnInit {
       '<b>Your turn!</b><br />Draw a card <b>or</b> drag that of the discard toward your board.',
       `<b>Card drawn!</b><br />Drag it toward the board <b>or</b> turn one your board's card.`,
       '<b>SKYJO ! Last Turn …</b>',
-      '<b>Game over, on retourne les cartes !</b>',
-      '<b>Sauvegarde de la partie !</b>',
-      '<b>Retourne deux cartes sur ton plateau pour savoir qui commence.</b>',
+      `<b>Game over, Let's return last cards!</b>`,
+      '<b>Savegame …!</b>',
+      '<b>Turn two cards to see who starts.</b>',
     ];
     let textesFR = [
       '<b>À toi de jouer !</b><br />Pioche une carte <b>ou</b> glisse celle de la défausse vers le plateau.',
@@ -494,9 +497,9 @@ export class PlateauGraphiqueComponent implements OnInit {
     this.renderer.removeClass(texteP1, 'd-none');
     this.renderer.addClass(texteP1, 'd-block');
     let textes = [
-      `<b>Player ${playerN}</b> a retourné un <b>${carteN}</b> !`,
-      `<b>Player ${playerN}</b> a pioché un <b>${carteN}</b> !`,
-      `<b>Player ${playerN}</b> récupère un <b>${carteN}</b> de la défausse !`,
+      `<b>Player ${playerN}</b> turned a <b>${carteN}</b>!`,
+      `<b>Player ${playerN}</b> picked a <b>${carteN}</b> from the draw!`,
+      `<b>Player ${playerN}</b> picked a <b>${carteN}</b> from the discard!`,
     ];
     texteP1.innerHTML = textes[typeOfPlay];
   }
@@ -522,20 +525,20 @@ export class PlateauGraphiqueComponent implements OnInit {
             let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
             if (scorePlayer != 1) {
               scoreTextZone.innerHTML =
-                '<b>Player ' +
+                '<b>P' +
                 PN +
-                ' (manche : ' +
+                ' (' +
                 scorePlayer +
-                ' pts, partie : ' +
+                ' pts, game: ' +
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             } else {
               scoreTextZone.innerHTML =
-                '<b>Player ' +
+                '<b>P' +
                 PN +
-                ' (manche : ' +
+                ' (' +
                 scorePlayer +
-                ' pt, partie : ' +
+                ' pt, game: ' +
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             }
@@ -558,20 +561,20 @@ export class PlateauGraphiqueComponent implements OnInit {
             let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
             if (scorePlayer != 1) {
               scoreTextZone.innerHTML =
-                '<b>Player ' +
+                '<b>P' +
                 PN +
-                ' (manche : ' +
+                ' (' +
                 scorePlayer +
-                ' pts, partie : ' +
+                ' pts, game: ' +
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             } else {
               scoreTextZone.innerHTML =
-                '<b>Player ' +
+                '<b>P' +
                 PN +
-                ' (manche : ' +
+                ' (' +
                 scorePlayer +
-                ' pt, partie : ' +
+                ' pt, game: ' +
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             }
@@ -601,7 +604,7 @@ export class PlateauGraphiqueComponent implements OnInit {
         let formattedDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
         let gameData = {
           scoreAAtteindre: this.scoreAAtteindre,
-          specificites: 'delete game',
+          specificites: 'Partie hors-ligne',
           date: formattedDate,
           playerIds: [1, 2], //À compléter avec les IA
           playerScores: {
@@ -618,12 +621,12 @@ export class PlateauGraphiqueComponent implements OnInit {
     }
     // Si pas fin de partie, on met un bouton "Manche suivante"
     this.envoyerTexteP1(
-      `Player ${winnerRound} remporte la manche avec ${scoreMin} points !`
+      `P${winnerRound} win this round with ${scoreMin} points!`
     );
     let txtDiv = this.el.nativeElement.querySelector('#TexteP1');
     if (txtDiv) {
       let txtButton = document.createElement('button');
-      txtButton.textContent = `Manche suivante`;
+      txtButton.textContent = `Next round`;
       txtButton.addEventListener('click', () => {
         if (txtDiv.contains(txtButton)) {
           txtDiv.removeChild(txtButton);
@@ -672,20 +675,20 @@ export class PlateauGraphiqueComponent implements OnInit {
     }
     if (scorePlayer != 1) {
       scoreTextZone.innerHTML =
-        '<b>Player ' +
+        '<b>P' +
         playerN +
-        ' (manche : ' +
+        ' (' +
         scorePlayer +
-        ' pts, partie : ' +
+        ' pts, game: ' +
         this.gameScorePlayers[playerN] +
         ' pts)</b>';
     } else {
       scoreTextZone.innerHTML =
-        '<b>Player ' +
+        '<b>P' +
         playerN +
-        ' (manche :' +
+        ' (' +
         scorePlayer +
-        ' pt, partie : ' +
+        ' pt, game: ' +
         this.gameScorePlayers[playerN] +
         ' pts)</b>';
     }
@@ -745,7 +748,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   // Retourne la carte du dessus du deck et la retire du deck
   drawCard() {
     if (this.deck.length === 0) {
-      alert('Le deck est vide !');
+      alert('Le deck est vide ! Fin de partie.');
       return null;
     }
     return this.deck.pop(); //Retire le dernier élément du tableau (retire une carte)
@@ -1076,6 +1079,72 @@ export class PlateauGraphiqueComponent implements OnInit {
     }
     /* this.updateFromTurn = true; */
     this.hideDraw(); //Si la carte provient de la pioche, on actualise la pioche
+  }
+
+  checkCompleteColumns() {
+    let linkCardP1 = `<img src="./assets/images/Card_0.png" style="height: 4vh; opacity: 0;" />`;
+    let linkCardP2_P5 = `<img src="./assets/images/Card_0.png" style="height: 2vh; opacity: 0;" />`;
+    let column3CardsValues = [0, 0, 0];
+    // Player 1
+    for (let column = 1; column <= 4; column++) {
+      let P1Buttons: NodeListOf<HTMLButtonElement> =
+        this.el.nativeElement.querySelectorAll(
+          `[class^="btn-"][class$="${column}P1"]`
+        );
+      let index = 0;
+      let visibilite = 0;
+      for (let button of Array.from(P1Buttons)) {
+        column3CardsValues[index] = parseInt(
+          button.dataset['cardNumber'] ?? '20'
+        );
+        if (button.id === 'visible') {
+          visibilite++;
+        }
+        index++;
+      }
+      if (
+        visibilite &&
+        column3CardsValues.every((val) => val === column3CardsValues[0])
+      ) {
+        let index = 0;
+        for (let button of Array.from(P1Buttons)) {
+          button.innerHTML = linkCardP1;
+          button.dataset['cardNumber'] = '0';
+          index++;
+        }
+      }
+    }
+    // Player 2 à Player 5
+    for (let PN = 2; PN <= this.playersNumber; PN++) {
+      for (let column = 1; column <= 4; column++) {
+        let PNDiv: NodeListOf<HTMLDivElement> =
+          this.el.nativeElement.querySelectorAll(
+            `[class^="c"][class$="${column}P${PN}"]`
+          );
+        let index = 0;
+        let visibilite = 0;
+        for (let div of Array.from(PNDiv)) {
+          column3CardsValues[index] = parseInt(
+            div.dataset['cardNumber'] ?? '20'
+          );
+          if (div.id === 'visible') {
+            visibilite++;
+          }
+          index++;
+        }
+        if (
+          visibilite &&
+          column3CardsValues.every((val) => val === column3CardsValues[0])
+        ) {
+          let index = 0;
+          for (let div of Array.from(PNDiv)) {
+            div.innerHTML = linkCardP2_P5;
+            div.dataset['cardNumber'] = '0';
+            index++;
+          }
+        }
+      }
+    }
   }
 
   newRound() {
