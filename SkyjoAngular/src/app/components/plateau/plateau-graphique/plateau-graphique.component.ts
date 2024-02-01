@@ -619,27 +619,48 @@ export class PlateauGraphiqueComponent implements OnInit {
         let currentDate = new Date();
         this.userAccount = this.getUserAccount();
         let humanID = this.userAccount.id || 5;
-        let humanIDString = `${humanID}`;
         let gameIDs: number[] = [];
+        let Scores;
         if (this.playersNumber === 2) {
           gameIDs = [humanID, 1];
+          Scores = {
+            [humanID]: this.gameScorePlayers[1],
+            '1': this.gameScorePlayers[2],
+          };
         } else if (this.playersNumber === 3) {
           gameIDs = [humanID, 1, 2];
+          Scores = {
+            [humanID]: this.gameScorePlayers[1],
+            '1': this.gameScorePlayers[2],
+            '2': this.gameScorePlayers[3],
+          };
         } else if (this.playersNumber === 4) {
           gameIDs = [humanID, 1, 2, 3];
+          Scores = {
+            [humanID]: this.gameScorePlayers[1],
+            '1': this.gameScorePlayers[2],
+            '2': this.gameScorePlayers[3],
+            '3': this.gameScorePlayers[4],
+          };
         } else if (this.playersNumber === 5) {
           gameIDs = [humanID, 1, 2, 3, 4];
+          Scores = {
+            [humanID]: this.gameScorePlayers[1],
+            '1': this.gameScorePlayers[2],
+            '2': this.gameScorePlayers[3],
+            '3': this.gameScorePlayers[4],
+            '4': this.gameScorePlayers[5],
+          };
         }
+
         let formattedDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
         let gameData = {
           scoreAAtteindre: this.scoreAAtteindre,
           specificites: 'Partie hors-ligne',
           date: formattedDate,
           playerIds: gameIDs, //À compléter avec les IA
-          playerScores: {
-            [humanID]: this.gameScorePlayers[1],
-            '1': this.gameScorePlayers[2],
-          },
+          nombreDeTours: this.nombreDeTours,
+          playerScores: Scores,
         };
         console.log(`Sauvegarde de la partie à partir de :`, [gameData]);
         await this.pauseInSeconds(5);
