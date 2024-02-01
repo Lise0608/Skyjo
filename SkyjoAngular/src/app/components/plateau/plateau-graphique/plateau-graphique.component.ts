@@ -15,6 +15,7 @@ import { IA } from './../../../model/plateau/ia';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameService } from 'src/app/services/game.service';
 import { DatePipe } from '@angular/common';
+import { Compte } from 'src/app/model/compte';
 
 type RoundFunction = () => Promise<void>; //Pour aller d'un round à l'autre
 
@@ -73,6 +74,7 @@ export class PlateauGraphiqueComponent implements OnInit {
   lastTurn = false;
   turnedP1CardNumber = '';
   playerDidSkyjo = 0;
+  userAccount!: Compte;
 
   private visibleEvent = new Event('visible');
   private visibleEvent2 = new Event('visible');
@@ -150,6 +152,12 @@ export class PlateauGraphiqueComponent implements OnInit {
       }
     }
     this.playersNumber = this.donneesJoueurs.length;
+  }
+
+  getUserAccount() {
+    return localStorage.getItem('token')
+      ? JSON.parse(localStorage.getItem('compte')!)
+      : null;
   }
 
   // === Déroulé partie ====================================================================================
@@ -599,25 +607,39 @@ export class PlateauGraphiqueComponent implements OnInit {
       }
     }
     // Si fin de partie
+    console.log('Score en fin de manche :', this.gameScorePlayers);
     for (let gSP of this.gameScorePlayers) {
       if (gSP >= this.scoreAAtteindre) {
         this.afficherTexteP1(4); // Que quand toutes les manches sont effectuées ou score dépasse
         let currentDate = new Date();
+        this.userAccount = this.getUserAccount();
+        let humanID = this.userAccount.id || 5;
+        let humanIDString = `${humanID}`;
+        let gameIDs: number[] = [];
+        if (this.playersNumber === 2) {
+          gameIDs = [humanID, 1];
+        } else if (this.playersNumber === 3) {
+          gameIDs = [humanID, 1, 2];
+        } else if (this.playersNumber === 4) {
+          gameIDs = [humanID, 1, 2, 3];
+        } else if (this.playersNumber === 5) {
+          gameIDs = [humanID, 1, 2, 3, 4];
+        }
         let formattedDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
         let gameData = {
           scoreAAtteindre: this.scoreAAtteindre,
           specificites: 'Partie hors-ligne',
           date: formattedDate,
-          playerIds: [1, 2], //À compléter avec les IA
+          playerIds: gameIDs, //À compléter avec les IA
           playerScores: {
-            '1': this.gameScorePlayers[1],
-            '2': this.gameScorePlayers[2],
+            [humanID]: this.gameScorePlayers[1],
+            '1': this.gameScorePlayers[2],
           },
         };
         console.log(`Sauvegarde de la partie à partir de :`, [gameData]);
         await this.pauseInSeconds(5);
         this.gameSrv.saveGame(gameData).subscribe(() => {
-          this.router.navigateByUrl(`/home`);
+          this.router.navigateByUrl(`/home`, { state: { data: gameData } }); //Commande pour le receveur : let data = navigation.extras.state['data'];
         });
       }
     }
@@ -908,7 +930,7 @@ export class PlateauGraphiqueComponent implements OnInit {
         if (P1Button.id != 'visible') {
           P1Button.id = 'visible';
           this.visible++;
-          console.log('Carte rendue visible');
+          /* console.log('Carte rendue visible'); */
           document.dispatchEvent(this.visibleChangeEvent);
           if (this.event1OK) {
             document.dispatchEvent(this.visibleChangeEvent2);
