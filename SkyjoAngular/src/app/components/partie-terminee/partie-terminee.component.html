@@ -10,6 +10,28 @@
   "
 >
   <h2>Partie terminée !</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Player</th>
+        <th>Score</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let playerScore of playerScoresWithUsername">
+        <tr>
+          <td>{{ playerScore.username }}</td>
+          <td>{{ playerScore.score }}</td>
+          <td class="text-success">
+            {{ isWinner(playerScore.score) ? "Winner" : "" }}
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+
   <a
     routerLink="/"
     class="btn rounded-pill mb-3"
