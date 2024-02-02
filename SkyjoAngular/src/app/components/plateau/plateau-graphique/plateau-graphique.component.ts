@@ -656,7 +656,7 @@ export class PlateauGraphiqueComponent implements OnInit {
         let formattedDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
         let gameData = {
           scoreAAtteindre: this.scoreAAtteindre,
-          specificites: 'Partie hors-ligne',
+          specificites: 'Local game',
           date: formattedDate,
           playerIds: gameIDs, //À compléter avec les IA
           nombreDeTours: this.nombreDeTours,
