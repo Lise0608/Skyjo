@@ -520,7 +520,7 @@ export class PlateauGraphiqueComponent implements OnInit {
     let cardNumber: number;
     for (let PN = 1; PN <= this.playersNumber; PN++) {
       let scorePlayer = this.getVisibleScorePN(PN);
-      if (PN == 1 && this.playerDidSkyjo !== PN) {
+      if (PN == 1 && PN !== this.playerDidSkyjo) {
         let P1Buttons: NodeListOf<HTMLButtonElement> =
           this.el.nativeElement.querySelectorAll(
             `[class^="btn-"][class$="P${PN}"]`
@@ -553,20 +553,20 @@ export class PlateauGraphiqueComponent implements OnInit {
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             }
+            await this.pauseInSeconds(1);
           }
-          await this.pauseInSeconds(1);
         }
-      } else if (PN != 1 && this.playerDidSkyjo !== PN) {
+      } else if (PN != 1 && PN !== this.playerDidSkyjo) {
         let PNDiv: NodeListOf<HTMLDivElement> =
           this.el.nativeElement.querySelectorAll(
-            `[class^="btn-"][class$="P${PN}"]`
+            `[class^="c"][class$="P${PN}"]`
           );
         for (let div of Array.from(PNDiv)) {
           if (div.id !== 'visible') {
             if (div.dataset['cardNumber'] !== undefined) {
               cardNumber = parseInt(div.dataset['cardNumber']);
               scorePlayer += cardNumber;
-              div.innerHTML = `<img src="assets/images/Card_${cardNumber}.png" style="height: 16vh;" />`; // Affiche la carte
+              div.innerHTML = `<img src="assets/images/Card_${cardNumber}.png" style="height: 8vh;" />`; // Affiche la carte
               div.id = 'visible';
             }
             let scoreTextZone = this.el.nativeElement.querySelector('.tP' + PN);
@@ -589,8 +589,8 @@ export class PlateauGraphiqueComponent implements OnInit {
                 this.gameScorePlayers[PN] +
                 ' pts)</b>';
             }
+            await this.pauseInSeconds(1);
           }
-          await this.pauseInSeconds(1);
         }
       }
     }
@@ -1173,7 +1173,7 @@ export class PlateauGraphiqueComponent implements OnInit {
         index++;
       }
       if (
-        visibilite &&
+        visibilite === 3 &&
         column3CardsValues.every((val) => val === column3CardsValues[0])
       ) {
         let index = 0;
@@ -1203,7 +1203,7 @@ export class PlateauGraphiqueComponent implements OnInit {
           index++;
         }
         if (
-          visibilite &&
+          visibilite === 3 &&
           column3CardsValues.every((val) => val === column3CardsValues[0])
         ) {
           let index = 0;
